@@ -1,0 +1,146 @@
+import { celebrate, Joi, Segments } from "celebrate";
+import { messages } from 'joi-translation-pt-br';
+
+export const UserValidation = {
+
+    get: celebrate({
+        [Segments.PARAMS]: {
+            id: Joi.number().positive().required(),
+        }
+    }, { abortEarly: false, messages: messages, }),
+
+    cep: celebrate({
+        [Segments.PARAMS]: {
+            cep: Joi.string().required().min(4),
+        }
+    }, { abortEarly: false, messages: messages, }),
+
+    login: celebrate({
+
+        [Segments.BODY]: {
+            email: Joi.string().email(),
+            password: Joi.string().required().min(6),
+            companyCNPJ: Joi.number().required().min(11),
+        }
+
+    }, { abortEarly: false, messages: messages, }),
+
+    storeCustomer: celebrate({
+        [Segments.BODY]: {
+            cpf: Joi.string().required().min(11),
+            password: Joi.string().required().min(6),
+            platformCPFCNPJ: Joi.string().required().min(11).max(14),
+            passwordRepeated: Joi.string().required().min(6),
+            userName: Joi.string().required().min(10),
+            email: Joi.string().email().required().min(5),
+            address: Joi.object().keys({
+                district: Joi.string().required().min(5),
+                street: Joi.string().required().min(5),
+                phoneNumber: Joi.string().required().min(12),
+                addressNumber: Joi.number().required().positive(),
+                addressCodePostal: Joi.string().required().min(7),
+            }).required(),
+        }
+    }, { abortEarly: false, messages: messages, }),
+
+    storeADM: celebrate({
+        [Segments.BODY]: {
+            cpf: Joi.string().required().min(11),
+            password: Joi.string().required().min(6),
+            passwordRepeated: Joi.string().required().min(6),
+            userName: Joi.string().required().min(10),
+            email: Joi.string().email().required().min(5),
+            address: Joi.object().keys({
+                district: Joi.string().required().min(5),
+                street: Joi.string().required().min(5),
+                phoneNumber: Joi.string().required().min(12),
+                addressNumber: Joi.number().required().positive(),
+                addressCodePostal: Joi.string().required().min(7),
+            }).required(),
+        }
+    }, { abortEarly: false, messages: messages, }),
+
+    storeEditor: celebrate({
+        [Segments.BODY]: {
+            userName: Joi.string().required().min(10),
+            email: Joi.string().email().required().min(5),
+            password: Joi.string().required().min(6),
+            passwordRepeated: Joi.string().required().min(6),
+            platformCPFCNPJ: Joi.string().required().min(11).max(14),
+        }
+    }, { abortEarly: false, messages: messages, }),
+
+    storeCompany: celebrate({
+        [Segments.BODY]: {
+            cpfcnpj: Joi.string().required().min(5),
+            platformName: Joi.string().required().min(5),
+            companyName: Joi.string().required().min(3),
+            corporateName: Joi.string().required().min(5),
+            userName: Joi.string().required().min(5),
+            email: Joi.string().email().required().min(5),
+            password: Joi.string().required().min(6),
+            passwordRepeated: Joi.string().required().min(6),
+            address: Joi.object().keys({
+                district: Joi.string().required().min(5),
+                street: Joi.string().required().min(5),
+                phoneNumber: Joi.string().required().min(12),
+                addressNumber: Joi.number().required().positive(),
+                addressCodePostal: Joi.string().required().min(7),
+            }).required(),
+        }
+    }, { abortEarly: false, messages: messages, }),
+
+    patchClient: celebrate({
+
+        [Segments.BODY]: {
+            id: Joi.number().required().positive(),
+            cnpj: Joi.string().required().min(5),
+            companyName: Joi.string().required().min(3),
+            corporateName: Joi.string().required().min(5),
+            userName: Joi.string().required().min(5),
+            email: Joi.string().email().required().min(5),
+            password: Joi.string().required().min(6),
+            passwordRepeated: Joi.string().required().min(6),
+            address: Joi.object().keys({
+                district: Joi.string().required().min(5),
+                street: Joi.string().required().min(5),
+                phoneNumber: Joi.string().required().min(12),
+                addressNumber: Joi.number().required().positive(),
+                addressCodePostal: Joi.string().required().min(7),
+            }).required(),
+        }
+
+    }, { abortEarly: false, messages: messages, }),
+
+    patchPhysicalPerson: celebrate({
+
+        [Segments.BODY]: {
+            id: Joi.number().required().positive(),
+            cpf: Joi.string().required().min(11),
+            password: Joi.string().required().min(6),
+            passwordRepeated: Joi.string().required().min(6),
+            userName: Joi.string().required().min(10),
+            email: Joi.string().email().required().min(5),
+            address: Joi.object().keys({
+                district: Joi.string().required().min(5),
+                street: Joi.string().required().min(5),
+                phoneNumber: Joi.string().required().min(12),
+                addressNumber: Joi.number().required().positive(),
+                addressCodePostal: Joi.string().required().min(7),
+            }).required(),
+            userType: Joi.string().required(),
+        }
+
+    }, { abortEarly: false, messages: messages, }),
+
+    patch: celebrate({
+
+        [Segments.BODY]: {
+            oldPassword: Joi.string().required().min(6),
+            newPassword: Joi.string().required().min(6),
+            newPasswordRepeated: Joi.string().required().min(6),
+        }
+
+    }, { abortEarly: false, messages: messages, }),
+
+}
