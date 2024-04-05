@@ -7,7 +7,7 @@ import { AddressEntity } from "../entity/AddressEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
 import { UserTypeEntity } from "../entity/UserTypeEntity";
 import { StatesEntity } from "../entity/StatesEntity";
-import { cnpj, cpf } from "cpf-cnpj-validator";
+import { cpf } from "cpf-cnpj-validator";
 import { CompanyEntity } from "../entity/CompanyEntity";
 import { getAddressByCEP } from "cep-address-finder";
 import { StringFormatter } from "../utils/string.formatter/string.formatter";
