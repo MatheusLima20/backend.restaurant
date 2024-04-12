@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { getRepository } from "typeorm";
 import * as jwt from "jsonwebtoken";
 import { AdmLogin } from "./AdmLogin";
 import { UserEntity } from "../../entity/UserEntity";
-import { PlatformEntity } from "../../entity/PlatformEntity";
-import { CompanyEntity } from "../../entity/CompanyEntity";
+import { dataSource } from "../../../ormconfig";
 
 export const Authorization = {
     auth: async (request: Request, response: Response) => {
@@ -62,40 +60,13 @@ export const Authorization = {
         const userBody = request.body;
 
         const email = userBody.email;
-        const companyCNPJ = userBody.companyCNPJ;
 
         try {
-            const userRepository = getRepository(UserEntity);
-            const companyRepository = getRepository(CompanyEntity);
-            const platformRepository = getRepository(PlatformEntity);
-
-            const company = await companyRepository.findOne({
-                where: {
-                    cpfcnpj: companyCNPJ,
-                },
-            });
-
-            if (!company) {
-                return response
-                    .status(404)
-                    .json({ message: "Plataforma não encontrada!" });
-            }
-
-            const platform = await platformRepository.findOne({
-                where: {
-                    fkCompany: company,
-                },
-            });
-
-            if (!platform) {
-                return response
-                    .status(404)
-                    .json({ message: "Plataforma não encontrada!" });
-            }
+            const userRepository = dataSource.getRepository(UserEntity);
 
             const user = await userRepository.findOne({
-                where: { email: email, fkPlatform: platform, isActive: true },
-                relations: ["fkPlatform", "fkUserType", "fkPlatform.fkCompany"],
+                where: { email: email, isActive: true },
+                relations: ["fkPlatform", "fkUserType"],
             });
 
             if (!user) {

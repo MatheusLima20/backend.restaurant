@@ -9,8 +9,7 @@ import {
 export type UserType =
     "SUPER" |
     "ADM" |
-    "CONSUMIDOR" |
-    "REDATOR"
+    "CUSTOMER"
     ;
 
 @Entity({ name: "user_type" })

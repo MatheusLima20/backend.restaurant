@@ -65,13 +65,6 @@ routes.post(
     UserController.storeADM
 );
 
-routes.post(
-    "/editor",
-    UserValidation.storeEditor,
-    UserController.storeEditor
-);
-
-
 routes.patch(
     "/user",
     VerifyJWTMiddleware.verifyJWT,

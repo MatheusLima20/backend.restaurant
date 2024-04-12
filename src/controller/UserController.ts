@@ -97,7 +97,7 @@ export const UserController = {
             const userTypeRepository = dataSource.getRepository(UserTypeEntity);
 
             const userType = await userTypeRepository.findOne({
-                where: { name: "CONSUMIDOR" },
+                where: { name: "CUSTOMER" },
             });
 
             const clientCompany = await userRepository.findOne({
@@ -243,7 +243,7 @@ export const UserController = {
                     }
 
                     const userType = await userTypeRepository.findOne({
-                        where: { name: "CONSUMIDOR" },
+                        where: { name: "CUSTOMER" },
                     });
 
                     if (!userType) {
@@ -480,7 +480,7 @@ export const UserController = {
         }
     },
 
-    storeEditor: async (request: Request, response: Response) => {
+    /*storeEditor: async (request: Request, response: Response) => {
         const dataUser = request.body;
 
         const platformCPFCNPJ = dataUser.platformCPFCNPJ;
@@ -561,7 +561,7 @@ export const UserController = {
                 message: error,
             });
         }
-    },
+    },*/
 
     storePlatform: async (request: Request, response: Response) => {
         const dataUser = request.body;
@@ -621,7 +621,7 @@ export const UserController = {
                     const password = AdmLogin.hashPassword(dataUser.password);
 
                     const companyData = {
-                        cpfcnpj: dataUser.cpfcnpj,
+                        cpfcnpj: userCpfcnpj,
                         companyName: dataUser.companyName,
                         corporateName: dataUser.corporateName,
                     };
