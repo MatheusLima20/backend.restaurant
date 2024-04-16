@@ -14,7 +14,7 @@ export const ProductValidation = {
             name: Joi.string().required(),
             value: Joi.number().positive(),
             amount: Joi.string().allow(),
-            unitMeasurement: Joi.number().required().positive(),
+            unitMeasurement: Joi.string().required(),
             isActive: Joi.boolean().required(),
             show: Joi.boolean().required(),
         }

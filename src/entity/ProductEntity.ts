@@ -17,10 +17,13 @@ export class ProductEntity {
     @Column({ name: "name" })
     name: string;
 
+    @Column({ name: "platform" })
+    platform: number;
+
     @Column({ name: "value", type: 'float' })
     value: number;
 
-    @Column({ name: "amount", type: 'float' })
+    @Column({ name: "amount", type: 'float', default: 0 })
     amount: number;
 
     @ManyToOne(
@@ -30,10 +33,10 @@ export class ProductEntity {
     @JoinColumn({ name: "fk_unit__measurement" })
     unitMeasurement: UnitMeasurementEntity;
 
-    @Column({ name: "is_active" })
+    @Column({ name: "is_active", default: true })
     isActive: boolean;
 
-    @Column({ name: "show" })
+    @Column({ name: "show", default: true })
     show: boolean;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
