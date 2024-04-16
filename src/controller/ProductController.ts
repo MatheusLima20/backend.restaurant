@@ -20,12 +20,12 @@ export const ProductController = {
 
             const productRepository = dataSource.getRepository(ProductEntity);
             const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
-
+            
             const unitMeasurement = await unitMeasurementRepository.findOne({
-                where: body.unitMeasurement
+                where: {name: body.unitMeasurement as any}
             });
-
-            const product: ProductEntity = {
+            
+            const product: any = {
                 name: body.name,
                 platform: platform.id,
                 value: body.value,
@@ -33,11 +33,10 @@ export const ProductController = {
                 isActive: body.isActive,
                 show: body.show,
                 unitMeasurement: unitMeasurement,
-                ...body
             }
-
+            
             await productRepository.save(product);
-
+            
             return response.json(
                 {
                     message: "Produto salvo com sucesso!"
