@@ -17,8 +17,8 @@ export class ProductEntity {
     @Column({ name: "name" })
     name: string;
 
-    @Column({ name: "platform" })
-    platform: number;
+    @Column({ name: "fk_platform" })
+    fkPlatform: number;
 
     @Column({ name: "value", type: 'float' })
     value: number;

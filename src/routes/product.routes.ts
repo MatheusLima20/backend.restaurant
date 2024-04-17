@@ -6,6 +6,12 @@ import { ProductValidation } from "../validations/ProductValidation";
 
 const routes = Router();
 
+routes.get(
+    "/product/",
+    VerifyJWTMiddleware.verifyJWT,
+    ProductController.get
+);
+
 routes.post(
     "/product/",
     VerifyJWTMiddleware.verifyJWT,

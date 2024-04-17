@@ -2,8 +2,36 @@ import { Request, Response } from "express";
 import { dataSource } from "../../ormconfig";
 import { ProductEntity } from "../entity/ProductEntity";
 import { UnitMeasurementEntity } from "../entity/UnitMeasurementEntity";
+import { ProductView } from "../views/ProductView";
 
 export const ProductController = {
+
+    get: async (request: Request, response: Response) => {
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+            const productRepository = dataSource.getRepository(ProductEntity);
+
+            const products = await productRepository.find({
+                where: {fkPlatform: platform.id}
+            });
+
+            const productView = ProductView.get(products)
+
+            return response.json({
+                data: productView,
+                message: "Dados encontrados com sucesso.",
+            });
+        } catch (error) {
+            return response.status(404).json({
+                message: error,
+            });
+        }
+
+    },
 
 
     store: async (request: Request, response: Response) => {
