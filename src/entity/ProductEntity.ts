@@ -31,7 +31,7 @@ export class ProductEntity {
         (unitMeasurement) => unitMeasurement.id, { nullable: true }
     )
     @JoinColumn({ name: "fk_unit__measurement" })
-    unitMeasurement: UnitMeasurementEntity;
+    fkUnitMeasurement: UnitMeasurementEntity;
 
     @Column({ name: "is_active", default: true })
     isActive: boolean;

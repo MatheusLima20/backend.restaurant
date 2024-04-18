@@ -13,7 +13,7 @@ export const ProductValidation = {
         [Segments.BODY]: {
             name: Joi.string().required(),
             value: Joi.number().positive(),
-            amount: Joi.string().allow(),
+            amount: Joi.number().allow(),
             unitMeasurement: Joi.string().required(),
             isActive: Joi.boolean().required(),
             show: Joi.boolean().required(),

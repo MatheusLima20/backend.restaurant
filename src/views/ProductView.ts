@@ -2,6 +2,7 @@ import { ProductEntity } from "../entity/ProductEntity";
 
 export const ProductView = {
     get: (products: Array<ProductEntity>) => {
+        
         return products.map((product) => {
 
             return {
@@ -9,7 +10,9 @@ export const ProductView = {
                 name: product.name,
                 amount: product.amount,
                 value: product.value,
-                unitMeasurement: product.unitMeasurement,
+                unitMeasurement: product.fkUnitMeasurement.name,
+                show: product.show,
+                isActive: product.isActive
             };
         });
     },

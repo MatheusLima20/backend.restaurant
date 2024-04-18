@@ -16,7 +16,8 @@ export const ProductController = {
             const productRepository = dataSource.getRepository(ProductEntity);
 
             const products = await productRepository.find({
-                where: {fkPlatform: platform.id}
+                where: {fkPlatform: platform.id},
+                relations: ['fkUnitMeasurement']
             });
 
             const productView = ProductView.get(products)
@@ -50,31 +51,33 @@ export const ProductController = {
             const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
             
             const unitMeasurement = await unitMeasurementRepository.findOne({
-                where: {name: body.unitMeasurement as any}
+                where: {name: body.fkUnitMeasurement as any}
             });
             
             const product: any = {
                 name: body.name,
-                platform: platform.id,
+                fkPlatform: platform.id,
                 value: body.value,
                 amount: body.amount,
                 isActive: body.isActive,
                 show: body.show,
-                unitMeasurement: unitMeasurement,
+                fkUnitMeasurement: unitMeasurement,
             }
             
             await productRepository.save(product);
             
             return response.json(
                 {
-                    message: "Produto salvo com sucesso!"
+                    message: "Produto salvo com sucesso!",
                 }
             );
 
             
         } catch (error) {
             
-            return response.status(404).json("Erro ao cadastrar o produto!");
+            return response.status(404).json(
+                {message: "Erro ao cadastrar o produto!"}
+            );
 
         }
 
