@@ -31,8 +31,16 @@ export const ProductValidation = {
 
     patch: celebrate({
 
+        [Segments.PARAMS]: {
+            id: Joi.number().required().positive()
+        },
         [Segments.BODY]: {
-
+            name: Joi.string().allow(),
+            value: Joi.number().allow(),
+            amount: Joi.number().allow(),
+            unitMeasurement: Joi.string().required(),
+            isActive: Joi.boolean().allow(),
+            show: Joi.boolean().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),

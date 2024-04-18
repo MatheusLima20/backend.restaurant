@@ -13,4 +13,18 @@ export const SpendingValidation = {
 
     }, { abortEarly: false, messages: messages, }),
 
+    patch: celebrate({
+
+        [Segments.PARAMS]: {
+            id: Joi.number().required().positive(),
+        },
+
+        [Segments.BODY]: {
+            name: Joi.string().required(),
+            value: Joi.number().required().positive(),
+            amount: Joi.number().required().positive(),
+        }
+
+    }, { abortEarly: false, messages: messages, }),
+
 }

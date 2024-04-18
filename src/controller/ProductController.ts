@@ -62,6 +62,7 @@ export const ProductController = {
                 isActive: body.isActive,
                 show: body.show,
                 fkUnitMeasurement: unitMeasurement,
+                createdBy: user.id,
             }
             
             await productRepository.save(product);
@@ -81,6 +82,65 @@ export const ProductController = {
 
         }
 
-    }
+    },
+
+    patch: async (request: Request, response: Response) => {
+
+        const { id } = request.params;
+
+        const body = request.body;
+
+        const auth = request.auth;
+        const user = auth.user;
+        
+        try {
+
+            dataSource.transaction(async (transactionalEntityManager) => {
+
+            const productEntity = transactionalEntityManager.getRepository(ProductEntity);
+            const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
+            
+            const unitMeasurement = await unitMeasurementRepository.findOne({
+                where: {name: body.fkUnitMeasurement as any}
+            });
+
+            const productId: number = Number.parseInt(id);
+
+            const product = {
+                name: body.name,
+                value: body.value,
+                amount: body.amount,
+                isActive: body.isActive,
+                show: body.show,
+                fkUnitMeasurement: unitMeasurement,
+                updatedBy: user.id
+            };
+
+            const oldProduct = await productEntity.findOne({
+                where: {id: productId}
+            });
+            
+            const spendingMerger = productEntity.merge(oldProduct, product)
+            
+            await productEntity.update(productId ,spendingMerger);
+            
+            return response.json({
+                message: "Produtos alterados com sucesso!"
+            });
+
+            });
+            
+            
+        } catch (error) {
+            
+            return response.status(404).json(
+                {
+                    message: "Erro ao salvar gastos", error: error
+                }
+            );
+
+        }
+
+    },
 
 };

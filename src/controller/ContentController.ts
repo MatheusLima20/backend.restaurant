@@ -337,7 +337,7 @@ export const ContentController = {
         const file = dataBody.file;
 
         try {
-            const contentRepository =dataSource. getRepository(ContentEntity);
+            const contentRepository = dataSource. getRepository(ContentEntity);
 
             const contentId = Number.parseInt(id);
 

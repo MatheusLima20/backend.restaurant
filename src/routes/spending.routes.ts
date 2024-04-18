@@ -6,11 +6,24 @@ import { SpendingValidation } from "../validations/SpendingValidation";
 
 const routes = Router();
 
+routes.get(
+    "/spending/",
+    VerifyJWTMiddleware.verifyJWT,
+    SpendingController.get
+);
+
 routes.post(
     "/spending/",
     VerifyJWTMiddleware.verifyJWT,
     SpendingValidation.store,
     SpendingController.store
+);
+
+routes.patch(
+    "/spending/:id",
+    VerifyJWTMiddleware.verifyJWT,
+    SpendingValidation.patch,
+    SpendingController.patch
 );
 
 

@@ -39,6 +39,12 @@ export class ProductEntity {
     @Column({ name: "show", default: true })
     show: boolean;
 
+    @Column({name: 'created_by', nullable: true })
+    createdBy: number;
+
+    @Column({name: "updated_by", nullable: true })
+    updatedBy: number;
+
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
     createdAt: Date;
 

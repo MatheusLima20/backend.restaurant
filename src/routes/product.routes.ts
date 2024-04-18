@@ -19,5 +19,12 @@ routes.post(
     ProductController.store
 );
 
+routes.patch(
+    "/product/:id",
+    VerifyJWTMiddleware.verifyJWT,
+    ProductValidation.patch,
+    ProductController.patch
+);
+
 
 module.exports = routes;
