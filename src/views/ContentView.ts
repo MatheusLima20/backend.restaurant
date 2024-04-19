@@ -34,7 +34,6 @@ export const ContentView = {
             viewsAmount: content.viewsAmount,
             createdAt: content.createdAt,
             updatedAt: content.updatedAt,
-            creatorName: content.createdBy.name,
         };
     },
     getByTag: (contents: Array<ContentEntity>) => {
@@ -53,7 +52,6 @@ export const ContentView = {
                 viewsAmount: content.viewsAmount,
                 createdAt: content.createdAt,
                 updatedAt: content.updatedAt,
-                creatorName: content.createdBy.name,
             };
         });
     },

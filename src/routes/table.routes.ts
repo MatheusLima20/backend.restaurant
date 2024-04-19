@@ -7,7 +7,7 @@ import { TableValidation } from "../validations/TableValidation";
 const routes = Router();
 
 routes.get(
-    "/table/",
+    "/tables/",
     VerifyJWTMiddleware.verifyJWT,
     TableController.get
 );
