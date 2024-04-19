@@ -47,13 +47,11 @@ export class ContentEntity {
     @Column({ name: "fk_platform" })
     fkPlatform: number;
 
-    @ManyToOne(() => UserEntity, (user) => user.id)
-    @JoinColumn({ name: "created_by" })
-    createdBy: UserEntity;
+    @Column({ name: "created_by", nullable: true })
+    createdBy: number;
 
-    @ManyToOne(() => UserEntity, (user) => user.id)
-    @JoinColumn({ name: "updated_by" })
-    updatedBy: UserEntity;
+    @Column({ name: "updated_by", nullable: true })
+    updatedBy: number;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
     createdAt: Date;

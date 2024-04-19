@@ -46,6 +46,15 @@ export class OrderEntity {
     @JoinColumn({ name: "fk_client" })
     fkClient: UserEntity;
 
+    @Column({ name: "fk_box_day", nullable: true })
+    fkBoxDay: number;
+
+    @Column({ name: "fk_table", nullable: true })
+    fkTable: number;
+
+    @Column({ name: "is_open", default: true })
+    isOpen: boolean;
+
     @Column({ name: 'created_by' })
     createdBy: number;
 

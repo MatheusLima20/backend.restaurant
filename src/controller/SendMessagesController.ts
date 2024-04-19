@@ -43,7 +43,7 @@ export const SendMessagesController = {
 
 
         } catch (error) {
-            console.log("error");
+            
             return response.status(404).json({ error });
         }
 

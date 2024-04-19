@@ -29,11 +29,11 @@ export const ProductController = {
         } catch (error) {
             return response.status(404).json({
                 message: error,
+                error
             });
         }
 
     },
-
 
     store: async (request: Request, response: Response) => {
 
@@ -77,7 +77,7 @@ export const ProductController = {
         } catch (error) {
             
             return response.status(404).json(
-                {message: "Erro ao cadastrar o produto!"}
+                {message: "Erro ao cadastrar o produto!", error}
             );
 
         }
