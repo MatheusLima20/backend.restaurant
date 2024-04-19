@@ -17,6 +17,7 @@ export const BoxDayController = {
 
             const boxDay = await boxDayRepository.find({
                 where: { fkPlatform: platform.id },
+                order: {createdAt : 'DESC'}
             });
 
             const boxDayView = BoxDayView.get(boxDay)
@@ -111,9 +112,22 @@ export const BoxDayController = {
 
                 const boxDayEntity = transactionalEntityManager.getRepository(BoxDayEntity);
 
+                const boxDayOpen = await boxDayEntity.find({
+                    where: { fkPlatform: platform.id, isOpen: true }
+                });
+
                 const oldBoxDay = await boxDayEntity.findOne({
                     where: { id: boxDayId, fkPlatform: platform.id }
                 });
+
+                if(boxDayOpen.length && !oldBoxDay.isOpen) {
+                    return response.status(404).json(
+                        {
+                            message: "Somente um caixa pode ficar aberto!",
+                            error: "Existem pedidos abertos."
+                        }
+                    );
+                }
 
                 const boxDay = {
                     isOpen: !oldBoxDay.isOpen,

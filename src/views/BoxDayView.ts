@@ -10,6 +10,7 @@ export const BoxDayView = {
 
             return {
                 id: boxDay.id,
+                isOpen: boxDay.isOpen,
                 createdAt: createdAt,
             };
         });
