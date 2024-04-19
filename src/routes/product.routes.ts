@@ -12,6 +12,12 @@ routes.get(
     ProductController.get
 );
 
+routes.get(
+    "/plates/",
+    VerifyJWTMiddleware.verifyJWT,
+    ProductController.getPlates
+);
+
 routes.post(
     "/product/",
     VerifyJWTMiddleware.verifyJWT,

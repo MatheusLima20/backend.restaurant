@@ -35,6 +35,35 @@ export const ProductController = {
 
     },
 
+    getPlates: async (request: Request, response: Response) => {
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+            const productRepository = dataSource.getRepository(ProductEntity);
+
+            const products = await productRepository.find({
+                where: { fkPlatform: platform.id, show: true },
+                relations: ['fkUnitMeasurement']
+            });
+
+            const productView = ProductView.get(products)
+
+            return response.json({
+                data: productView,
+                message: "Dados encontrados com sucesso.",
+            });
+        } catch (error) {
+            return response.status(404).json({
+                message: error,
+                error
+            });
+        }
+
+    },
+
     store: async (request: Request, response: Response) => {
 
         const body: ProductEntity = request.body;
