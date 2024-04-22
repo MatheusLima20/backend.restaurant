@@ -26,17 +26,20 @@ export class OrderEntity {
     @Column({ nullable: true })
     value: number;
 
-    @Column({ name: "tracking_code" })
+    @Column({ nullable: true })
+    amount: number;
+
+    @Column({ name: "tracking_code", nullable: true })
     trackingCode: string;
 
-    @Column({ name: "is_delivered", default: false })
+    @Column({ name: "is_delivered", default: false, nullable: true  })
     isDelivered: boolean;
 
-    @Column({ name: "is_cancelled", default: false })
+    @Column({ name: "is_cancelled", default: false, nullable: true  })
     isCancelled: boolean;
 
     @ManyToOne(() => UserEntity, (user) => user.id)
-    @JoinColumn({ name: "fk_final_client" })
+    @JoinColumn({ name: "fk_final_client", })
     fkFinalClient: UserEntity;
 
     @Column({ name: "fk_platform" })
@@ -55,7 +58,7 @@ export class OrderEntity {
     @Column({ name: "is_open", default: true })
     isOpen: boolean;
 
-    @Column({ name: 'created_by' })
+    @Column({ name: 'created_by', nullable: true  })
     createdBy: number;
 
     @Column({ name: "updated_by", nullable: true })

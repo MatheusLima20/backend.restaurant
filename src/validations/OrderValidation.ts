@@ -3,30 +3,17 @@ import { messages } from 'joi-translation-pt-br';
 
 export const OrderValidation = {
 
-    getByIsDeliveredAndIsCancelled: celebrate({
+    getByTable: celebrate({
         [Segments.PARAMS]: {
-            isDelivered: Joi.boolean().required(),
-            isCancelled: Joi.boolean().required(),
-        }
-    }, { abortEarly: false, messages: messages, }),
-
-    getByTrankingCode: celebrate({
-        [Segments.PARAMS]: {
-            trackingCode: Joi.string().required(),
-            companycnpj: Joi.string().required(),
-        }
-    }, { abortEarly: false, messages: messages, }),
-
-    getById: celebrate({
-        [Segments.PARAMS]: {
-            id: Joi.string().required(),
+            id: Joi.number().required().positive(),
         }
     }, { abortEarly: false, messages: messages, }),
 
     store: celebrate({
         [Segments.BODY]: {
-            description: Joi.string().required().min(10),
-            finalClientId: Joi.number().required().positive(),
+            idProduct: Joi.number().required().positive(),
+            idTable: Joi.number().required().positive(),
+            amount: Joi.number().required().positive(),
         }
     }, { abortEarly: false, messages: messages, }),
 
