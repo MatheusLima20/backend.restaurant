@@ -1,5 +1,4 @@
 import { OrderEntity } from "../entity/OrdersEntity";
-import dayjs = require("dayjs");
 
 export const OrderView = {
     getByTable: (orders: Array<OrderEntity>) => {
