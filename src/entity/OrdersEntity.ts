@@ -23,7 +23,7 @@ export class OrderEntity {
     @Column({ name: "delivery_date", nullable: true })
     deliveryDate: Date;
 
-    @Column({ nullable: true })
+    @Column({ type:'float', nullable: true })
     value: number;
 
     @Column({ nullable: true })

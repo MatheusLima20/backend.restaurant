@@ -14,20 +14,21 @@ export const OrderController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
-        
+
         try {
             const orderRepository = dataSource.getRepository(OrderEntity);
 
             const order = await orderRepository.find({
-                where: { 
+                where: {
                     fkPlatform: platform.id,
                     fkTable: Number.parseInt(id),
+                    isCancelled: false,
                 },
                 order: { createdAt: 'DESC' }
             });
-            
+
             const orderView = OrderView.getByTable(order);
-            
+
             return response.json({
                 data: orderView,
                 message: "Dados encontrados com sucesso.",
@@ -46,7 +47,7 @@ export const OrderController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
-        
+
         try {
 
             const orderRepository = dataSource.getRepository(OrderEntity);
@@ -77,9 +78,9 @@ export const OrderController = {
                 value: product.value,
                 createdBy: user.id,
             }
-            
-            await orderRepository.save({ ...order} );
-            
+
+            await orderRepository.save({ ...order });
+
             return response.json({
                 message: "Pedido salvo com sucesso!"
             });
@@ -89,6 +90,63 @@ export const OrderController = {
                 message: error,
                 error
             });
+        }
+
+    },
+
+    patch: async (request: Request, response: Response) => {
+
+        const { id } = request.params;
+
+        const body = request.body;
+
+        const auth = request.auth;
+        const user = auth.user;
+
+        try {
+
+            dataSource.transaction(async (transactionalEntityManager) => {
+
+                const orderEntity = transactionalEntityManager.getRepository(OrderEntity);
+                const productRepository = dataSource.getRepository(ProductEntity);
+
+                const product = await productRepository.findOne({
+                    where: { id: Number.parseInt(body.idProduct) }
+                });
+
+                const orderId: number = Number.parseInt(id);
+
+                const order: any = {
+                    description: product.name,
+                    value: product.value,
+                    amount: body.amount,
+                    isCancelled: body.show,
+                    updatedBy: user.id,
+                };
+
+                const oldOrder = await orderEntity.findOne({
+                    where: { id: orderId }
+                });
+
+                const spendingMerger = orderEntity.merge(oldOrder, order)
+
+                await orderEntity.update(orderId, spendingMerger);
+
+                return response.json({
+                    message: "Pedido alterado com sucesso!"
+                });
+
+            });
+
+
+        } catch (error) {
+
+            return response.status(404).json(
+                {
+                    message: "Erro ao salvar gastos", error: error
+                }
+            );
+
         }
 
     },

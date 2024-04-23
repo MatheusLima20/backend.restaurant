@@ -20,5 +20,12 @@ routes.post(
     OrderController.store
 );
 
+routes.patch(
+    "/order/:id",
+    VerifyJWTMiddleware.verifyJWT,
+    OrderValidation.patch,
+    OrderController.patch
+);
+
 
 module.exports = routes;

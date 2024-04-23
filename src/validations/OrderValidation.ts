@@ -19,14 +19,14 @@ export const OrderValidation = {
 
     patch: celebrate({
 
+        [Segments.PARAMS]: {
+            id: Joi.number().required().positive(),
+        },
+
         [Segments.BODY]: {
-            orderId: Joi.number().required().positive(),
-            deliveryId: Joi.number().allow().positive(),
-            deliveryForecast: Joi.date().allow(),
-            value: Joi.number().required().positive(),
-            orderStatusId: Joi.number().required().positive(),
-            finalClientId: Joi.number().positive().allow(),
-            description: Joi.string().allow(),
+            productId: Joi.number().allow().positive(),
+            amount: Joi.number().allow().positive(),
+            isCancelled: Joi.bool().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),
