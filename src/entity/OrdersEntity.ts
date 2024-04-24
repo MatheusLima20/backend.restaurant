@@ -8,7 +8,7 @@ import {
     ManyToOne,
 } from "typeorm";
 import { UserEntity } from "./UserEntity";
-//smart delivery
+
 @Entity({ name: "order" })
 export class OrderEntity {
     @PrimaryGeneratedColumn()

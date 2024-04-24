@@ -103,6 +103,8 @@ export const OrderController = {
         const auth = request.auth;
         const user = auth.user;
 
+        const productId = body.productId;
+
         try {
 
             dataSource.transaction(async (transactionalEntityManager) => {
@@ -110,17 +112,21 @@ export const OrderController = {
                 const orderEntity = transactionalEntityManager.getRepository(OrderEntity);
                 const productRepository = dataSource.getRepository(ProductEntity);
 
-                const product = await productRepository.findOne({
-                    where: { id: Number.parseInt(body.idProduct) }
-                });
+                let product: any;
+
+                if(productId) {
+                    product = await productRepository.findOne({
+                        where: { id: Number.parseInt(productId) }
+                    });
+                }
 
                 const orderId: number = Number.parseInt(id);
 
                 const order: any = {
-                    description: product.name,
-                    value: product.value,
-                    amount: body.amount,
-                    isCancelled: body.show,
+                    description: product?.name,
+                    value: product?.value,
+                    amount: body?.amount,
+                    isCancelled: body?.isCancelled,
                     updatedBy: user.id,
                 };
 
