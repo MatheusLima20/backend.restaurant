@@ -22,6 +22,7 @@ export const OrderController = {
                 where: {
                     fkPlatform: platform.id,
                     fkTable: Number.parseInt(id),
+                    isOpen: true,
                     isCancelled: false,
                 },
                 order: { createdAt: 'DESC' }
