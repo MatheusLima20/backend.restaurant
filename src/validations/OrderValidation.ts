@@ -27,6 +27,7 @@ export const OrderValidation = {
             productId: Joi.number().allow().positive(),
             amount: Joi.number().allow().positive(),
             isCancelled: Joi.bool().allow(),
+            isOpen: Joi.bool().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),

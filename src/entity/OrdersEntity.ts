@@ -26,7 +26,7 @@ export class OrderEntity {
     @Column({ type:'float', nullable: true })
     value: number;
 
-    @Column({ nullable: true })
+    @Column({ type:'float', nullable: true })
     amount: number;
 
     @Column({ name: "tracking_code", nullable: true })

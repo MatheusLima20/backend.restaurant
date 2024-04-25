@@ -111,6 +111,20 @@ export const BoxDayController = {
             dataSource.transaction(async (transactionalEntityManager) => {
 
                 const boxDayEntity = transactionalEntityManager.getRepository(BoxDayEntity);
+                const orderEntity = dataSource.getRepository(OrderEntity);
+
+                const order = await orderEntity.findOne({
+                    where: { fkPlatform: platform.id, isOpen: true }
+                });
+
+                if(order) {
+                    return response.status(404).json(
+                        {
+                            message: "Ainda existem pedido(s) aberto(s)!",
+                            error: "Ainda existem pedido(s) aberto(s)!"
+                        }
+                    );
+                }
 
                 const boxDayOpen = await boxDayEntity.find({
                     where: { fkPlatform: platform.id, isOpen: true }

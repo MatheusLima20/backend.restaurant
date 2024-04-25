@@ -128,6 +128,7 @@ export const OrderController = {
                     value: product?.value,
                     amount: body?.amount,
                     isCancelled: body?.isCancelled,
+                    isOpen: body?.isOpen,
                     updatedBy: user.id,
                 };
 
