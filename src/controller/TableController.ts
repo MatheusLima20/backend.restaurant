@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { dataSource } from "../../ormconfig";
 import { TableEntity } from "../entity/TableEntity ";
 import { TableView } from "../views/TableView";
+import { OrderEntity } from "../entity/OrdersEntity";
 
 export const TableController = {
 
@@ -13,12 +14,32 @@ export const TableController = {
 
         try {
             const tableRepository = dataSource.getRepository(TableEntity);
+            const orderEntity = dataSource.getRepository(OrderEntity);
 
             const table = await tableRepository.find({
                 where: { fkPlatform: platform.id },
             });
 
-            const tableView = TableView.get(table)
+            const isOcuppied: boolean [] = [];
+            
+            if (table.length) {
+                
+                for (let index = 0; index < table.length; index++) {
+                    const element = table[index];
+                    const orders = await orderEntity.find({
+                        where: {
+                            fkPlatform: platform.id,
+                            fkTable: element.id,
+                            isOpen: true,
+                            isCancelled: false,
+                        }
+                    });
+                    isOcuppied.push(orders.length !== 0);            
+                }
+
+            }
+
+            const tableView = TableView.get(table, isOcuppied);
 
             return response.json({
                 data: tableView,
