@@ -105,6 +105,7 @@ export const OrderController = {
         const user = auth.user;
 
         const productId = body.productId;
+        const add: boolean = body.add;
 
         try {
 
@@ -113,28 +114,49 @@ export const OrderController = {
                 const orderEntity = transactionalEntityManager.getRepository(OrderEntity);
                 const productRepository = dataSource.getRepository(ProductEntity);
 
-                let product: any;
+                const orderId: number = Number.parseInt(id);
+                const oldOrder = await orderEntity.findOne({
+                    where: { id: orderId }
+                });
 
-                if(productId) {
+                let product: any;
+                let amount = body?.amount;
+
+                if (productId) {
                     product = await productRepository.findOne({
                         where: { id: Number.parseInt(productId) }
                     });
+
+                    const verifyAmount = oldOrder.amount === 0 && amount < 0;
+
+                    if (verifyAmount) {
+                        return response.status(404).json(
+                            {
+                                message: "A quantidade para cancelar é menor do que a registrada.",
+                                error: "Quantidade menor."
+                            }
+                        );
+                    }
+
+                    if (amount < 0) {
+                        amount = oldOrder.amount + amount;
+                    }
+
                 }
 
-                const orderId: number = Number.parseInt(id);
+                if(add) {
+                    amount = oldOrder.amount + amount;
+                }
 
                 const order: any = {
                     description: product?.name,
                     value: product?.value,
-                    amount: body?.amount,
+                    amount: amount,
                     isCancelled: body?.isCancelled,
                     isOpen: body?.isOpen,
                     updatedBy: user.id,
                 };
 
-                const oldOrder = await orderEntity.findOne({
-                    where: { id: orderId }
-                });
 
                 const spendingMerger = orderEntity.merge(oldOrder, order)
 
@@ -151,7 +173,7 @@ export const OrderController = {
 
             return response.status(404).json(
                 {
-                    message: "Erro ao salvar gastos", error: error
+                    message: "Erro ao salvar prato " + error, error: error
                 }
             );
 

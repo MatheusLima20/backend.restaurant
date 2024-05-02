@@ -25,9 +25,10 @@ export const OrderValidation = {
 
         [Segments.BODY]: {
             productId: Joi.number().allow().positive(),
-            amount: Joi.number().allow().positive(),
+            amount: Joi.number().allow(),
             isCancelled: Joi.bool().allow(),
             isOpen: Joi.bool().allow(),
+            add: Joi.bool().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),
