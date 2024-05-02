@@ -127,24 +127,25 @@ export const OrderController = {
                         where: { id: Number.parseInt(productId) }
                     });
 
-                    const verifyAmount = oldOrder.amount === 0 && amount < 0;
+                    if (amount < 0) {
+                        amount = oldOrder.amount + amount;
+                    }
+
+                    const verifyAmount = amount < 1;
 
                     if (verifyAmount) {
                         return response.status(404).json(
                             {
-                                message: "A quantidade para cancelar é menor do que a registrada.",
+                                message: "A quantidade para cancelar é maior ou " +
+                                    "igual a registrada.",
                                 error: "Quantidade menor."
                             }
                         );
                     }
 
-                    if (amount < 0) {
-                        amount = oldOrder.amount + amount;
-                    }
-
                 }
 
-                if(add) {
+                if (add) {
                     amount = oldOrder.amount + amount;
                 }
 
