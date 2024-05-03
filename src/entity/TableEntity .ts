@@ -16,6 +16,9 @@ export class TableEntity {
     @Column({ nullable: true })
     name: string;
 
+    @Column({ name: "is_active", default: true })
+    isActive: boolean;
+
     @Column({ name: "fk_platform" })
     fkPlatform: number;    
 

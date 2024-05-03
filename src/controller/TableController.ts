@@ -17,7 +17,7 @@ export const TableController = {
             const orderEntity = dataSource.getRepository(OrderEntity);
 
             const table = await tableRepository.find({
-                where: { fkPlatform: platform.id },
+                where: { fkPlatform: platform.id, isActive: true },
             });
 
             const isOcuppied: boolean [] = [];
@@ -66,7 +66,7 @@ export const TableController = {
             const tableRepository = dataSource.getRepository(TableEntity);
 
             const table = await tableRepository.find({
-                where: { fkPlatform: platform.id }
+                where: { fkPlatform: platform.id, isActive: true }
             });
 
             const name = "Mesa: " + (table.length + 1);
@@ -99,29 +99,31 @@ export const TableController = {
     patch: async (request: Request, response: Response) => {
 
         const { id } = request.params;
+        const body = request.body;
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
 
         try {
 
-            const boxDayId: number = Number.parseInt(id);
+            const tableId: number = Number.parseInt(id);
 
             dataSource.transaction(async (transactionalEntityManager) => {
 
-                const boxDayEntity = transactionalEntityManager.getRepository(TableEntity);
+                const tableEntity = transactionalEntityManager.getRepository(TableEntity);
 
-                const oldBoxDay = await boxDayEntity.findOne({
-                    where: { id: boxDayId, fkPlatform: platform.id }
+                const oldTable = await tableEntity.findOne({
+                    where: { id: tableId, fkPlatform: platform.id }
                 });
 
-                const boxDay = {
+                const table = {
+                    isActive: body.isActive,
                     updatedBy: user.id
                 };
 
-                const spendingMerger = boxDayEntity.merge(oldBoxDay, boxDay)
+                const spendingMerger = tableEntity.merge(oldTable, table)
 
-                await boxDayEntity.update(boxDayId, spendingMerger);
+                await tableEntity.update(tableId, spendingMerger);
 
                 return response.json({
                     message: "Caixa atualizado com sucesso!"
