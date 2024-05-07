@@ -33,11 +33,11 @@ export const OrderValidation = {
 
     }, { abortEarly: false, messages: messages, }),
 
-    patchDelivered: celebrate({
+    patchChangeTableOrders: celebrate({
 
-        [Segments.BODY]: {
-            id: Joi.number().required().positive(),
-            costumerId: Joi.number().required().positive(),
+        [Segments.PARAMS]: {
+            idTable1: Joi.number().required().positive(),
+            idTable2: Joi.number().required().positive(),
         }
 
     }, { abortEarly: false, messages: messages, }),

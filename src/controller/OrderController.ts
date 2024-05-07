@@ -182,4 +182,72 @@ export const OrderController = {
 
     },
 
+    patchChangeTableOrders: async (request: Request, response: Response) => {
+
+        const { idTable1, idTable2 } = request.params;
+        const body = request.body;
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+
+            const table1Id: number = Number.parseInt(idTable1);
+            const table2Id: number = Number.parseInt(idTable2);
+
+            dataSource.transaction(async (transactionalEntityManager) => {
+
+                const ordersEntity = transactionalEntityManager.getRepository(OrderEntity);
+
+                const ordersTable1 = await ordersEntity.find({
+                    where: {
+                        fkTable: table1Id,
+                        fkPlatform: platform.id,
+                        isOpen: true,
+                        isCancelled: false,
+                    }
+                });
+                
+                if(!ordersTable1.length){
+                    return response.status(404).json(
+                        {
+                            message: "Mesa sem pedidos.", 
+                            error: "Erro na troca "
+                        }
+                    );
+                }
+
+                const table = {
+                    fkTable: table2Id,
+                    updatedBy: user.id
+                };
+
+                for (let index = 0; index < ordersTable1.length; index++) {
+                    const oldOrder = ordersTable1[index];
+
+                    const spendingMerger = ordersEntity.merge(oldOrder, table)
+                    
+                    await ordersEntity.update(oldOrder.id, spendingMerger);
+
+                }
+
+                return response.json({
+                    message: "Caixa atualizado com sucesso!"
+                });
+
+            });
+
+
+        } catch (error) {
+
+            return response.status(404).json(
+                {
+                    message: "Erro ao salvar caixa.", error: error
+                }
+            );
+
+        }
+
+    },
+
 };

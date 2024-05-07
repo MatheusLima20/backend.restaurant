@@ -27,5 +27,12 @@ routes.patch(
     OrderController.patch
 );
 
+routes.patch(
+    "/order/:idTable1/:idTable2",
+    VerifyJWTMiddleware.verifyJWT,
+    OrderValidation.patchChangeTableOrders,
+    OrderController.patchChangeTableOrders
+);
+
 
 module.exports = routes;
