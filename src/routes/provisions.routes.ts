@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { VerifyJWTMiddleware } from "../middlwares/validations/VerifyJWTMiddleware";
-import { ProductController } from "../controller/ProductController";
-import { ProductValidation } from "../validations/ProductValidation";
+import { ProvisionsController } from "../controller/ProvisionsController";
+import { ProductValidation as ProvisionsValidation } from "../validations/ProductValidation";
 
 
 const routes = Router();
@@ -9,27 +9,27 @@ const routes = Router();
 routes.get(
     "/product/",
     VerifyJWTMiddleware.verifyJWT,
-    ProductController.get
+    ProvisionsController.get
 );
 
 routes.get(
     "/plates/",
     VerifyJWTMiddleware.verifyJWT,
-    ProductController.getPlates
+    ProvisionsController.getPlates
 );
 
 routes.post(
     "/product/",
     VerifyJWTMiddleware.verifyJWT,
-    ProductValidation.store,
-    ProductController.store
+    ProvisionsValidation.store,
+    ProvisionsController.store
 );
 
 routes.patch(
     "/product/:id",
     VerifyJWTMiddleware.verifyJWT,
-    ProductValidation.patch,
-    ProductController.patch
+    ProvisionsValidation.patch,
+    ProvisionsController.patch
 );
 
 

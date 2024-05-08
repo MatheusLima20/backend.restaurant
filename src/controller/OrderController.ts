@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { dataSource } from "../../ormconfig";
 import { OrderEntity } from "../entity/OrdersEntity";
-import { ProductEntity } from "../entity/ProductEntity";
+import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { BoxDayEntity } from "../entity/BoxDayEntity";
 import { OrderView } from "../views/OrderView";
 
@@ -53,7 +53,7 @@ export const OrderController = {
 
             const orderRepository = dataSource.getRepository(OrderEntity);
             const boxDayRepository = dataSource.getRepository(BoxDayEntity);
-            const productRepository = dataSource.getRepository(ProductEntity);
+            const productRepository = dataSource.getRepository(ProvisionsEntity);
 
             const boxDay = await boxDayRepository.findOne({
                 where: { fkPlatform: platform.id, isOpen: true }
@@ -112,7 +112,7 @@ export const OrderController = {
             dataSource.transaction(async (transactionalEntityManager) => {
 
                 const orderEntity = transactionalEntityManager.getRepository(OrderEntity);
-                const productRepository = dataSource.getRepository(ProductEntity);
+                const productRepository = dataSource.getRepository(ProvisionsEntity);
 
                 const orderId: number = Number.parseInt(id);
                 const oldOrder = await orderEntity.findOne({

@@ -9,8 +9,8 @@ import {
 } from "typeorm";
 import { UnitMeasurementEntity } from "./UnitMeasurementEntity";
 
-@Entity({ name: "product" })
-export class ProductEntity {
+@Entity({ name: "provisions" })
+export class ProvisionsEntity {
     @PrimaryGeneratedColumn({ type: "bigint" })
     id: number;
 

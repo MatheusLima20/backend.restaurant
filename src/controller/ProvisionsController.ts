@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { dataSource } from "../../ormconfig";
-import { ProductEntity } from "../entity/ProductEntity";
+import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { UnitMeasurementEntity } from "../entity/UnitMeasurementEntity";
-import { ProductView } from "../views/ProductView";
+import { ProductView } from "../views/ProvisionsView";
 
-export const ProductController = {
+export const ProvisionsController = {
 
     get: async (request: Request, response: Response) => {
 
@@ -13,7 +13,7 @@ export const ProductController = {
         const platform = user.platform;
 
         try {
-            const productRepository = dataSource.getRepository(ProductEntity);
+            const productRepository = dataSource.getRepository(ProvisionsEntity);
 
             const products = await productRepository.find({
                 where: {fkPlatform: platform.id},
@@ -42,7 +42,7 @@ export const ProductController = {
         const platform = user.platform;
 
         try {
-            const productRepository = dataSource.getRepository(ProductEntity);
+            const productRepository = dataSource.getRepository(ProvisionsEntity);
 
             const products = await productRepository.find({
                 where: { fkPlatform: platform.id, show: true },
@@ -66,7 +66,7 @@ export const ProductController = {
 
     store: async (request: Request, response: Response) => {
 
-        const body: ProductEntity = request.body;
+        const body: ProvisionsEntity = request.body;
 
         const auth = request.auth;
 
@@ -76,7 +76,7 @@ export const ProductController = {
         
         try {
 
-            const productRepository = dataSource.getRepository(ProductEntity);
+            const productRepository = dataSource.getRepository(ProvisionsEntity);
             const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
             
             const unitMeasurement = await unitMeasurementRepository.findOne({
@@ -126,7 +126,7 @@ export const ProductController = {
 
             dataSource.transaction(async (transactionalEntityManager) => {
 
-            const productEntity = transactionalEntityManager.getRepository(ProductEntity);
+            const productEntity = transactionalEntityManager.getRepository(ProvisionsEntity);
             const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
             
             const unitMeasurement = await unitMeasurementRepository.findOne({

@@ -1,7 +1,7 @@
-import { ProductEntity } from "../entity/ProductEntity";
+import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 
 export const ProductView = {
-    get: (products: Array<ProductEntity>) => {
+    get: (products: Array<ProvisionsEntity>) => {
         
         return products.map((product) => {
 
