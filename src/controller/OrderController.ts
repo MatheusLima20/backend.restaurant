@@ -207,11 +207,29 @@ export const OrderController = {
                         isCancelled: false,
                     }
                 });
+
+                const ordersTable2 = await ordersEntity.find({
+                    where: {
+                        fkTable: table2Id,
+                        fkPlatform: platform.id,
+                        isOpen: true,
+                        isCancelled: false,
+                    }
+                });
                 
                 if(!ordersTable1.length){
                     return response.status(404).json(
                         {
                             message: "Mesa sem pedidos.", 
+                            error: "Erro na troca "
+                        }
+                    );
+                }
+
+                if(ordersTable2.length) {
+                    return response.status(404).json(
+                        {
+                            message: "A Mesa já está ocupada.", 
                             error: "Erro na troca "
                         }
                     );

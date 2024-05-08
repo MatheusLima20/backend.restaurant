@@ -32,10 +32,12 @@ export const TableValidation = {
     patch: celebrate({
 
         [Segments.PARAMS]: {
-            id: Joi.number().required().positive(),
+            id: Joi.number().required().positive(),            
+        },
+        [Segments.BODY]: {
             isActive: Joi.boolean().allow(),
             name: Joi.string().allow(),
-        },
+        }
 
     }, { abortEarly: false, messages: messages, }),
 

@@ -104,6 +104,9 @@ export const TableController = {
         const user = auth.user;
         const platform = user.platform;
 
+        const name = body.name;
+        const isActive = body.isActive;
+
         try {
 
             const tableId: number = Number.parseInt(id);
@@ -111,13 +114,33 @@ export const TableController = {
             dataSource.transaction(async (transactionalEntityManager) => {
 
                 const tableEntity = transactionalEntityManager.getRepository(TableEntity);
+                const orderEntity = transactionalEntityManager.getRepository(OrderEntity);
 
                 const oldTable = await tableEntity.findOne({
                     where: { id: tableId, fkPlatform: platform.id }
                 });
 
+                const ordersTable = await orderEntity.find({
+                    where: {
+                        fkTable: tableId,
+                        fkPlatform: platform.id,
+                        isCancelled: false,
+                        isOpen: true,
+                    }
+                });
+
+                if(!isActive && ordersTable.length !== 0) {
+                    return response.status(404).json(
+                        {
+                            message: "Existe(m) pedido(s) aberto(s) na mesa.", 
+                            error: "Mesa"
+                        }
+                    );
+                }
+
                 const table = {
-                    isActive: body.isActive,
+                    name: name,
+                    isActive: isActive,
                     updatedBy: user.id
                 };
 
@@ -126,7 +149,7 @@ export const TableController = {
                 await tableEntity.update(tableId, spendingMerger);
 
                 return response.json({
-                    message: "Caixa atualizado com sucesso!"
+                    message: "Mesa atualizada com sucesso!"
                 });
 
             });
@@ -136,7 +159,7 @@ export const TableController = {
 
             return response.status(404).json(
                 {
-                    message: "Erro ao salvar caixa.", error: error
+                    message: "Erro ao salvar mesa.", error: error
                 }
             );
 
