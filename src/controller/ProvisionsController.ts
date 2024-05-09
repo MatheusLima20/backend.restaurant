@@ -16,7 +16,7 @@ export const ProvisionsController = {
             const productRepository = dataSource.getRepository(ProvisionsEntity);
 
             const products = await productRepository.find({
-                where: {fkPlatform: platform.id},
+                where: { fkPlatform: platform.id },
                 relations: ['fkUnitMeasurement']
             });
 
@@ -72,17 +72,17 @@ export const ProvisionsController = {
 
         const user = auth.user;
 
-        const platform = user.platform;        
-        
+        const platform = user.platform;
+
         try {
 
             const productRepository = dataSource.getRepository(ProvisionsEntity);
             const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
-            
+
             const unitMeasurement = await unitMeasurementRepository.findOne({
-                where: {name: body.fkUnitMeasurement as any}
+                where: { name: body.fkUnitMeasurement as any }
             });
-            
+
             const product: any = {
                 name: body.name,
                 fkPlatform: platform.id,
@@ -93,20 +93,20 @@ export const ProvisionsController = {
                 fkUnitMeasurement: unitMeasurement,
                 createdBy: user.id,
             }
-            
+
             await productRepository.save(product);
-            
+
             return response.json(
                 {
                     message: "Produto salvo com sucesso!",
                 }
             );
 
-            
+
         } catch (error) {
-            
+
             return response.status(404).json(
-                {message: "Erro ao cadastrar o produto!", error}
+                { message: "Erro ao cadastrar o produto!", error }
             );
 
         }
@@ -121,47 +121,54 @@ export const ProvisionsController = {
 
         const auth = request.auth;
         const user = auth.user;
-        
+        const add = body.add;
+
         try {
 
             dataSource.transaction(async (transactionalEntityManager) => {
 
-            const productEntity = transactionalEntityManager.getRepository(ProvisionsEntity);
-            const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
-            
-            const unitMeasurement = await unitMeasurementRepository.findOne({
-                where: {name: body.fkUnitMeasurement as any}
+                const productEntity = transactionalEntityManager.getRepository(ProvisionsEntity);
+                const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
+
+                const unitMeasurement = await unitMeasurementRepository.findOne({
+                    where: { name: body.fkUnitMeasurement as any }
+                });
+
+                const productId: number = Number.parseInt(id);
+
+                const oldProduct = await productEntity.findOne({
+                    where: { id: productId }
+                });
+
+                let amount: number = body.amount;
+
+                if (add) {
+                    amount = oldProduct.amount + amount;
+                }
+
+                const product = {
+                    name: body.name,
+                    value: body.value,
+                    amount: amount,
+                    isActive: body.isActive,
+                    show: body.show,
+                    fkUnitMeasurement: unitMeasurement,
+                    updatedBy: user.id
+                };
+
+                const spendingMerger = productEntity.merge(oldProduct, product)
+
+                await productEntity.update(productId, spendingMerger);
+
+                return response.json({
+                    message: "Produtos alterados com sucesso!"
+                });
+
             });
 
-            const productId: number = Number.parseInt(id);
 
-            const product = {
-                name: body.name,
-                value: body.value,
-                amount: body.amount,
-                isActive: body.isActive,
-                show: body.show,
-                fkUnitMeasurement: unitMeasurement,
-                updatedBy: user.id
-            };
-
-            const oldProduct = await productEntity.findOne({
-                where: {id: productId}
-            });
-            
-            const spendingMerger = productEntity.merge(oldProduct, product)
-            
-            await productEntity.update(productId ,spendingMerger);
-            
-            return response.json({
-                message: "Produtos alterados com sucesso!"
-            });
-
-            });
-            
-            
         } catch (error) {
-            
+
             return response.status(404).json(
                 {
                     message: "Erro ao salvar gastos", error: error

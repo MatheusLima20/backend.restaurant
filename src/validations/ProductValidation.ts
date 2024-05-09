@@ -38,9 +38,10 @@ export const ProductValidation = {
             name: Joi.string().allow(),
             value: Joi.number().allow(),
             amount: Joi.number().allow(),
-            unitMeasurement: Joi.string().required(),
+            unitMeasurement: Joi.string().allow(),
             isActive: Joi.boolean().allow(),
             show: Joi.boolean().allow(),
+            add: Joi.boolean().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),
