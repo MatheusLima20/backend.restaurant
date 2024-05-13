@@ -13,6 +13,13 @@ routes.get(
     OrderController.getByTable
 );
 
+routes.get(
+    "/order-boxday/:id",
+    VerifyJWTMiddleware.verifyJWT,
+    OrderValidation.getByBoxDay,
+    OrderController.getByBoxDay
+);
+
 routes.post(
     "/order/",
     VerifyJWTMiddleware.verifyJWT,

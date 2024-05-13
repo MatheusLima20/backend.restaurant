@@ -9,6 +9,12 @@ export const OrderValidation = {
         }
     }, { abortEarly: false, messages: messages, }),
 
+    getByBoxDay: celebrate({
+        [Segments.PARAMS]: {
+            id: Joi.number().required().positive(),
+        }
+    }, { abortEarly: false, messages: messages, }),
+
     store: celebrate({
         [Segments.BODY]: {
             idProduct: Joi.number().required().positive(),

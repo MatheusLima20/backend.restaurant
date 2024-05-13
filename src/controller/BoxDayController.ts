@@ -14,13 +14,39 @@ export const BoxDayController = {
 
         try {
             const boxDayRepository = dataSource.getRepository(BoxDayEntity);
+            const orderEntity = dataSource.getRepository(OrderEntity);
 
             const boxDay = await boxDayRepository.find({
                 where: { fkPlatform: platform.id },
-                order: {createdAt : 'DESC'}
+                order: {createdAt : 'DESC'},
+                take: 20
             });
 
-            const boxDayView = BoxDayView.get(boxDay)
+            let totalBoxs = [];
+
+            for (let index = 0; index < boxDay.length; index++) {
+
+                let totalOrders = 0;
+                
+                const orders = await orderEntity.find({
+                    where: {
+                        fkBoxDay: boxDay[index].id,
+                        isCancelled: false,
+                        fkPlatform: platform.id,
+                    }
+                });
+
+                for (let index = 0; index < orders.length; index++) {
+                    const order = orders[index];
+                    const totalOrder = order.value * order.amount;
+                    totalOrders = totalOrders + totalOrder;
+                }
+
+                totalBoxs.push(totalOrders);
+                
+            }
+
+            const boxDayView = BoxDayView.get(boxDay, totalBoxs)
 
             return response.json({
                 data: boxDayView,

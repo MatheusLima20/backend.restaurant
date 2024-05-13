@@ -42,6 +42,40 @@ export const OrderController = {
 
     },
 
+    getByBoxDay: async (request: Request, response: Response) => {
+
+        const { id } = request.params;
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+            const orderRepository = dataSource.getRepository(OrderEntity);
+
+            const order = await orderRepository.find({
+                where: {
+                    fkPlatform: platform.id,
+                    fkBoxDay: Number.parseInt(id),
+                    isCancelled: false,
+                },
+                order: { createdAt: 'DESC' }
+            });
+
+            const orderView = OrderView.getByBoxDay(order);
+
+            return response.json({
+                data: orderView,
+                message: "Dados encontrados com sucesso.",
+            });
+        } catch (error) {
+            return response.status(404).json({
+                message: error, error
+            });
+        }
+
+    },
+
     store: async (request: Request, response: Response) => {
 
         const body = request.body;
