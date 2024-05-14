@@ -17,6 +17,7 @@ export const ProvisionsController = {
 
             const products = await productRepository.find({
                 where: { fkPlatform: platform.id },
+                order: { createdAt: 'desc' },
                 relations: ['fkUnitMeasurement']
             });
 

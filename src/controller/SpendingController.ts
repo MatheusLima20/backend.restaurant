@@ -15,7 +15,8 @@ export const SpendingController = {
             const spendingRepository = dataSource.getRepository(SpendingEntity);
 
             const spending = await spendingRepository.find({
-                where: {fkPlatform: platform.id}
+                where: { fkPlatform: platform.id },
+                order: { createdAt: 'DESC' }
             });
 
             const spendingView = SpendingView.get(spending);
@@ -39,7 +40,7 @@ export const SpendingController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
-        
+
         try {
 
             const spendingEntity = dataSource.getRepository(SpendingEntity);
@@ -51,16 +52,16 @@ export const SpendingController = {
                 fkPlatform: platform.id,
                 createdBy: user.id
             };
-            
+
             await spendingEntity.save(spending);
-            
+
             return response.json({
                 message: "Gastos salvos com sucesso!"
             });
-            
-            
+
+
         } catch (error) {
-            
+
             return response.status(404).json(
                 {
                     message: "Erro ao salvar gastos", error: error
@@ -79,39 +80,39 @@ export const SpendingController = {
 
         const auth = request.auth;
         const user = auth.user;
-        
+
         try {
 
             dataSource.transaction(async (transactionalEntityManager) => {
 
-            const spendingEntity = transactionalEntityManager.getRepository(SpendingEntity);
+                const spendingEntity = transactionalEntityManager.getRepository(SpendingEntity);
 
-            const spendingId: number = Number.parseInt(id);
+                const spendingId: number = Number.parseInt(id);
 
-            const spending = {
-                name: body.name,
-                value: body.value,
-                amount: body.amount,
-                updatedBy: user.id
-            };
+                const spending = {
+                    name: body.name,
+                    value: body.value,
+                    amount: body.amount,
+                    updatedBy: user.id
+                };
 
-            const oldSpending = await spendingEntity.findOne({
-                where: {id: spendingId}
+                const oldSpending = await spendingEntity.findOne({
+                    where: { id: spendingId }
+                });
+
+                const spendingMerger = spendingEntity.merge(oldSpending, spending)
+
+                await spendingEntity.update(spendingId, spendingMerger);
+
+                return response.json({
+                    message: "Gastos alterados com sucesso!"
+                });
+
             });
-            
-            const spendingMerger = spendingEntity.merge(oldSpending, spending)
-            
-            await spendingEntity.update(spendingId ,spendingMerger);
-            
-            return response.json({
-                message: "Gastos alterados com sucesso!"
-            });
 
-            });
-            
-            
+
         } catch (error) {
-            
+
             return response.status(404).json(
                 {
                     message: "Erro ao salvar gastos", error: error
