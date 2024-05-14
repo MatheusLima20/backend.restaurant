@@ -5,11 +5,11 @@ dotenv.config();
 
 export const dataSource = new DataSource({
     type: 'mysql',
-    host: 'localhost',
+    host: process.env.DB_HOST,
     port: 3306,
-    username: 'root',
-    password: '92725323',
-    database: 'db_restaurant',
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     synchronize: true,
     logging: false,
     entities: [process.env.PATH_ENTITY],
