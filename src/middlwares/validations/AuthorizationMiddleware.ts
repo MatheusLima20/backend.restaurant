@@ -95,7 +95,7 @@ export const Authorization = {
         } catch (error) {
             return response.status(404).json({
                 error,
-                message: "Não foi possivel validar o login.",
+                message: '"Não foi possivel validar o login."',
             });
         }
     },

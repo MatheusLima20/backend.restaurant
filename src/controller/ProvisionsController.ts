@@ -11,7 +11,7 @@ export const ProvisionsController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
-
+        
         try {
             const productRepository = dataSource.getRepository(ProvisionsEntity);
 
