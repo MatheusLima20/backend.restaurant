@@ -11,7 +11,7 @@ import { cpf } from "cpf-cnpj-validator";
 import { CompanyEntity } from "../entity/CompanyEntity";
 import { getAddressByCEP } from "cep-address-finder";
 import { StringFormatter } from "../utils/string.formatter/string.formatter";
-import { dataSource } from "../../ormconfig";
+import { dataSource } from "../data.source";
 
 export const UserController = {
     verifyLogin: async (request: Request, response: Response) => {

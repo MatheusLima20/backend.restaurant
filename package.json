@@ -38,7 +38,7 @@
     },
     "scripts": {
         "dev": "nodemon src/restaurant.ts",
-        "start": "node build/src/restaurant.js",
+        "start": "node build/restaurant.js",
         "build": "tsc --build",
         "clean": "tsc --build --clean"
     }

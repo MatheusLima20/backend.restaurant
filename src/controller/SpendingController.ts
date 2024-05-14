@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { dataSource } from "../../ormconfig";
+import { dataSource } from "../data.source";
 import { SpendingEntity } from "../entity/SpendingEntity";
 import { SpendingView } from "../views/SpendingView";
 

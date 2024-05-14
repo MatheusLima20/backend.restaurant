@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { dataSource } from "../../ormconfig";
+import { dataSource } from "../data.source";
 import { OrderEntity } from "../entity/OrdersEntity";
 import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { BoxDayEntity } from "../entity/BoxDayEntity";

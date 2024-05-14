@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ProfileEntity } from "../entity/ProfileEntity";
 import { ProfileView } from "../views/ProfileView";
-import { dataSource } from "../../ormconfig";
+import { dataSource } from "../data.source";
 
 export const ProfileController = {
     getByUserId: async (request: Request, response: Response) => {

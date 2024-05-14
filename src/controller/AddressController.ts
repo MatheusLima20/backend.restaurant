@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import { getRepository } from "typeorm";
 import { AddressEntity } from "../entity/AddressEntity";
 import { AddressView } from "../views/AddressView";
-import { dataSource } from "../../ormconfig";
+import { dataSource } from "../data.source";
 
 
 export const AddressController = {

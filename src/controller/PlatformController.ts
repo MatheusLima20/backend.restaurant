@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { getRepository } from "typeorm";
 import { CompanyEntity } from "../entity/CompanyEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
 import { StringFormatter } from "../utils/string.formatter/string.formatter";
+import { dataSource } from "../data.source";
 
 
 export const PlatformController = {
@@ -15,8 +15,8 @@ export const PlatformController = {
 
         try {
 
-            const platformEntity = getRepository(PlatformEntity);
-            const companyEntity = getRepository(CompanyEntity);
+            const platformEntity = dataSource.getRepository(PlatformEntity);
+            const companyEntity = dataSource.getRepository(CompanyEntity);
 
             const company = await companyEntity.findOne({
                 where: {

@@ -6,7 +6,7 @@ import { ContentView } from "../views/ContentView";
 import { Archive } from "../utils/file/archive";
 import { PlatformEntity } from "../entity/PlatformEntity";
 import { CompanyEntity } from "../entity/CompanyEntity";
-import { dataSource } from "../../ormconfig";
+import { dataSource } from "../data.source";
 
 export const ContentController = {
     upload: (request: Request, response: Response, next: NextFunction) => {

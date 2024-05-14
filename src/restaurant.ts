@@ -5,7 +5,7 @@ import routes from "./routes";
 import { customErrors } from "./middlwares/CustomErrors/CelebrationMiddleware";
 import * as cors from "cors";
 import * as http from "http";
-import { dataSource } from "../ormconfig";
+import { dataSource } from "./data.source";
 
 const host: string = process.env.HOST_NAME;
 const port: number = Number.parseInt(process.env.PORT);
