@@ -31,7 +31,9 @@ export const UserController = {
         }
     },
 
-    getCollaborators: async (request: Request, response: Response) => {
+    getUsers: async (request: Request, response: Response) => {
+        const { userType } = request.params;
+
         const auth = request.auth;
 
         const authUser = auth.user;
@@ -39,95 +41,21 @@ export const UserController = {
 
         try {
             const userRepository = dataSource.getRepository(UserEntity);
-            const addressRepository = dataSource.getRepository(AddressEntity);
             const userTypeRepository = dataSource.getRepository(UserTypeEntity);
 
-            const userTypeADM = await userTypeRepository.findOne({
-                where: { name: "ADM" },
-            });
-
-            const collaborators: UserEntity[] = [];
-
-            const usersAdm = await userRepository.find({
-                where: {
-                    fkPlatform: platform.id as any,
-                    fkUserType: userTypeADM,
-                },
-                relations: ["fkUserType"],
-            });
-            const users = usersAdm.filter((value) => value.cpf !== null);
-
-            collaborators.push(...users);
-
-            const address: AddressEntity[] = [];
-
-            for (let i = 0; i < collaborators.length; i++) {
-                const addressData = await addressRepository.findOne({
-                    where: {
-                        fkUser: collaborators[i],
-                        main: true,
-                    },
-                    relations: ["fkState"],
-                });
-
-                address.push(addressData);
-            }
-
-            const userView = UserView.getCollaborator(collaborators, address);
-
-            return response.json({
-                data: userView,
-                message: "Usuários encontrados com sucesso.",
-            });
-        } catch (error) {
-            return response.status(404).json({
-                message: error,
-            });
-        }
-    },
-
-    getCustomers: async (request: Request, response: Response) => {
-        const auth = request.auth;
-        const authUser = auth.user;
-        const platform = authUser.platform;
-
-        try {
-            const userRepository = dataSource.getRepository(UserEntity);
-            const addressRepository = dataSource.getRepository(AddressEntity);
-            const userTypeRepository = dataSource.getRepository(UserTypeEntity);
-
-            const userType = await userTypeRepository.findOne({
-                where: { name: "CUSTOMER" },
-            });
-
-            const clientCompany = await userRepository.findOne({
-                where: { id: authUser.id, fkPlatform: platform.id as any },
-                relations: ["fkCompany"],
+            const userTypeDataBase = await userTypeRepository.findOne({
+                where: { name: userType as any },
             });
 
             const users = await userRepository.find({
                 where: {
-                    fkCompany: clientCompany.fkCompany,
-                    fkUserType: userType,
                     fkPlatform: platform.id as any,
+                    fkUserType: userTypeDataBase,
                 },
+                relations: ["fkUserType"],
             });
 
-            const address: AddressEntity[] = [];
-
-            for (let i = 0; i < users.length; i++) {
-                const addressData = await addressRepository.findOne({
-                    where: {
-                        fkUser: users[i],
-                        main: true,
-                    },
-                    relations: ["fkState"],
-                });
-
-                address.push(addressData);
-            }
-
-            const userView = UserView.getPhysicalPerson(users, address);
+            const userView = UserView.getUsers(users);
 
             return response.json({
                 data: userView,
@@ -480,10 +408,12 @@ export const UserController = {
         }
     },
 
-    /*storeEditor: async (request: Request, response: Response) => {
+    storeEmployee: async (request: Request, response: Response) => {
         const dataUser = request.body;
 
-        const platformCPFCNPJ = dataUser.platformCPFCNPJ;
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
 
         try {
             await dataSource.transaction(
@@ -495,22 +425,6 @@ export const UserController = {
                         transactionalEntityManager.getRepository(
                             UserTypeEntity
                         );
-                    const companyRepository =
-                        transactionalEntityManager.getRepository(CompanyEntity);
-
-                    const companyPlatform = await companyRepository.findOne({
-                        where: { cpfcnpj: platformCPFCNPJ },
-                    });
-
-                    const platformDataBase = await platformRepository.findOne({
-                        where: { fkCompany: companyPlatform },
-                    });
-
-                    if (!platformDataBase) {
-                        return response.status(404).json({
-                            message: "Plataforma não encontrada.",
-                        });
-                    }
 
                     const password = AdmLogin.hashPassword(dataUser.password);
 
@@ -533,7 +447,7 @@ export const UserController = {
                     }
 
                     const userType = await userTypeEntity.findOne({
-                        where: { name: "REDATOR" },
+                        where: { name: "WAITER" },
                     });
 
                     if (!userType) {
@@ -546,7 +460,7 @@ export const UserController = {
                         email: user.email,
                         name: user.name,
                         password: password,
-                        fkPlatform: platformDataBase,
+                        fkPlatform: platform.id as any,
                         fkUserType: userType,
                         isActive: false,
                     } as UserEntity);
@@ -561,7 +475,7 @@ export const UserController = {
                 message: error,
             });
         }
-    },*/
+    },
 
     storePlatform: async (request: Request, response: Response) => {
         const dataUser = request.body;
@@ -860,7 +774,7 @@ export const UserController = {
                     }
 
                     const addressDataBase = await addressEntity.findOne({
-                        where: { fkUser: userMerge.id as any},
+                        where: { fkUser: userMerge.id as any },
                     });
 
                     const addressMerge = addressEntity.merge(
@@ -898,7 +812,7 @@ export const UserController = {
 
         try {
             await dataSource.transaction(
-                async (transactionalEntityManager) => {}
+                async (transactionalEntityManager) => { }
             );
         } catch (error) {
             return response.status(404).json({

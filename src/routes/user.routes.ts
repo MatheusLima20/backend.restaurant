@@ -14,15 +14,10 @@ routes.get(
 );
 
 routes.get(
-    "/collaborators",
+    "/users/:userType",
     VerifyJWTMiddleware.verifyJWT,
-    UserController.getCollaborators
-);
-
-routes.get(
-    "/customers",
-    VerifyJWTMiddleware.verifyJWT,
-    UserController.getCustomers
+    UserValidation.getUsers,
+    UserController.getUsers
 );
 
 routes.get(
@@ -37,7 +32,6 @@ routes.get(
     UserValidation.cep,
     UserController.shearchCep
 );
-
 
 routes.post(
     "/login",
@@ -63,6 +57,13 @@ routes.post(
     VerifyJWTMiddleware.verifyJWT,
     UserValidation.storeADM,
     UserController.storeADM
+);
+
+routes.post(
+    "/employee",
+    VerifyJWTMiddleware.verifyJWT,
+    UserValidation.storeEmployee,
+    UserController.storeEmployee
 );
 
 routes.patch(

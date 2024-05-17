@@ -28,9 +28,9 @@ export const UserView = {
 
     },
 
-    getCollaborator: (users: Array<UserEntity>, address: Array<AddressEntity>) => {
+    getUsers: (users: Array<UserEntity>) => {
 
-        return users.map((user: UserEntity, index: number) => {
+        return users.map((user: UserEntity) => {
 
             return {
                 id: user.id,
@@ -38,15 +38,6 @@ export const UserView = {
                 cpf: user.cpf,
                 email: user.email,
                 userType: user.fkUserType.name,
-                address: {
-                    city: address[index].city,
-                    state: address[index].fkState.name,
-                    street: address[index].street,
-                    district: address[index].district,
-                    phoneNumber: address[index].phoneNumber.toString(),
-                    addressNumber: address[index].addressNumber,
-                    addressCodePostal: address[index].addressCodePostal.toString(),
-                }
             }
         });
 

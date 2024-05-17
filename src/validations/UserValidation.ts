@@ -9,6 +9,12 @@ export const UserValidation = {
         }
     }, { abortEarly: false, messages: messages, }),
 
+    getUsers: celebrate({
+        [Segments.PARAMS]: {
+            userType: Joi.string().required(),
+        }
+    }, { abortEarly: false, messages: messages, }),
+
     cep: celebrate({
         [Segments.PARAMS]: {
             cep: Joi.string().required().min(4),
@@ -59,13 +65,12 @@ export const UserValidation = {
         }
     }, { abortEarly: false, messages: messages, }),
 
-    storeEditor: celebrate({
+    storeEmployee: celebrate({
         [Segments.BODY]: {
             userName: Joi.string().required().min(10),
             email: Joi.string().email().required().min(5),
             password: Joi.string().required().min(6),
             passwordRepeated: Joi.string().required().min(6),
-            platformCPFCNPJ: Joi.string().required().min(11).max(14),
         }
     }, { abortEarly: false, messages: messages, }),
 
