@@ -1,6 +1,6 @@
 import { AddressEntity } from "../entity/AddressEntity";
 import { UserEntity } from "../entity/UserEntity";
-import { Address } from "../@types/express";
+import { Address } from "../types/express";
 
 
 export const UserView = {
