@@ -38,25 +38,28 @@ export const UserController = {
 
         const authUser = auth.user;
         const platform = authUser.platform;
-
+        
         try {
             const userRepository = dataSource.getRepository(UserEntity);
             const userTypeRepository = dataSource.getRepository(UserTypeEntity);
+
 
             const userTypeDataBase = await userTypeRepository.findOne({
                 where: { name: userType as any },
             });
 
+            const platformId = platform.id;
+            const userTypeId = userTypeDataBase.id
+            
             const users = await userRepository.find({
                 where: {
-                    fkPlatform: platform.id as any,
-                    fkUserType: userTypeDataBase,
+                    fkPlatform: platformId as any,
+                    fkUserType: userTypeId as any,
                 },
                 relations: ["fkUserType"],
             });
-
+            
             const userView = UserView.getUsers(users);
-
             return response.json({
                 data: userView,
                 message: "Usuários encontrados com sucesso.",
@@ -420,7 +423,6 @@ export const UserController = {
                 async (transactionalEntityManager) => {
                     const userEntity =
                         transactionalEntityManager.getRepository(UserEntity);
-                    const platformRepository = dataSource.getRepository(PlatformEntity);
                     const userTypeEntity =
                         transactionalEntityManager.getRepository(
                             UserTypeEntity
@@ -428,7 +430,7 @@ export const UserController = {
 
                     const password = AdmLogin.hashPassword(dataUser.password);
 
-                    const user = {
+                    const userBody = {
                         name: dataUser.userName,
                         email: dataUser.email,
                         password: password,
@@ -436,7 +438,7 @@ export const UserController = {
 
                     const emailStored = await userEntity.findOne({
                         where: {
-                            email: user.email,
+                            email: userBody.email,
                         },
                     });
 
@@ -457,12 +459,13 @@ export const UserController = {
                     }
 
                     await userEntity.save({
-                        email: user.email,
-                        name: user.name,
+                        email: userBody.email,
+                        name: userBody.name,
                         password: password,
                         fkPlatform: platform.id as any,
                         fkUserType: userType,
                         isActive: false,
+                        createdBy: user.id,
                     } as UserEntity);
 
                     return response.json({
@@ -570,6 +573,16 @@ export const UserController = {
                         });
                     }
 
+                    const stateData = await statesEntity.findOne({
+                        where: { uf: uf },
+                    });
+                    
+                    if (!stateData) {
+                        return response.status(404).json({
+                            message: "Estado não encontrado.",
+                        });
+                    }
+
                     const companyDataBase = await companyEntity.findOne({
                         where: { cpfcnpj: companyData.cpfcnpj },
                     });
@@ -614,17 +627,7 @@ export const UserController = {
                         password: password,
                         fkPlatform: platformStore,
                         fkUserType: userType,
-                    } as UserEntity);
-
-                    const stateData = await statesEntity.findOne({
-                        where: { uf: uf },
-                    });
-
-                    if (!stateData) {
-                        return response.status(404).json({
-                            message: "Estado não encontrado.",
-                        });
-                    }
+                    } as UserEntity);                    
 
                     const addressStore = await addressEntity.save({
                         addressCodePostal: addressDataBory.addressCodePostal,

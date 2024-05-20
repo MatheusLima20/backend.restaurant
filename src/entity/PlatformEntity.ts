@@ -12,7 +12,7 @@ import { CompanyEntity } from "./CompanyEntity";
 @Entity({ name: "platform" })
 export class PlatformEntity {
 
-    @PrimaryGeneratedColumn({ type: "bigint" })
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column()

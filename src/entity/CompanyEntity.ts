@@ -8,7 +8,7 @@ import {
 
 @Entity({ name: "companies" })
 export class CompanyEntity {
-    @PrimaryGeneratedColumn({ type: "bigint" })
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ name: "cpf_cnpj" })

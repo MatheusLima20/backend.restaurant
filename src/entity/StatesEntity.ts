@@ -8,7 +8,7 @@ import {
 
 @Entity({ name: "states" })
 export class StatesEntity {
-    @PrimaryGeneratedColumn({ type: "bigint" })
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column()

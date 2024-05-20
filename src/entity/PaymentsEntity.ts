@@ -13,7 +13,7 @@ import { UserEntity } from "./UserEntity";
 @Entity({ name: "payments" })
 export class PaymentsEntity {
 
-    @PrimaryGeneratedColumn({ type: "bigint" })
+    @PrimaryGeneratedColumn()
     id: number;
 
     @ManyToOne(() => OrderEntity, (order) => order.id)

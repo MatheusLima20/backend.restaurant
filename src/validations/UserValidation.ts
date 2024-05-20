@@ -67,8 +67,9 @@ export const UserValidation = {
 
     storeEmployee: celebrate({
         [Segments.BODY]: {
-            userName: Joi.string().required().min(10),
+            userName: Joi.string().required().min(5),
             email: Joi.string().email().required().min(5),
+            userType: Joi.string().required(),
             password: Joi.string().required().min(6),
             passwordRepeated: Joi.string().required().min(6),
         }

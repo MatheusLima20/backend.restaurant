@@ -14,7 +14,7 @@ import { UserEntity } from "./UserEntity";
 @Entity({ name: "address" })
 export class AddressEntity {
 
-    @PrimaryGeneratedColumn({ type: "bigint" })
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column()

@@ -11,7 +11,7 @@ import { UnitMeasurementEntity } from "./UnitMeasurementEntity";
 
 @Entity({ name: "provisions" })
 export class ProvisionsEntity {
-    @PrimaryGeneratedColumn({ type: "bigint" })
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ name: "name" })

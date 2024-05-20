@@ -4,10 +4,7 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
-    JoinColumn,
-    ManyToOne,
 } from "typeorm";
-import { UserEntity } from "./UserEntity";
 
 @Entity({ name: "content" })
 export class ContentEntity {
