@@ -38,7 +38,7 @@ export const UserController = {
 
         const authUser = auth.user;
         const platform = authUser.platform;
-        
+
         try {
             const userRepository = dataSource.getRepository(UserEntity);
             const userTypeRepository = dataSource.getRepository(UserTypeEntity);
@@ -49,16 +49,22 @@ export const UserController = {
             });
 
             const platformId = platform.id;
-            const userTypeId = userTypeDataBase.id
-            
+            const userTypeId = userTypeDataBase.id;
+
             const users = await userRepository.find({
-                where: {
-                    fkPlatform: platformId as any,
-                    fkUserType: userTypeId as any,
+                relations: {
+                    fkUserType: true
                 },
-                relations: ["fkUserType"],
+                where: {
+                    fkPlatform: {
+                        id: platformId
+                    },
+                    fkUserType: {
+                        id: userTypeId
+                    },
+                },
             });
-            
+
             const userView = UserView.getUsers(users);
             return response.json({
                 data: userView,
@@ -576,7 +582,7 @@ export const UserController = {
                     const stateData = await statesEntity.findOne({
                         where: { uf: uf },
                     });
-                    
+
                     if (!stateData) {
                         return response.status(404).json({
                             message: "Estado não encontrado.",
@@ -627,7 +633,7 @@ export const UserController = {
                         password: password,
                         fkPlatform: platformStore,
                         fkUserType: userType,
-                    } as UserEntity);                    
+                    } as UserEntity);
 
                     const addressStore = await addressEntity.save({
                         addressCodePostal: addressDataBory.addressCodePostal,
@@ -809,13 +815,69 @@ export const UserController = {
     },
 
     patch: async (request: Request, response: Response) => {
+
+        const { id } = request.params;
+
+        const body = request.body;
+
         const auth: RequestAuth = request.auth;
 
         const user: User = auth.user;
 
+        const platform = user.platform;
+
+        const userId = Number.parseInt(id);
+
         try {
             await dataSource.transaction(
-                async (transactionalEntityManager) => { }
+                async (transactionalEntityManager) => {
+
+                    const userEntity = transactionalEntityManager.getRepository(UserEntity);
+
+                    let password = body.password;
+                    let passwordRepeated = body.passwordRepeated;
+
+                    if (password) {
+
+                        const isSamePassword = password === passwordRepeated;
+
+                        if (!isSamePassword) {
+                            return response.json({
+                                message: "As senhas não conferem!"
+                            });
+                        }
+
+                        password = AdmLogin.hashPassword(password);
+
+                    }
+
+                    const userData = {
+                        userName: body.userName,
+                        email: body.email,
+                        isActive: body.isActive,
+                        userType: body.userType,
+                        password: password,
+                        passwordRepeated: passwordRepeated,
+                        updatedBy: user.id,
+                    }
+
+                    const oldUser = await userEntity.findOne({
+                        where: {
+                            id: userId,
+                            fkPlatform: {
+                                id: platform.id
+                            }
+                        }
+                    });
+
+                    const userMerger = userEntity.merge(oldUser, userData);
+                    
+                    await userEntity.update({ id: userId }, userMerger);
+
+                    return response.json({
+                        message: "Usuário criado com sucesso!"
+                    });
+                }
             );
         } catch (error) {
             return response.status(404).json({

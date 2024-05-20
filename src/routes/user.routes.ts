@@ -67,7 +67,7 @@ routes.post(
 );
 
 routes.patch(
-    "/user",
+    "/user/:id",
     VerifyJWTMiddleware.verifyJWT,
     UserValidation.patch,
     UserController.patch

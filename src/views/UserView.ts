@@ -38,6 +38,7 @@ export const UserView = {
                 cpf: user.cpf,
                 email: user.email,
                 userType: user.fkUserType.name,
+                isActive: user.isActive,
             }
         });
 

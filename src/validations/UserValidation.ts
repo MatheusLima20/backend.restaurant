@@ -72,6 +72,7 @@ export const UserValidation = {
             userType: Joi.string().required(),
             password: Joi.string().required().min(6),
             passwordRepeated: Joi.string().required().min(6),
+            isActive: Joi.boolean().allow(),
         }
     }, { abortEarly: false, messages: messages, }),
 
@@ -139,11 +140,17 @@ export const UserValidation = {
     }, { abortEarly: false, messages: messages, }),
 
     patch: celebrate({
+        [Segments.PARAMS]: {
+            id: Joi.number().positive().required(),
+        },
 
         [Segments.BODY]: {
-            oldPassword: Joi.string().required().min(6),
-            newPassword: Joi.string().required().min(6),
-            newPasswordRepeated: Joi.string().required().min(6),
+            userName: Joi.string().required(),
+            email: Joi.string().allow(),
+            isActive: Joi.boolean().allow(),
+            userType: Joi.string().allow(),
+            password: Joi.string().allow(),
+            passwordRepeated: Joi.string().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),

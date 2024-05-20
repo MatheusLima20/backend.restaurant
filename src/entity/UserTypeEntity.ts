@@ -21,7 +21,7 @@ export class UserTypeEntity {
     id: number;
 
     @Column()
-    name: UserType;
+    name: string;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
     createdAt: Date;
