@@ -26,6 +26,7 @@ export const UserValidation = {
         [Segments.BODY]: {
             email: Joi.string().email(),
             password: Joi.string().required().min(6),
+            userType: Joi.string().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),

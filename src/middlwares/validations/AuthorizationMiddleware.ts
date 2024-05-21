@@ -60,14 +60,31 @@ export const Authorization = {
         const userBody = request.body;
 
         const email = userBody.email;
+        const userType = userBody.userType;
 
         try {
             const userRepository = dataSource.getRepository(UserEntity);
 
-            const user = await userRepository.findOne({
-                where: { email: email, isActive: true },
-                relations: ["fkPlatform", "fkUserType"],
-            });
+            let user: UserEntity;
+
+            if (userType) {
+                user = await userRepository.findOne({
+                    where: {
+                        email: email, isActive: true, fkUserType: {
+                            name: userType
+                        }
+                    },
+                    relations: ["fkPlatform", "fkUserType"],
+                });
+            }
+
+            if (!userType) {
+                user = await userRepository.findOne({
+                    where: { email: email, isActive: true },
+                    relations: ["fkPlatform", "fkUserType"],
+                });
+
+            }
 
             if (!user) {
                 return response
