@@ -871,7 +871,7 @@ export const UserController = {
                     });
 
                     const userMerger = userEntity.merge(oldUser, userData);
-                    
+
                     await userEntity.update({ id: userId }, userMerger);
 
                     return response.json({
