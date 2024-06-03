@@ -7,7 +7,7 @@ import { ProductValidation as ProvisionsValidation } from "../validations/Produc
 const routes = Router();
 
 routes.get(
-    "/product/",
+    "/product/:isproduct",
     VerifyJWTMiddleware.verifyJWT,
     ProvisionsController.get
 );

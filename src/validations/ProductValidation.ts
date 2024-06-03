@@ -5,7 +5,7 @@ export const ProductValidation = {
 
     get: celebrate({
         [Segments.PARAMS]: {
-            orderId: Joi.number().positive().required(),
+            isproduct: Joi.boolean().allow(),
         }
     }, { abortEarly: false, messages: messages, }),
 
@@ -17,6 +17,7 @@ export const ProductValidation = {
             unitMeasurement: Joi.string().required(),
             isActive: Joi.boolean().required(),
             show: Joi.boolean().required(),
+            isPlate: Joi.boolean().required(),
         }
     }, { abortEarly: false, messages: messages, }),
 

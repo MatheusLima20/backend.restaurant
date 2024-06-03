@@ -8,17 +8,20 @@ export const ProvisionsController = {
 
     get: async (request: Request, response: Response) => {
 
+        const { isproduct } = request.params;
+
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
-        
         try {
             const productRepository = dataSource.getRepository(ProvisionsEntity);
-
+            const isProduct = isproduct === "true";
             const products = await productRepository.find({
-                where: { fkPlatform: platform.id },
+                where: { fkPlatform: platform.id, isPlate: isProduct },
                 order: { createdAt: 'desc' },
-                relations: ['fkUnitMeasurement']
+                relations: {
+                    fkUnitMeasurement: true
+                }
             });
 
             const productView = ProductView.get(products)
@@ -90,6 +93,7 @@ export const ProvisionsController = {
                 value: body.value,
                 amount: body.amount,
                 isActive: body.isActive,
+                isPlate: body.isPlate,
                 show: body.show,
                 fkUnitMeasurement: unitMeasurement,
                 createdBy: user.id,
