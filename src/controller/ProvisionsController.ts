@@ -127,7 +127,6 @@ export const ProvisionsController = {
         const auth = request.auth;
         const user = auth.user;
         const add = body.add;
-
         try {
 
             dataSource.transaction(async (transactionalEntityManager) => {
@@ -136,7 +135,7 @@ export const ProvisionsController = {
                 const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
 
                 const unitMeasurement = await unitMeasurementRepository.findOne({
-                    where: { name: body.fkUnitMeasurement as any }
+                    where: { name: body.unitMeasurement as any }
                 });
 
                 const productId: number = Number.parseInt(id);
