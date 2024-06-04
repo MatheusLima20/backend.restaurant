@@ -7,8 +7,9 @@ import { SpendingValidation } from "../validations/SpendingValidation";
 const routes = Router();
 
 routes.get(
-    "/spending/",
+    "/spending/:date",
     VerifyJWTMiddleware.verifyJWT,
+    SpendingValidation.get,
     SpendingController.get
 );
 

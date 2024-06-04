@@ -2,10 +2,13 @@ import { Request, Response } from "express";
 import { dataSource } from "../data.source";
 import { SpendingEntity } from "../entity/SpendingEntity";
 import { SpendingView } from "../views/SpendingView";
+import { Like } from "typeorm";
 
 export const SpendingController = {
 
     get: async (request: Request, response: Response) => {
+
+        const { date } = request.params;
 
         const auth = request.auth;
         const user = auth.user;
@@ -15,7 +18,10 @@ export const SpendingController = {
             const spendingRepository = dataSource.getRepository(SpendingEntity);
 
             const spending = await spendingRepository.find({
-                where: { fkPlatform: platform.id },
+                where: {
+                    fkPlatform: platform.id,
+                    createdAt: Like(`%${date}%`) as any
+                },
                 order: { createdAt: 'DESC' }
             });
 

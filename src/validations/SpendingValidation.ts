@@ -3,6 +3,14 @@ import { messages } from 'joi-translation-pt-br';
 
 export const SpendingValidation = {
 
+    get: celebrate({
+
+        [Segments.PARAMS]: {
+            date: Joi.string().required(),
+        }
+
+    }, { abortEarly: false, messages: messages, }),
+
     store: celebrate({
 
         [Segments.BODY]: {
