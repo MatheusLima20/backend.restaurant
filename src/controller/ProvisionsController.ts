@@ -70,7 +70,7 @@ export const ProvisionsController = {
 
     store: async (request: Request, response: Response) => {
 
-        const body: ProvisionsEntity = request.body;
+        const body = request.body;
 
         const auth = request.auth;
 
@@ -84,7 +84,7 @@ export const ProvisionsController = {
             const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
 
             const unitMeasurement = await unitMeasurementRepository.findOne({
-                where: { name: body.fkUnitMeasurement as any }
+                where: { name: body.unitMeasurement as any }
             });
 
             const product: any = {
@@ -133,11 +133,11 @@ export const ProvisionsController = {
 
                 const productEntity = transactionalEntityManager.getRepository(ProvisionsEntity);
                 const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
-
+                
                 const unitMeasurement = await unitMeasurementRepository.findOne({
                     where: { name: body.unitMeasurement as any }
                 });
-
+                
                 const productId: number = Number.parseInt(id);
 
                 const oldProduct = await productEntity.findOne({
