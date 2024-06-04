@@ -43,6 +43,7 @@ export const ProductValidation = {
             isActive: Joi.boolean().allow(),
             show: Joi.boolean().allow(),
             add: Joi.boolean().allow(),
+            isPlate: Joi.boolean().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),
