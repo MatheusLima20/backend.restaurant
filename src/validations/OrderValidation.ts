@@ -3,6 +3,12 @@ import { messages } from 'joi-translation-pt-br';
 
 export const OrderValidation = {
 
+    getByDate: celebrate({
+        [Segments.PARAMS]: {
+            date: Joi.string().required(),
+        }
+    }, { abortEarly: false, messages: messages, }),
+
     getByTable: celebrate({
         [Segments.PARAMS]: {
             id: Joi.number().required().positive(),

@@ -7,6 +7,13 @@ import { VerifyJWTMiddleware } from "../middlwares/validations/VerifyJWTMiddlewa
 const routes = Router();
 
 routes.get(
+    "/order/sell/:date",
+    VerifyJWTMiddleware.verifyJWT,
+    OrderValidation.getByDate,
+    OrderController.getByDate
+);
+
+routes.get(
     "/order/:id",
     VerifyJWTMiddleware.verifyJWT,
     OrderValidation.getByTable,

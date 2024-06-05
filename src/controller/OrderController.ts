@@ -4,8 +4,44 @@ import { OrderEntity } from "../entity/OrdersEntity";
 import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { BoxDayEntity } from "../entity/BoxDayEntity";
 import { OrderView } from "../views/OrderView";
+import { Like } from "typeorm";
 
 export const OrderController = {
+
+    getByDate: async (request: Request, response: Response) => {
+
+        const { date } = request.params;
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+            const orderRepository = dataSource.getRepository(OrderEntity);
+
+            const order = await orderRepository.find({
+                where: {
+                    fkPlatform: platform.id,
+                    isOpen: false,
+                    isCancelled: false,
+                    createdAt: Like(`%${date}%`) as any
+                },
+                order: { createdAt: 'DESC' }
+            });
+
+            const orderView = OrderView.getByDate(order);
+
+            return response.json({
+                data: orderView,
+                message: "Dados encontrados com sucesso.",
+            });
+        } catch (error) {
+            return response.status(404).json({
+                message: error, error
+            });
+        }
+
+    },
 
     getByTable: async (request: Request, response: Response) => {
 
@@ -59,7 +95,7 @@ export const OrderController = {
                     fkBoxDay: Number.parseInt(id),
                     isCancelled: false,
                 },
-                order: { createdAt: 'DESC' }
+                order: { description: 'ASC' }
             });
 
             const orderView = OrderView.getByBoxDay(order);
