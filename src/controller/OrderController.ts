@@ -286,20 +286,20 @@ export const OrderController = {
                         isCancelled: false,
                     }
                 });
-                
-                if(!ordersTable1.length){
+
+                if (!ordersTable1.length) {
                     return response.status(404).json(
                         {
-                            message: "Mesa sem pedidos.", 
+                            message: "Mesa sem pedidos.",
                             error: "Erro na troca "
                         }
                     );
                 }
 
-                if(ordersTable2.length) {
+                if (ordersTable2.length) {
                     return response.status(404).json(
                         {
-                            message: "A Mesa já está ocupada.", 
+                            message: "A Mesa já está ocupada.",
                             error: "Erro na troca "
                         }
                     );
@@ -314,7 +314,7 @@ export const OrderController = {
                     const oldOrder = ordersTable1[index];
 
                     const spendingMerger = ordersEntity.merge(oldOrder, table)
-                    
+
                     await ordersEntity.update(oldOrder.id, spendingMerger);
 
                 }
