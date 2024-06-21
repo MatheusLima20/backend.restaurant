@@ -40,7 +40,6 @@ export const OrderValidation = {
             amount: Joi.number().allow(),
             isCancelled: Joi.bool().allow(),
             isOpen: Joi.bool().allow(),
-            add: Joi.bool().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),

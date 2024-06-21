@@ -175,7 +175,6 @@ export const OrderController = {
         const user = auth.user;
 
         const productId = body.productId;
-        const add: boolean = body.add;
 
         try {
 
@@ -213,10 +212,6 @@ export const OrderController = {
                         );
                     }
 
-                }
-
-                if (add) {
-                    amount = oldOrder.amount + amount;
                 }
 
                 const order: any = {
