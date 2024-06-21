@@ -15,6 +15,7 @@ routes.get(
 routes.post(
     "/box-day/",
     VerifyJWTMiddleware.verifyJWT,
+    BoxDayValidation.store,
     BoxDayController.store
 );
 

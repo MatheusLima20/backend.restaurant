@@ -16,6 +16,9 @@ export class BoxDayEntity {
     @Column({ name: "fk_platform" })
     fkPlatform: number;
 
+    @Column({ name: "start_value" , nullable: false })
+    startValue: number;
+
     @Column({ name: "is_open" , default: true })
     isOpen: boolean;
 

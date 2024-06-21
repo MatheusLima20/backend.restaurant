@@ -18,7 +18,7 @@ export const BoxDayController = {
 
             const boxDay = await boxDayRepository.find({
                 where: { fkPlatform: platform.id },
-                order: {createdAt : 'DESC'},
+                order: { createdAt: 'DESC' },
                 take: 20
             });
 
@@ -27,7 +27,7 @@ export const BoxDayController = {
             for (let index = 0; index < boxDay.length; index++) {
 
                 let totalOrders = 0;
-                
+
                 const orders = await orderEntity.find({
                     where: {
                         fkBoxDay: boxDay[index].id,
@@ -43,7 +43,7 @@ export const BoxDayController = {
                 }
 
                 totalBoxs.push(totalOrders);
-                
+
             }
 
             const boxDayView = BoxDayView.get(boxDay, totalBoxs)
@@ -67,6 +67,8 @@ export const BoxDayController = {
         const user = auth.user;
 
         const platform = user.platform;
+
+        const dataBody = request.body;
 
         try {
 
@@ -99,7 +101,10 @@ export const BoxDayController = {
                 );
             }
 
+            const startValue = dataBody.startValue ? dataBody.startValue : 0;
+            
             const boxDay: any = {
+                startValue: startValue,
                 fkPlatform: platform.id,
                 createdBy: user.id,
             }
@@ -116,7 +121,7 @@ export const BoxDayController = {
         } catch (error) {
 
             return response.status(404).json(
-                { message: "Erro ao cadastrar o produto!", error }
+                { message: "Erro ao cadastrar o caixa!", error }
             );
 
         }
@@ -143,7 +148,7 @@ export const BoxDayController = {
                     where: { fkPlatform: platform.id, isOpen: true }
                 });
 
-                if(order) {
+                if (order) {
                     return response.status(404).json(
                         {
                             message: "Ainda existem pedido(s) aberto(s)!",
@@ -160,7 +165,7 @@ export const BoxDayController = {
                     where: { id: boxDayId, fkPlatform: platform.id }
                 });
 
-                if(boxDayOpen.length && !oldBoxDay.isOpen) {
+                if (boxDayOpen.length && !oldBoxDay.isOpen) {
                     return response.status(404).json(
                         {
                             message: "Somente um caixa pode ficar aberto!",

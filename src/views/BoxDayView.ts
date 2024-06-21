@@ -6,13 +6,19 @@ export const BoxDayView = {
         
         return boxDays.map((boxDay, index) => {
 
+            const startValue = boxDay.startValue;
+            const total = totalBoxDay[index];
+
+            const totalWithStartValue = total +  startValue;
             const createdAt = dayjs(boxDay.createdAt).format('DD/MM/YYYY HH:mm:ss');
             
             return {
                 id: boxDay.id,
+                startValue: startValue,
                 isOpen: boxDay.isOpen,
                 createdAt: createdAt,
-                totalBoxDay: totalBoxDay[index]
+                totalWithStartValue: totalWithStartValue,
+                totalBoxDay: total
             };
         });
     },

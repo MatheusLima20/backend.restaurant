@@ -11,12 +11,7 @@ export const BoxDayValidation = {
 
     store: celebrate({
         [Segments.BODY]: {
-            name: Joi.string().required(),
-            value: Joi.number().positive(),
-            amount: Joi.number().allow(),
-            unitMeasurement: Joi.string().required(),
-            isActive: Joi.boolean().required(),
-            show: Joi.boolean().required(),
+            startValue: Joi.number().allow(),
         }
     }, { abortEarly: false, messages: messages, }),
 

@@ -455,7 +455,7 @@ export const UserController = {
                     }
 
                     const userType = await userTypeEntity.findOne({
-                        where: { name: "WAITER" },
+                        where: { name: dataUser.userType },
                     });
 
                     if (!userType) {
@@ -470,7 +470,7 @@ export const UserController = {
                         password: password,
                         fkPlatform: platform.id as any,
                         fkUserType: userType,
-                        isActive: false,
+                        isActive: dataUser.isActive,
                         createdBy: user.id,
                     } as UserEntity);
 
@@ -833,6 +833,7 @@ export const UserController = {
                 async (transactionalEntityManager) => {
 
                     const userEntity = transactionalEntityManager.getRepository(UserEntity);
+                    const userTypeEntity = dataSource.getRepository(UserTypeEntity);
 
                     let password = body.password;
                     let passwordRepeated = body.passwordRepeated;
@@ -851,31 +852,41 @@ export const UserController = {
 
                     }
 
+                    const userType = await userTypeEntity.findOne({
+                        where: { name: body.userType }
+                    });
+
+                    if (!userType) {
+                        return response.status(404).json({
+                            message: "Tipo de usuário não encontrado",
+                        });
+                    }
+
                     const userData = {
                         userName: body.userName,
                         email: body.email,
                         isActive: body.isActive,
-                        userType: body.userType,
+                        fkUserType: userType,
                         password: password,
-                        passwordRepeated: passwordRepeated,
                         updatedBy: user.id,
                     }
-
+                    
                     const oldUser = await userEntity.findOne({
                         where: {
                             id: userId,
                             fkPlatform: {
                                 id: platform.id
                             }
-                        }
+                        },
+                        relations: { fkUserType: true }
                     });
 
                     const userMerger = userEntity.merge(oldUser, userData);
-
+                    
                     await userEntity.update({ id: userId }, userMerger);
 
                     return response.json({
-                        message: "Usuário criado com sucesso!"
+                        message: "Usuário atualizado com sucesso!"
                     });
                 }
             );
