@@ -18,6 +18,7 @@ export const OrderValidation = {
     getByBoxDay: celebrate({
         [Segments.PARAMS]: {
             id: Joi.number().required().positive(),
+            isCancelled: Joi.bool().allow(),
         }
     }, { abortEarly: false, messages: messages, }),
 

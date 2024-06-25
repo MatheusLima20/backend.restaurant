@@ -21,7 +21,7 @@ routes.get(
 );
 
 routes.get(
-    "/order-boxday/:id",
+    "/order-boxday/:id/:isCancelled",
     VerifyJWTMiddleware.verifyJWT,
     OrderValidation.getByBoxDay,
     OrderController.getByBoxDay

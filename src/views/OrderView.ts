@@ -1,4 +1,5 @@
 import { OrderEntity } from "../entity/OrdersEntity";
+import { UserEntity } from "../entity/UserEntity";
 
 export const OrderView = {
     getByDate: (orders: Array<OrderEntity>) => {
@@ -23,12 +24,12 @@ export const OrderView = {
         }
 
     },
-    getByTable: (orders: Array<OrderEntity>) => {
+    getByTable: (orders: Array<OrderEntity>, users: Array<UserEntity>) => {
 
         const values = [];
         let total = 0;
 
-        orders.map((order) => {
+        orders.map((order, index) => {
             total += order.value * order.amount;
             values.push({
                 id: order.id,
@@ -36,6 +37,7 @@ export const OrderView = {
                 amount: order.amount,
                 productName: order.description,
                 value: order.value,
+                createdBy: users[index].name
             });
         });
 
@@ -45,12 +47,11 @@ export const OrderView = {
         }
 
     },
-    getByBoxDay: (orders: Array<OrderEntity>) => {
+    getByBoxDay: (orders: Array<OrderEntity>, users: Array<UserEntity>) => {
 
         const values = [];
         let total = 0;
-
-        orders.map((order) => {
+        orders.map((order, index) => {
             total += order.value * order.amount;
             values.push({
                 id: order.id,
@@ -58,6 +59,7 @@ export const OrderView = {
                 amount: order.amount,
                 productName: order.description,
                 value: order.value,
+                updatedBy: users[index].name,
             });
         });
 

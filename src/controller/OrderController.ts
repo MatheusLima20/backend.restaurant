@@ -5,6 +5,7 @@ import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { BoxDayEntity } from "../entity/BoxDayEntity";
 import { OrderView } from "../views/OrderView";
 import { Like } from "typeorm";
+import { UserEntity } from "../entity/UserEntity";
 
 export const OrderController = {
 
@@ -52,19 +53,30 @@ export const OrderController = {
         const platform = user.platform;
 
         try {
+            const userRepository = dataSource.getRepository(UserEntity);
+
             const orderRepository = dataSource.getRepository(OrderEntity);
 
-            const order = await orderRepository.find({
+            const orders = await orderRepository.find({
                 where: {
                     fkPlatform: platform.id,
                     fkTable: Number.parseInt(id),
                     isOpen: true,
                     isCancelled: false,
                 },
-                order: { createdAt: 'DESC' }
+                order: { createdAt: 'DESC' },
             });
 
-            const orderView = OrderView.getByTable(order);
+            let users: UserEntity[] = [];
+
+            for (let i = 0; i < orders.length; i++) {
+                const user = await userRepository.findOne({
+                    where: { id: orders[i].createdBy }
+                });
+                users.push(user);
+            }
+
+            const orderView = OrderView.getByTable(orders, users);
 
             return response.json({
                 data: orderView,
@@ -80,25 +92,35 @@ export const OrderController = {
 
     getByBoxDay: async (request: Request, response: Response) => {
 
-        const { id } = request.params;
+        const { id, isCancelled }: any = request.params;
 
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
 
         try {
+            const userRepository = dataSource.getRepository(UserEntity);
             const orderRepository = dataSource.getRepository(OrderEntity);
 
-            const order = await orderRepository.find({
+            const orders = await orderRepository.find({
                 where: {
                     fkPlatform: platform.id,
                     fkBoxDay: Number.parseInt(id),
-                    isCancelled: false,
+                    isCancelled: isCancelled,
                 },
                 order: { description: 'ASC' }
             });
 
-            const orderView = OrderView.getByBoxDay(order);
+            let users: UserEntity[] = [];
+
+            for (let i = 0; i < orders.length; i++) {
+                const user = await userRepository.findOne({
+                    where: { id: orders[i].updatedBy }
+                });
+                users.push(user);
+            }
+
+            const orderView = OrderView.getByBoxDay(orders, users);
 
             return response.json({
                 data: orderView,
