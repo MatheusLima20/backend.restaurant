@@ -3,6 +3,7 @@ import { dataSource } from "../data.source";
 import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { UnitMeasurementEntity } from "../entity/UnitMeasurementEntity";
 import { ProductView } from "../views/ProvisionsView";
+import dayjs = require("dayjs");
 
 export const ProvisionsController = {
 
@@ -78,6 +79,14 @@ export const ProvisionsController = {
 
         const platform = user.platform;
 
+        const userType = user.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                message: "Usuário sem permissão.",
+            });
+        }
+
         try {
 
             const productRepository = dataSource.getRepository(ProvisionsEntity);
@@ -127,6 +136,14 @@ export const ProvisionsController = {
         const auth = request.auth;
         const user = auth.user;
         const add = body.add;
+
+        const userType = user.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                message: "Usuário sem permissão.",
+            });
+        }
         try {
 
             dataSource.transaction(async (transactionalEntityManager) => {
@@ -157,7 +174,8 @@ export const ProvisionsController = {
                     isActive: body.isActive,
                     show: body.show,
                     fkUnitMeasurement: unitMeasurement,
-                    updatedBy: user.id
+                    updatedBy: user.id,
+                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                 };
 
                 const spendingMerger = productEntity.merge(oldProduct, product)

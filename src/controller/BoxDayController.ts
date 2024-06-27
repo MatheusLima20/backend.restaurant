@@ -3,6 +3,7 @@ import { dataSource } from "../data.source";
 import { BoxDayEntity } from "../entity/BoxDayEntity";
 import { BoxDayView } from "../views/BoxDayView";
 import { OrderEntity } from "../entity/OrdersEntity";
+import dayjs = require("dayjs");
 
 export const BoxDayController = {
 
@@ -176,7 +177,8 @@ export const BoxDayController = {
 
                 const boxDay = {
                     isOpen: !oldBoxDay.isOpen,
-                    updatedBy: user.id
+                    updatedBy: user.id,
+                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                 };
 
                 const spendingMerger = boxDayEntity.merge(oldBoxDay, boxDay)

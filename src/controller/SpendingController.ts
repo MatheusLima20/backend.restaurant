@@ -3,6 +3,7 @@ import { dataSource } from "../data.source";
 import { SpendingEntity } from "../entity/SpendingEntity";
 import { SpendingView } from "../views/SpendingView";
 import { Like } from "typeorm";
+import dayjs = require("dayjs");
 
 export const SpendingController = {
 
@@ -13,6 +14,16 @@ export const SpendingController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
+
+        const userType = user.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                data: [],
+                message: "Usuário sem permissão.",
+            });
+        }
+        
 
         try {
             const spendingRepository = dataSource.getRepository(SpendingEntity);
@@ -46,6 +57,14 @@ export const SpendingController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
+
+        const userType = user.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                message: "Usuário sem permissão.",
+            });
+        }
 
         try {
 
@@ -87,6 +106,14 @@ export const SpendingController = {
         const auth = request.auth;
         const user = auth.user;
 
+        const userType = user.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                message: "Usuário sem permissão.",
+            });
+        }
+
         try {
 
             dataSource.transaction(async (transactionalEntityManager) => {
@@ -99,7 +126,8 @@ export const SpendingController = {
                     name: body.name,
                     value: body.value,
                     amount: body.amount,
-                    updatedBy: user.id
+                    updatedBy: user.id,
+                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                 };
 
                 const oldSpending = await spendingEntity.findOne({

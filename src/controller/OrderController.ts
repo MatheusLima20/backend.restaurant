@@ -6,6 +6,7 @@ import { BoxDayEntity } from "../entity/BoxDayEntity";
 import { OrderView } from "../views/OrderView";
 import { Like } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
+import dayjs = require("dayjs");
 
 export const OrderController = {
 
@@ -16,6 +17,15 @@ export const OrderController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
+
+        const userType = user.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                data: [],
+                message: "Usuário sem permissão.",
+            });
+        }
 
         try {
             const orderRepository = dataSource.getRepository(OrderEntity);
@@ -243,6 +253,7 @@ export const OrderController = {
                     isCancelled: body?.isCancelled,
                     isOpen: body?.isOpen,
                     updatedBy: user.id,
+                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                 };
 
 

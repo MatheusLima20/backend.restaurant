@@ -12,6 +12,7 @@ import { CompanyEntity } from "../entity/CompanyEntity";
 import { getAddressByCEP } from "cep-address-finder";
 import { StringFormatter } from "../utils/string.formatter/string.formatter";
 import { dataSource } from "../data.source";
+import dayjs = require("dayjs");
 
 export const UserController = {
     verifyLogin: async (request: Request, response: Response) => {
@@ -286,6 +287,14 @@ export const UserController = {
 
         const platform = userAuth.platform;
 
+        const userType = userAuth.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                message: "Usuário sem permissão.",
+            });
+        }
+
         try {
             const userCPF: string = dataUser.cpf;
 
@@ -423,6 +432,14 @@ export const UserController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
+
+        const userType = user.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                message: "Usuário sem permissão.",
+            });
+        }
 
         try {
             await dataSource.transaction(
@@ -675,6 +692,14 @@ export const UserController = {
 
         const dataUser = request.body;
 
+        const userType = authUser.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                message: "Usuário sem permissão.",
+            });
+        }
+
         try {
             const password = dataUser.password;
             const passwordRepeated = dataUser.passwordRepeated;
@@ -744,6 +769,7 @@ export const UserController = {
                         email: dataUser.email,
                         password: passwordHashed,
                         fkUserType: userType,
+                        updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                     };
 
                     const addressStore = {
@@ -753,6 +779,7 @@ export const UserController = {
                         phoneNumber: phoneNumber,
                         addressNumber: address.addressNumber,
                         addressCodePostal: addressCodePostal,
+                        updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                     };
 
                     const userDataBase = await userEntity.findOne({
@@ -828,6 +855,14 @@ export const UserController = {
 
         const userId = Number.parseInt(id);
 
+        const userType = user.userType;
+
+        if (userType !== "SUPER") {
+            return response.status(404).json({
+                message: "Usuário sem permissão.",
+            });
+        }
+
         try {
             await dataSource.transaction(
                 async (transactionalEntityManager) => {
@@ -870,7 +905,7 @@ export const UserController = {
                         password: password,
                         updatedBy: user.id,
                     }
-                    
+
                     const oldUser = await userEntity.findOne({
                         where: {
                             id: userId,
@@ -882,7 +917,7 @@ export const UserController = {
                     });
 
                     const userMerger = userEntity.merge(oldUser, userData);
-                    
+
                     await userEntity.update({ id: userId }, userMerger);
 
                     return response.json({
