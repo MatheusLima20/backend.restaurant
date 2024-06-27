@@ -1,8 +1,14 @@
+import dayjs = require("dayjs");
 import { ContentEntity } from "../entity/ContentEntity";
 
 export const ContentView = {
     get: (contents: Array<ContentEntity>) => {
         return contents.map((content) => {
+
+            const createdAt = dayjs(content.createdAt).subtract(3, "hours")
+                .format('DD/MM/YYYY HH:mm:ss');
+            const updatedAt = dayjs(content.updatedAt).subtract(3, "hours")
+                .format('DD/MM/YYYY HH:mm:ss');
 
             return {
                 id: content.id,
@@ -16,13 +22,19 @@ export const ContentView = {
                 visible: content.visible,
                 contentType: content.contentType,
                 viewsAmount: content.viewsAmount,
-                createdAt: content.createdAt,
-                updatedAt: content.updatedAt
+                createdAt: createdAt,
+                updatedAt: updatedAt
             };
         });
     },
 
     getById: (content: ContentEntity) => {
+
+
+        const createdAt = dayjs(content.createdAt).subtract(3, "hours")
+            .format('DD/MM/YYYY HH:mm:ss');
+        const updatedAt = dayjs(content.updatedAt).subtract(3, "hours")
+            .format('DD/MM/YYYY HH:mm:ss');
 
         return {
             id: content.id,
@@ -32,12 +44,17 @@ export const ContentView = {
             url: content.url,
             contentType: content.contentType,
             viewsAmount: content.viewsAmount,
-            createdAt: content.createdAt,
-            updatedAt: content.updatedAt,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
         };
     },
     getByTag: (contents: Array<ContentEntity>) => {
         return contents.map((content) => {
+
+            const createdAt = dayjs(content.createdAt).subtract(3, "hours")
+                .format('DD/MM/YYYY HH:mm:ss');
+            const updatedAt = dayjs(content.updatedAt).subtract(3, "hours")
+                .format('DD/MM/YYYY HH:mm:ss');
 
             return {
                 id: content.id,
@@ -50,8 +67,8 @@ export const ContentView = {
                 tag: content.tag,
                 contentType: content.contentType,
                 viewsAmount: content.viewsAmount,
-                createdAt: content.createdAt,
-                updatedAt: content.updatedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
             };
         });
     },

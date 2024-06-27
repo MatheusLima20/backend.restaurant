@@ -8,7 +8,8 @@ export const TableView = {
         
         tables.map((table) => {
 
-            const createdAt = dayjs(table.createdAt).format('DD/MM/YYYY HH:mm:ss');
+            const createdAt = dayjs(table.createdAt).subtract(3, "hours")
+                .format('DD/MM/YYYY HH:mm:ss');
 
             valuesTable.push({
                 id: table.id,
