@@ -41,6 +41,7 @@ export const OrderValidation = {
             amount: Joi.number().allow(),
             isCancelled: Joi.bool().allow(),
             isOpen: Joi.bool().allow(),
+            paymentMethod: Joi.string().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),

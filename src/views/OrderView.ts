@@ -65,6 +65,7 @@ export const OrderView = {
                 productName: order.description,
                 value: order.value,
                 updatedBy: users[index].name,
+                paymentMethod: order.paymentMethod,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
             });

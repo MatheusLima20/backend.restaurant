@@ -17,6 +17,9 @@ export class OrderEntity {
     @Column()
     description: string;
 
+    @Column({ name: "payment_method", nullable: true })
+    paymentMethod: string;
+
     @Column({ name: "delivery_forecast", nullable: true })
     deliveryForecast: Date;
 

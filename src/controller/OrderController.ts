@@ -252,6 +252,7 @@ export const OrderController = {
                     amount: amount,
                     isCancelled: body?.isCancelled,
                     isOpen: body?.isOpen,
+                    paymentMethod: body?.paymentMethod,
                     updatedBy: user.id,
                     updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                 };
