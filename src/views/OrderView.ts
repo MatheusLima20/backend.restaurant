@@ -32,13 +32,16 @@ export const OrderView = {
 
         orders.map((order, index) => {
             total += order.value * order.amount;
+            const createdAt = dayjs(order.createdAt).subtract(3, "hours")
+                .format('DD/MM/YYYY HH:mm:ss');
             values.push({
                 id: order.id,
                 isOpen: order.isOpen,
                 amount: order.amount,
                 productName: order.description,
                 value: order.value,
-                createdBy: users[index].name
+                createdBy: users[index].name,
+                createdAt: createdAt
             });
         });
 
