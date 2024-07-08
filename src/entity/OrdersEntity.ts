@@ -9,6 +9,8 @@ import {
 } from "typeorm";
 import { UserEntity } from "./UserEntity";
 
+export type OrderStatus = "pendente" | "processando" | "finalizado";
+
 @Entity({ name: "order" })
 export class OrderEntity {
     @PrimaryGeneratedColumn()
@@ -19,6 +21,9 @@ export class OrderEntity {
 
     @Column({ name: "payment_method", nullable: true })
     paymentMethod: string;
+
+    @Column({ name: "status", default: "pendente"})
+    status: string;
 
     @Column({ name: "delivery_forecast", nullable: true })
     deliveryForecast: Date;

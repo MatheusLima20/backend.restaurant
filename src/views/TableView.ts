@@ -2,7 +2,7 @@ import { TableEntity } from "../entity/TableEntity ";
 import dayjs = require("dayjs");
 
 export const TableView = {
-    get: (tables: Array<TableEntity>, isOcuppied: any []) => {
+    get: (tables: Array<TableEntity>, isOcuppied: any [], amountPendings: number []) => {
 
         const valuesTable = [];
         
@@ -21,7 +21,8 @@ export const TableView = {
         
         return {
             tables: valuesTable,
-            isOcuppied: isOcuppied
+            isOcuppied: isOcuppied,
+            amountPendings: amountPendings,
         };
     },
 };

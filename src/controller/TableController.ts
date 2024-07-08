@@ -21,6 +21,8 @@ export const TableController = {
             });
 
             const isOcuppied: boolean [] = [];
+
+            const amountPendings: number [] = [];
             
             if (table.length) {
                 
@@ -34,12 +36,15 @@ export const TableController = {
                             isCancelled: false,
                         }
                     });
-                    isOcuppied.push(orders.length !== 0);            
+                    isOcuppied.push(orders.length !== 0);
+                    const pendings = orders.filter((value) => value.status === "pendente");
+
+                    amountPendings.push(pendings.length);        
                 }
 
             }
 
-            const tableView = TableView.get(table, isOcuppied);
+            const tableView = TableView.get(table, isOcuppied, amountPendings);
 
             return response.json({
                 data: tableView,

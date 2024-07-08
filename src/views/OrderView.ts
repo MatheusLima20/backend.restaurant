@@ -40,6 +40,7 @@ export const OrderView = {
                 amount: order.amount,
                 productName: order.description,
                 value: order.value,
+                status: order.status,
                 createdBy: users[index].name,
                 createdAt: createdAt
             });
