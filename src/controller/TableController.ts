@@ -22,7 +22,7 @@ export const TableController = {
 
             const isOcuppied: boolean [] = [];
 
-            const amountPendings: number [] = [];
+            var amountPendings: OrderEntity [] = [];
             
             if (table.length) {
                 
@@ -39,11 +39,11 @@ export const TableController = {
                     isOcuppied.push(orders.length !== 0);
                     const pendings = orders.filter((value) => value.status === "pendente");
 
-                    amountPendings.push(pendings.length);        
+                    amountPendings = amountPendings.concat(pendings);    
                 }
 
             }
-
+            
             const tableView = TableView.get(table, isOcuppied, amountPendings);
 
             return response.json({

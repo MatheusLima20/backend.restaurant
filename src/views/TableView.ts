@@ -1,8 +1,9 @@
+import { OrderEntity } from "../entity/OrdersEntity";
 import { TableEntity } from "../entity/TableEntity ";
 import dayjs = require("dayjs");
 
 export const TableView = {
-    get: (tables: Array<TableEntity>, isOcuppied: any [], amountPendings: number []) => {
+    get: (tables: Array<TableEntity>, isOcuppied: any [], amountPendings: OrderEntity []) => {
 
         const valuesTable = [];
         
@@ -18,11 +19,25 @@ export const TableView = {
                 createdAt: createdAt,
             });
         });
+
+        const pendings = amountPendings.map((pendings) => {
+            const createdAt = dayjs(pendings.createdAt).subtract(3, "hours")
+                .format('DD/MM/YYYY HH:mm:ss');
+            return {
+                id: pendings.id,
+                productName: pendings.description,
+                idTable: pendings.fkTable,
+                value: pendings.value,
+                amount: pendings.amount,
+                status: pendings.status,
+                createdAt: createdAt,
+            }
+        });
         
         return {
             tables: valuesTable,
             isOcuppied: isOcuppied,
-            amountPendings: amountPendings,
+            amountPendings: pendings,
         };
     },
 };
