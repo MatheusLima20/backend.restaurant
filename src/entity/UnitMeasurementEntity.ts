@@ -12,6 +12,13 @@ export type Unit =
     | "Unidade" 
     | "Gramas"
     | "Caixa"
+    | "Mililitros"
+    | "Pacote"
+    | "Prato"
+    | "Guarnição"
+    | "Bebida"
+    | "Sobremesa"
+    | "PETISCO"
     ;
 
 @Entity({ name: "unit_measurement" })
@@ -22,6 +29,9 @@ export class UnitMeasurementEntity {
 
     @Column()
     name: Unit;
+
+    @Column()
+    description: string;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
     createdAt: Date;
