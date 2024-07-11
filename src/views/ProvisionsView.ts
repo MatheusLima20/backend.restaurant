@@ -25,7 +25,7 @@ export const ProductView = {
                 name: product.name,
                 amount: product.amount,
                 value: product.value,
-                orderType: product.fkOrderType.name,
+                productType: product.fkProductType.name,
                 show: product.show,
                 isActive: product.isActive
             };

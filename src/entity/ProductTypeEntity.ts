@@ -6,7 +6,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 
-export type OrderType =
+export type ProductType =
     | "Prato"
     | "Guarnição"
     | "Bebida"
@@ -14,14 +14,14 @@ export type OrderType =
     | "Petisco"
     ;
 
-@Entity({ name: "order_type" })
-export class OrderTypeEntity {
+@Entity({ name: "product_type" })
+export class ProductTypeEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    name: OrderType;
+    name: ProductType;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
     createdAt: Date;

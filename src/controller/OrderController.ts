@@ -171,7 +171,7 @@ export const OrderController = {
             const product = await productRepository.findOne({
                 where: { id: Number.parseInt(body.idProduct) },
                 relations: {
-                    fkOrderType: true
+                    fkProductType: true
                 }
             });
 
@@ -182,7 +182,7 @@ export const OrderController = {
                 description: product.name,
                 amount: body.amount,
                 value: product.value,
-                orderType: product.fkOrderType.name,
+                productType: product.fkProductType.name,
                 createdBy: user.id,
             }
             

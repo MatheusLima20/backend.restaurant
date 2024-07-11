@@ -4,7 +4,7 @@ import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { UnitMeasurementEntity } from "../entity/UnitMeasurementEntity";
 import { ProductView } from "../views/ProvisionsView";
 import dayjs = require("dayjs");
-import { OrderTypeEntity } from "../entity/OrderTypeEntity";
+import { ProductTypeEntity } from "../entity/ProductTypeEntity";
 
 export const ProvisionsController = {
 
@@ -15,7 +15,7 @@ export const ProvisionsController = {
         const platform = user.platform;
         try {
             const productRepository = dataSource.getRepository(ProvisionsEntity);
-            
+
             const products = await productRepository.find({
                 where: { fkPlatform: platform.id, isPlate: false },
                 order: { createdAt: 'desc' },
@@ -25,7 +25,7 @@ export const ProvisionsController = {
             });
 
             const productView = ProductView.get(products);
-            
+
             return response.json({
                 data: productView,
                 message: "Dados encontrados com sucesso.",
@@ -51,7 +51,7 @@ export const ProvisionsController = {
             const products = await productRepository.find({
                 where: { fkPlatform: platform.id, show: true },
                 relations: {
-                    fkOrderType: true
+                    fkProductType: true
                 }
             });
 
@@ -92,15 +92,22 @@ export const ProvisionsController = {
 
             const productRepository = dataSource.getRepository(ProvisionsEntity);
             const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
-            const orderTypeRepository = dataSource.getRepository(OrderTypeEntity);
+            const productTypeRepository = dataSource.getRepository(ProductTypeEntity);
 
-            const unitMeasurement = await unitMeasurementRepository.findOne({
-                where: { name: body.unitMeasurement as any }
-            });
+            let unitMeasurement: UnitMeasurementEntity;
+            let productType: ProductTypeEntity;
 
-            const orderType = await orderTypeRepository.findOne({
-                where: { name: body.orderType as any }
-            });
+            if (body.unitMeasurement) {
+                unitMeasurement = await unitMeasurementRepository.findOne({
+                    where: { name: body.unitMeasurement as any }
+                });
+            }
+
+            if (body.productType) {
+                productType = await productTypeRepository.findOne({
+                    where: { name: body.productType as any }
+                });
+            }
 
             const product: any = {
                 name: body.name,
@@ -111,7 +118,7 @@ export const ProvisionsController = {
                 isPlate: body.isPlate,
                 show: body.show,
                 fkUnitMeasurement: unitMeasurement,
-                fkOrderType: orderType,
+                fkProductType: productType,
                 createdBy: user.id,
             }
 
@@ -157,11 +164,22 @@ export const ProvisionsController = {
 
                 const productEntity = transactionalEntityManager.getRepository(ProvisionsEntity);
                 const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
-                
-                const unitMeasurement = await unitMeasurementRepository.findOne({
-                    where: { name: body.unitMeasurement as any }
-                });
-                
+                const productTypeRepository = dataSource.getRepository(ProductTypeEntity);
+
+                let unitMeasurement: UnitMeasurementEntity;
+                let productType: ProductTypeEntity;
+
+                if (body.unitMeasurement) {
+                    unitMeasurement = await unitMeasurementRepository.findOne({
+                        where: { name: body.unitMeasurement as any }
+                    });
+                }
+
+                if (body.productType) {
+                    productType = await productTypeRepository.findOne({
+                        where: { name: body.productType as any }
+                    });
+                }
                 const productId: number = Number.parseInt(id);
 
                 const oldProduct = await productEntity.findOne({
@@ -181,6 +199,7 @@ export const ProvisionsController = {
                     isActive: body.isActive,
                     show: body.show,
                     fkUnitMeasurement: unitMeasurement,
+                    fkProductType: productType,
                     updatedBy: user.id,
                     updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                 };
