@@ -25,6 +25,9 @@ export class OrderEntity {
     @Column({ name: "status", default: "pendente"})
     status: string;
 
+    @Column({ name: "order_type", nullable: true})
+    orderType: string;
+
     @Column({ name: "delivery_forecast", nullable: true })
     deliveryForecast: Date;
 
