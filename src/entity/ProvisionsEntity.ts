@@ -8,6 +8,7 @@ import {
     JoinColumn,
 } from "typeorm";
 import { UnitMeasurementEntity } from "./UnitMeasurementEntity";
+import { OrderTypeEntity } from "./OrderTypeEntity";
 
 @Entity({ name: "provisions" })
 export class ProvisionsEntity {
@@ -32,6 +33,13 @@ export class ProvisionsEntity {
     )
     @JoinColumn({ name: "fk_unit__measurement" })
     fkUnitMeasurement: UnitMeasurementEntity;
+
+    @ManyToOne(
+        () => OrderTypeEntity, 
+        (orderType) => orderType.id, { nullable: true }
+    )
+    @JoinColumn({ name: "fk_order_type" })
+    fkOrderType: OrderTypeEntity;
 
     @Column({ name: "is_active", default: true })
     isActive: boolean;

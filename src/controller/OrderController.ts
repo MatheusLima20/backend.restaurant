@@ -167,11 +167,11 @@ export const OrderController = {
                     error: "Erro"
                 });
             }
-
+            
             const product = await productRepository.findOne({
                 where: { id: Number.parseInt(body.idProduct) },
                 relations: {
-                    fkUnitMeasurement: true
+                    fkOrderType: true
                 }
             });
 
@@ -182,10 +182,10 @@ export const OrderController = {
                 description: product.name,
                 amount: body.amount,
                 value: product.value,
-                orderType: product.fkUnitMeasurement.name,
+                orderType: product.fkOrderType.name,
                 createdBy: user.id,
             }
-
+            
             await orderRepository.save({ ...order });
 
             return response.json({

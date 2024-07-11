@@ -4,29 +4,28 @@ import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { UnitMeasurementEntity } from "../entity/UnitMeasurementEntity";
 import { ProductView } from "../views/ProvisionsView";
 import dayjs = require("dayjs");
+import { OrderTypeEntity } from "../entity/OrderTypeEntity";
 
 export const ProvisionsController = {
 
     get: async (request: Request, response: Response) => {
-
-        const { isproduct } = request.params;
 
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
         try {
             const productRepository = dataSource.getRepository(ProvisionsEntity);
-            const isProduct = isproduct === "true";
+            
             const products = await productRepository.find({
-                where: { fkPlatform: platform.id, isPlate: isProduct },
+                where: { fkPlatform: platform.id, isPlate: false },
                 order: { createdAt: 'desc' },
                 relations: {
-                    fkUnitMeasurement: true
+                    fkUnitMeasurement: true,
                 }
             });
 
-            const productView = ProductView.get(products)
-
+            const productView = ProductView.get(products);
+            
             return response.json({
                 data: productView,
                 message: "Dados encontrados com sucesso.",
@@ -51,10 +50,12 @@ export const ProvisionsController = {
 
             const products = await productRepository.find({
                 where: { fkPlatform: platform.id, show: true },
-                relations: ['fkUnitMeasurement']
+                relations: {
+                    fkOrderType: true
+                }
             });
 
-            const productView = ProductView.get(products)
+            const productView = ProductView.getPlates(products)
 
             return response.json({
                 data: productView,
@@ -91,9 +92,14 @@ export const ProvisionsController = {
 
             const productRepository = dataSource.getRepository(ProvisionsEntity);
             const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
+            const orderTypeRepository = dataSource.getRepository(OrderTypeEntity);
 
             const unitMeasurement = await unitMeasurementRepository.findOne({
                 where: { name: body.unitMeasurement as any }
+            });
+
+            const orderType = await orderTypeRepository.findOne({
+                where: { name: body.orderType as any }
             });
 
             const product: any = {
@@ -105,6 +111,7 @@ export const ProvisionsController = {
                 isPlate: body.isPlate,
                 show: body.show,
                 fkUnitMeasurement: unitMeasurement,
+                fkOrderType: orderType,
                 createdBy: user.id,
             }
 

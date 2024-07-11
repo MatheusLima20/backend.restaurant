@@ -4,13 +4,28 @@ export const ProductView = {
     get: (products: Array<ProvisionsEntity>) => {
         
         return products.map((product) => {
-
+            
             return {
                 id: product.id,
                 name: product.name,
                 amount: product.amount,
                 value: product.value,
                 unitMeasurement: product.fkUnitMeasurement.name,
+                show: product.show,
+                isActive: product.isActive
+            };
+        });
+    },
+    getPlates: (products: Array<ProvisionsEntity>) => {
+        
+        return products.map((product) => {
+            
+            return {
+                id: product.id,
+                name: product.name,
+                amount: product.amount,
+                value: product.value,
+                orderType: product.fkOrderType.name,
                 show: product.show,
                 isActive: product.isActive
             };
