@@ -10,8 +10,7 @@ export const BoxDayView = {
             const total = totalBoxDay[index];
 
             const totalWithStartValue = total + startValue;
-            const createdAt = dayjs(boxDay.createdAt).subtract(3, "hours")
-                .format('DD/MM/YYYY HH:mm:ss');
+            const createdAt = dayjs(boxDay.createdAt).subtract(3, "hours");
 
             return {
                 id: boxDay.id,

@@ -51,10 +51,8 @@ export const ContentView = {
     getByTag: (contents: Array<ContentEntity>) => {
         return contents.map((content) => {
 
-            const createdAt = dayjs(content.createdAt).subtract(3, "hours")
-                .format('DD/MM/YYYY HH:mm:ss');
-            const updatedAt = dayjs(content.updatedAt).subtract(3, "hours")
-                .format('DD/MM/YYYY HH:mm:ss');
+            const createdAt = dayjs(content.createdAt).subtract(3, "hours");
+            const updatedAt = dayjs(content.updatedAt).subtract(3, "hours");
 
             return {
                 id: content.id,
