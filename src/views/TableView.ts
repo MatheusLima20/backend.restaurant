@@ -9,8 +9,7 @@ export const TableView = {
         
         tables.map((table) => {
 
-            const createdAt = dayjs(table.createdAt).subtract(3, "hours")
-                .format('DD/MM/YYYY HH:mm:ss');
+            const createdAt = dayjs(table.createdAt).subtract(3, "hours");
 
             valuesTable.push({
                 id: table.id,
@@ -21,8 +20,7 @@ export const TableView = {
         });
 
         const pendings = amountPendings.map((pendings) => {
-            const createdAt = dayjs(pendings.createdAt).subtract(3, "hours")
-                .format('DD/MM/YYYY HH:mm:ss');
+            const createdAt = dayjs(pendings.createdAt).subtract(3, "hours");
             return {
                 id: pendings.id,
                 productName: pendings.description,

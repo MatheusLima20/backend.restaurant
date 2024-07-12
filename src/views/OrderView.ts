@@ -32,8 +32,7 @@ export const OrderView = {
 
         orders.map((order, index) => {
             total += order.value * order.amount;
-            const createdAt = dayjs(order.createdAt).subtract(3, "hours")
-                .format('DD/MM/YYYY HH:mm:ss');
+            const createdAt = dayjs(order.createdAt).subtract(3, "hours");
             values.push({
                 id: order.id,
                 isOpen: order.isOpen,
@@ -59,10 +58,8 @@ export const OrderView = {
         let total = 0;
         orders.map((order, index) => {
             total += order.value * order.amount;
-            const createdAt = dayjs(order.createdAt).subtract(3, "hours")
-                .format('DD/MM/YYYY HH:mm:ss');
-            const updatedAt = dayjs(order.updatedAt).subtract(3, "hours")
-                .format('DD/MM/YYYY HH:mm:ss');
+            const createdAt = dayjs(order.createdAt).subtract(3, "hours");
+            const updatedAt = dayjs(order.updatedAt).subtract(3, "hours");
             values.push({
                 id: order.id,
                 isOpen: order.isOpen,
