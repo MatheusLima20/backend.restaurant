@@ -39,6 +39,7 @@ export const OrderView = {
                 isOpen: order.isOpen,
                 amount: order.amount,
                 productName: order.description,
+                productType: order.productType,
                 value: order.value,
                 status: order.status,
                 createdBy: users[index].name,

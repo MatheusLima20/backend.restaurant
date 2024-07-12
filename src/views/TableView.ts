@@ -26,6 +26,7 @@ export const TableView = {
             return {
                 id: pendings.id,
                 productName: pendings.description,
+                productType: pendings.productType,
                 idTable: pendings.fkTable,
                 value: pendings.value,
                 amount: pendings.amount,
