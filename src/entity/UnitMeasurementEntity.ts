@@ -14,11 +14,6 @@ export type Unit =
     | "Caixa"
     | "Mililitros"
     | "Pacote"
-    | "Prato"
-    | "Guarnição"
-    | "Bebida"
-    | "Sobremesa"
-    | "PETISCO"
     ;
 
 @Entity({ name: "unit_measurement" })

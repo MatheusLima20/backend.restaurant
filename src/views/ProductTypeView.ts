@@ -3,9 +3,9 @@ import { ProductTypeEntity } from "../entity/ProductTypeEntity";
 
 export const ProductTypeView = {
 
-    get: (ProductTypes: Array<ProductTypeEntity>) => {
+    get: (productTypes: Array<ProductTypeEntity>) => {
 
-        return ProductTypes.map((productType: ProductTypeEntity) => {
+        return productTypes.map((productType: ProductTypeEntity) => {
             return {
                 id: productType.id,
                 name: productType.name,
