@@ -5,9 +5,9 @@ export const ContentView = {
     get: (contents: Array<ContentEntity>) => {
         return contents.map((content) => {
 
-            const createdAt = dayjs(content.createdAt).subtract(3, "hours")
+            const createdAt = dayjs(content.createdAt)
                 .format('DD/MM/YYYY HH:mm:ss');
-            const updatedAt = dayjs(content.updatedAt).subtract(3, "hours")
+            const updatedAt = dayjs(content.updatedAt)
                 .format('DD/MM/YYYY HH:mm:ss');
 
             return {
@@ -31,9 +31,9 @@ export const ContentView = {
     getById: (content: ContentEntity) => {
 
 
-        const createdAt = dayjs(content.createdAt).subtract(3, "hours")
+        const createdAt = dayjs(content.createdAt)
             .format('DD/MM/YYYY HH:mm:ss');
-        const updatedAt = dayjs(content.updatedAt).subtract(3, "hours")
+        const updatedAt = dayjs(content.updatedAt)
             .format('DD/MM/YYYY HH:mm:ss');
 
         return {
@@ -51,8 +51,8 @@ export const ContentView = {
     getByTag: (contents: Array<ContentEntity>) => {
         return contents.map((content) => {
 
-            const createdAt = dayjs(content.createdAt).subtract(3, "hours");
-            const updatedAt = dayjs(content.updatedAt).subtract(3, "hours");
+            const createdAt = dayjs(content.createdAt);
+            const updatedAt = dayjs(content.updatedAt);
 
             return {
                 id: content.id,

@@ -1,4 +1,3 @@
-import dayjs = require("dayjs");
 import { OrderEntity } from "../entity/OrdersEntity";
 import { UserEntity } from "../entity/UserEntity";
 
@@ -32,7 +31,7 @@ export const OrderView = {
 
         orders.map((order, index) => {
             total += order.value * order.amount;
-            const createdAt = dayjs(order.createdAt).subtract(3, "hours");
+            const createdAt = order.createdAt;
             values.push({
                 id: order.id,
                 isOpen: order.isOpen,
@@ -58,8 +57,8 @@ export const OrderView = {
         let total = 0;
         orders.map((order, index) => {
             total += order.value * order.amount;
-            const createdAt = dayjs(order.createdAt).subtract(3, "hours");
-            const updatedAt = dayjs(order.updatedAt).subtract(3, "hours");
+            const createdAt = order.createdAt;
+            const updatedAt = order.updatedAt;
             values.push({
                 id: order.id,
                 isOpen: order.isOpen,

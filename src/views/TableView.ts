@@ -1,6 +1,5 @@
 import { OrderEntity } from "../entity/OrdersEntity";
 import { TableEntity } from "../entity/TableEntity ";
-import dayjs = require("dayjs");
 
 export const TableView = {
     get: (tables: Array<TableEntity>, isOcuppied: any [], amountPendings: OrderEntity []) => {
@@ -9,7 +8,7 @@ export const TableView = {
         
         tables.map((table) => {
 
-            const createdAt = dayjs(table.createdAt).subtract(3, "hours");
+            const createdAt = table.createdAt;
 
             valuesTable.push({
                 id: table.id,
@@ -20,7 +19,7 @@ export const TableView = {
         });
 
         const pendings = amountPendings.map((pendings) => {
-            const createdAt = dayjs(pendings.createdAt).subtract(3, "hours");
+            const createdAt = pendings.createdAt;
             return {
                 id: pendings.id,
                 productName: pendings.description,

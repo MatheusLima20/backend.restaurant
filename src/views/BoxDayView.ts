@@ -1,5 +1,5 @@
 import { BoxDayEntity } from "../entity/BoxDayEntity";
-import dayjs = require("dayjs");
+
 
 export const BoxDayView = {
     get: (boxDays: Array<BoxDayEntity>, totalBoxDay: number[]) => {
@@ -10,7 +10,7 @@ export const BoxDayView = {
             const total = totalBoxDay[index];
 
             const totalWithStartValue = total + startValue;
-            const createdAt = dayjs(boxDay.createdAt).subtract(3, "hours");
+            const createdAt = boxDay.createdAt;
 
             return {
                 id: boxDay.id,
