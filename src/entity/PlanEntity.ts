@@ -17,19 +17,22 @@ export class PlanEntity {
     @Column()
     name: Plan;
 
-    @Column()
-    value: number;
+    @Column({ name: 'month_value', type: "float" })
+    monthValue: number;
 
-    @Column()
-    frequency: string;
+    @Column({ name: 'annual_value', type: "float" })
+    annualValue: number;
 
-    @Column()
+    @Column({ name: 'max_boxday' })
+    maxBoxDay: number;
+
+    @Column({ name: 'max_tables' })
     maxTables: number;
 
-    @Column()
+    @Column({ name: 'max_users' })
     maxUsers: number;
 
-    @Column()
+    @Column({ name: 'tax_delivery' , type: "float" })
     taxDelivery: number;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
