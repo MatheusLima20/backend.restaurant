@@ -87,6 +87,8 @@ export const UserValidation = {
             email: Joi.string().email().required().min(5),
             password: Joi.string().required().min(6),
             passwordRepeated: Joi.string().required().min(6),
+            plan: Joi.string().required(),
+            isMonthPlan: Joi.boolean().required(),
             address: Joi.object().keys({
                 district: Joi.string().required().min(5),
                 street: Joi.string().required().min(5),

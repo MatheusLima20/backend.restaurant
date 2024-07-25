@@ -13,6 +13,7 @@ import { getAddressByCEP } from "cep-address-finder";
 import { StringFormatter } from "../utils/string.formatter/string.formatter";
 import { dataSource } from "../data.source";
 import dayjs = require("dayjs");
+import { PlanEntity } from "../entity/PlanEntity";
 
 export const UserController = {
     verifyLogin: async (request: Request, response: Response) => {
@@ -506,6 +507,9 @@ export const UserController = {
     storePlatform: async (request: Request, response: Response) => {
         const dataUser = request.body;
 
+        const plan = dataUser.plan;
+        const isMonthPlan = dataUser.isMonthPlan;
+
         try {
             const userCpfcnpj: string = dataUser.cpfcnpj;
 
@@ -541,6 +545,9 @@ export const UserController = {
 
             await dataSource.transaction(
                 async (transactionalEntityManager) => {
+
+                    const planEntity = dataSource.getRepository(PlanEntity);
+
                     const platformEntity =
                         transactionalEntityManager.getRepository(
                             PlatformEntity
@@ -990,3 +997,4 @@ export const UserController = {
         }
     },
 };
+

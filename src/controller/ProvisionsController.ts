@@ -49,7 +49,7 @@ export const ProvisionsController = {
             const productRepository = dataSource.getRepository(ProvisionsEntity);
 
             const products = await productRepository.find({
-                where: { fkPlatform: platform.id, isPlate: true},
+                where: { fkPlatform: platform.id, isPlate: true },
                 relations: {
                     fkProductType: true
                 }
