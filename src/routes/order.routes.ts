@@ -30,8 +30,8 @@ routes.get(
 routes.get(
     "/order-status/:status",
     VerifyJWTMiddleware.verifyJWT,
-    OrderValidation.getByBoxDay,
-    OrderController.getByBoxDay
+    OrderValidation.getByStatus,
+    OrderController.getByStatus
 );
 
 routes.post(

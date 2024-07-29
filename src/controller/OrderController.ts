@@ -158,13 +158,13 @@ export const OrderController = {
             const orders = await orderRepository.find({
                 where: {
                     fkPlatform: platform.id,
-                    isOpen: false,
+                    isOpen: true,
                     isCancelled: false,
                     status: Like(`%${status}%`) as any
                 },
                 order: { order: 'ASC' }
             });
-
+            
             const orderView = OrderView.getByStatus(orders);
 
             return response.json({
