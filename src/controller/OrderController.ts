@@ -155,7 +155,7 @@ export const OrderController = {
         try {
             const orderRepository = dataSource.getRepository(OrderEntity);
 
-            const order = await orderRepository.find({
+            const orders = await orderRepository.find({
                 where: {
                     fkPlatform: platform.id,
                     isOpen: false,
@@ -165,7 +165,7 @@ export const OrderController = {
                 order: { order: 'ASC' }
             });
 
-            const orderView = OrderView.getByDate(order);
+            const orderView = OrderView.getByStatus(orders);
 
             return response.json({
                 data: orderView,

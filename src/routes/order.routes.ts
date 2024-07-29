@@ -27,6 +27,13 @@ routes.get(
     OrderController.getByBoxDay
 );
 
+routes.get(
+    "/order-status/:status",
+    VerifyJWTMiddleware.verifyJWT,
+    OrderValidation.getByBoxDay,
+    OrderController.getByBoxDay
+);
+
 routes.post(
     "/order/",
     VerifyJWTMiddleware.verifyJWT,

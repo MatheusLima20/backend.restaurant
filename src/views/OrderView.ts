@@ -78,4 +78,15 @@ export const OrderView = {
         }
 
     },
+    getByStatus: (orders: Array<OrderEntity>) => {
+
+        return orders.map((order) => {
+            return{
+                id: order.id,
+                amount: order.amount,
+                productName: order.description,
+            };
+        });
+
+    },
 };
