@@ -4,7 +4,7 @@ import { OrderEntity } from "../entity/OrdersEntity";
 import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { BoxDayEntity } from "../entity/BoxDayEntity";
 import { OrderView } from "../views/OrderView";
-import { Like } from "typeorm";
+import { IsNull, Like, Not } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
 import dayjs = require("dayjs");
 
@@ -144,6 +144,41 @@ export const OrderController = {
 
     },
 
+    getByStatus: async (request: Request, response: Response) => {
+
+        const { status } = request.params;
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+            const orderRepository = dataSource.getRepository(OrderEntity);
+
+            const order = await orderRepository.find({
+                where: {
+                    fkPlatform: platform.id,
+                    isOpen: false,
+                    isCancelled: false,
+                    status: Like(`%${status}%`) as any
+                },
+                order: { order: 'ASC' }
+            });
+
+            const orderView = OrderView.getByDate(order);
+
+            return response.json({
+                data: orderView,
+                message: "Dados encontrados com sucesso.",
+            });
+        } catch (error) {
+            return response.status(404).json({
+                message: error, error
+            });
+        }
+
+    },
+
     store: async (request: Request, response: Response) => {
 
         const body = request.body;
@@ -167,7 +202,7 @@ export const OrderController = {
                     error: "Erro"
                 });
             }
-            
+
             const product = await productRepository.findOne({
                 where: { id: Number.parseInt(body.idProduct) },
                 relations: {
@@ -185,7 +220,7 @@ export const OrderController = {
                 productType: product.fkProductType.name,
                 createdBy: user.id,
             }
-            
+
             await orderRepository.save({ ...order });
 
             return response.json({
@@ -226,6 +261,7 @@ export const OrderController = {
 
                 let product: any;
                 let amount = body?.amount;
+                const status = body?.status;
 
                 if (productId) {
                     product = await productRepository.findOne({
@@ -257,15 +293,91 @@ export const OrderController = {
                     isCancelled: body?.isCancelled,
                     isOpen: body?.isOpen,
                     paymentMethod: body?.paymentMethod,
-                    status: body?.status,
+                    status: status,
                     updatedBy: user.id,
                     updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                 };
 
-
                 const spendingMerger = orderEntity.merge(oldOrder, order)
 
                 await orderEntity.update(orderId, spendingMerger);
+
+                return response.json({
+                    message: "Pedido alterado com sucesso!"
+                });
+
+            });
+
+
+        } catch (error) {
+
+            return response.status(404).json(
+                {
+                    message: "Erro ao salvar prato " + error, error: error
+                }
+            );
+
+        }
+
+    },
+
+    patchs: async (request: Request, response: Response) => {
+
+        const body = request.body;
+
+        const auth = request.auth;
+        const user = auth.user;
+
+        const platform = user.platform;
+
+        const orders: OrderEntity[] = body.orders;
+
+        const status = body?.status;
+
+        try {
+
+            dataSource.transaction(async (transactionalEntityManager) => {
+
+                const orderEntity = transactionalEntityManager.getRepository(OrderEntity);
+
+                for (let index = 0; index < orders.length; index++) {
+                    const element = orders[index];
+
+                    const orderId: number = element.id;
+                    const oldOrder = await orderEntity.findOne({
+                        where: { id: orderId }
+                    });
+
+                    let orderNumber: number = 0;
+                    
+
+                    if (status === 'processando') {
+
+                        const order = await orderEntity.findOne({
+                            where: {
+                                fkPlatform: platform.id,
+                                isOpen: true,
+                                isCancelled: false,
+                                status: 'processando'
+                            },
+                            order: { order: 'DESC' }
+                        });
+                        orderNumber = order?.order? order.order : 0;
+                        orderNumber = orderNumber + 1;
+                    }
+
+                    const order: any = {
+                        status: status,
+                        order: orderNumber,
+                        updatedBy: user.id,
+                        updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
+                    };
+
+                    const spendingMerger = orderEntity.merge(oldOrder, order)
+
+                    await orderEntity.update(orderId, spendingMerger);
+
+                }
 
                 return response.json({
                     message: "Pedido alterado com sucesso!"

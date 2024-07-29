@@ -34,6 +34,9 @@ export class OrderEntity {
     @Column({ name: "delivery_date", nullable: true })
     deliveryDate: Date;
 
+    @Column({ name: "order", default: 0  })
+    order: number;
+
     @Column({ type:'float', nullable: true })
     value: number;
 

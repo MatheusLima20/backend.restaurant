@@ -47,6 +47,15 @@ export const OrderValidation = {
 
     }, { abortEarly: false, messages: messages, }),
 
+    patchs: celebrate({
+
+        [Segments.BODY]: {
+            orders: Joi.array(),
+            status: Joi.string().allow(),
+        }
+
+    }, { abortEarly: false, messages: messages, }),
+
     patchChangeTableOrders: celebrate({
 
         [Segments.PARAMS]: {
