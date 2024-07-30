@@ -10,7 +10,7 @@ import { Server } from "socket.io";
 
 const host: string = process.env.HOST_NAME;
 const port: number = Number.parseInt(process.env.PORT);
-const socket_origin: string = String(process.env.PORT);
+const socket_origin: string = String(process.env.SOCKET_ORIGIN);
 
 const app = express();
 
@@ -56,7 +56,6 @@ io.on("connection", (socket) => {
     });
 
     socket.on("send_orders", (data) => {
-        console.log(data.platform);
         socket.to(data.platform).emit("receive_orders", data);
     });
 
