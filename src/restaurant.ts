@@ -49,7 +49,6 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-    console.log(`User Connected: ${socket.id}`);
 
     socket.on("platform", (data) => {
         socket.join(data);
