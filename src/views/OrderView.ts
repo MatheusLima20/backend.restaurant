@@ -85,6 +85,7 @@ export const OrderView = {
                 id: order.id,
                 amount: order.amount,
                 productName: order.description,
+                isCancelled: order.isCancelled,
                 idTable: order.fkTable,
             };
         });

@@ -158,13 +158,11 @@ export const OrderController = {
             const orders = await orderRepository.find({
                 where: {
                     fkPlatform: platform.id,
-                    isOpen: true,
-                    isCancelled: false,
                     status: Like(`%${status}%`) as any
                 },
                 order: { order: 'ASC' }
             });
-            
+
             const orderView = OrderView.getByStatus(orders);
 
             return response.json({
@@ -349,7 +347,7 @@ export const OrderController = {
                     });
 
                     let orderNumber: number = 0;
-                    
+
 
                     if (status === 'processando') {
 
@@ -362,7 +360,7 @@ export const OrderController = {
                             },
                             order: { order: 'DESC' }
                         });
-                        orderNumber = order?.order? order.order : 0;
+                        orderNumber = order?.order ? order.order : 0;
                         orderNumber = orderNumber + 1;
                     }
 
