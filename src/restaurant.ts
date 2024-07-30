@@ -6,9 +6,11 @@ import { customErrors } from "./middlwares/CustomErrors/CelebrationMiddleware";
 import * as cors from "cors";
 import * as http from "http";
 import { dataSource } from "./data.source";
+import { Server } from "socket.io";
 
 const host: string = process.env.HOST_NAME;
 const port: number = Number.parseInt(process.env.PORT);
+const socket_origin: string = String(process.env.PORT);
 
 const app = express();
 
@@ -39,8 +41,32 @@ app.use(customErrors());
 
 const httpServer = http.createServer(app);
 
+const io = new Server(httpServer, {
+    cors: {
+        origin: socket_origin,
+        methods: ["GET", "POST", "PATCH"],
+    },
+});
+
+io.on("connection", (socket) => {
+    console.log(`User Connected: ${socket.id}`);
+
+    socket.on("platform", (data) => {
+        socket.join(data);
+    });
+
+    socket.on("send_orders", (data) => {
+        console.log(data.platform);
+        socket.to(data.platform).emit("receive_orders", data);
+    });
+
+    socket.on("send_status", (data) => {
+        socket.to(data.platform).emit("receive_status", data);
+    });
+});
+
 dataSource.initialize().then(() => {
     httpServer.listen(port, host, () => {
-      return console.log('Server started on port: ' + port + ' 🏆!');
+        return console.log('Server started on port: ' + port + ' 🏆!');
     });
 });
