@@ -87,6 +87,9 @@ export const OrderView = {
                 productName: order.description,
                 isCancelled: order.isCancelled,
                 idTable: order.fkTable,
+                productType: order.productType,
+                order: order.order,
+                createdAt: order.createdAt,
             };
         });
 
