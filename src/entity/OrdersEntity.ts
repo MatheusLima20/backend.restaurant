@@ -19,13 +19,16 @@ export class OrderEntity {
     @Column()
     description: string;
 
+    @Column({ nullable: true })
+    observation: string;
+
     @Column({ name: "payment_method", nullable: true })
     paymentMethod: string;
 
-    @Column({ name: "status", default: "pendente"})
+    @Column({ name: "status", default: "pendente" })
     status: string;
 
-    @Column({ name: "product_type", nullable: true})
+    @Column({ name: "product_type", nullable: true })
     productType: string;
 
     @Column({ name: "delivery_forecast", nullable: true })
@@ -34,22 +37,22 @@ export class OrderEntity {
     @Column({ name: "delivery_date", nullable: true })
     deliveryDate: Date;
 
-    @Column({ name: "order", default: 0  })
+    @Column({ name: "order", default: 0 })
     order: number;
 
-    @Column({ type:'float', nullable: true })
+    @Column({ type: 'float', nullable: true })
     value: number;
 
-    @Column({ type:'float', nullable: true })
+    @Column({ type: 'float', nullable: true })
     amount: number;
 
     @Column({ name: "tracking_code", nullable: true })
     trackingCode: string;
 
-    @Column({ name: "is_delivered", default: false, nullable: true  })
+    @Column({ name: "is_delivered", default: false, nullable: true })
     isDelivered: boolean;
 
-    @Column({ name: "is_cancelled", default: false, nullable: true  })
+    @Column({ name: "is_cancelled", default: false, nullable: true })
     isCancelled: boolean;
 
     @ManyToOne(() => UserEntity, (user) => user.id)
@@ -72,7 +75,7 @@ export class OrderEntity {
     @Column({ name: "is_open", default: true })
     isOpen: boolean;
 
-    @Column({ name: 'created_by', nullable: true  })
+    @Column({ name: 'created_by', nullable: true })
     createdBy: number;
 
     @Column({ name: "updated_by", nullable: true })

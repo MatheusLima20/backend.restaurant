@@ -213,6 +213,7 @@ export const OrderController = {
                 fkTable: body.idTable,
                 fkBoxDay: boxDay.id,
                 description: product.name,
+                observation: body.observation,
                 amount: body.amount,
                 value: product.value,
                 productType: product.fkProductType.name,

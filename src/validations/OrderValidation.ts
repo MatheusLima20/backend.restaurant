@@ -33,6 +33,7 @@ export const OrderValidation = {
             idProduct: Joi.number().required().positive(),
             idTable: Joi.number().required().positive(),
             amount: Joi.number().required().positive(),
+            observation: Joi.string().allow(),
         }
     }, { abortEarly: false, messages: messages, }),
 

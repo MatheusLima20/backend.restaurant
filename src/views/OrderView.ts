@@ -40,6 +40,7 @@ export const OrderView = {
                 productType: order.productType,
                 value: order.value,
                 status: order.status,
+                observation: order.observation,
                 createdBy: users[index].name,
                 createdAt: createdAt
             });
@@ -89,6 +90,7 @@ export const OrderView = {
                 idTable: order.fkTable,
                 productType: order.productType,
                 order: order.order,
+                observation: order.observation,
                 createdAt: order.createdAt,
             };
         });
