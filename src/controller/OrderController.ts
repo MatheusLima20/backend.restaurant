@@ -285,6 +285,8 @@ export const OrderController = {
 
                 }
 
+                const updatedBy = !oldOrder.isCancelled ? user.id : undefined;
+
                 const order: any = {
                     description: product?.name,
                     value: product?.value,
@@ -293,7 +295,7 @@ export const OrderController = {
                     isOpen: body?.isOpen,
                     paymentMethod: body?.paymentMethod,
                     status: status,
-                    updatedBy: user.id,
+                    updatedBy: updatedBy,
                     updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
                 };
 
