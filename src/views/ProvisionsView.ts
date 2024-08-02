@@ -27,6 +27,7 @@ export const ProductView = {
                 value: product.value,
                 productType: product.fkProductType.name,
                 show: product.show,
+                toCook: product.toCook,
                 isActive: product.isActive
             };
         });
