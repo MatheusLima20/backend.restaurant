@@ -44,6 +44,9 @@ export class ProvisionsEntity {
     @Column({ name: "is_active", default: true })
     isActive: boolean;
 
+    @Column({ name: "to_cook", default: true })
+    toCook: boolean;
+
     @Column({ name: "is_plate", default: true })
     isPlate: boolean;
 

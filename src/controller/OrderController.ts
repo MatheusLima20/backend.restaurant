@@ -4,7 +4,7 @@ import { OrderEntity } from "../entity/OrdersEntity";
 import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { BoxDayEntity } from "../entity/BoxDayEntity";
 import { OrderView } from "../views/OrderView";
-import { IsNull, Like, Not } from "typeorm";
+import { Like } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
 import dayjs = require("dayjs");
 
@@ -208,6 +208,8 @@ export const OrderController = {
                 }
             });
 
+            const status = !product.toCook ? 'finalizado' : undefined;
+
             const order: any = {
                 fkPlatform: platform.id,
                 fkTable: body.idTable,
@@ -215,6 +217,7 @@ export const OrderController = {
                 description: product.name,
                 observation: body.observation,
                 amount: body.amount,
+                status: status,
                 value: product.value,
                 productType: product.fkProductType.name,
                 createdBy: user.id,

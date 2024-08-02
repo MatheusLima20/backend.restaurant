@@ -18,6 +18,7 @@ export const ProductValidation = {
             productType: Joi.string().allow(),
             isActive: Joi.boolean().required(),
             show: Joi.boolean().required(),
+            toCook: Joi.boolean().allow(),
             isPlate: Joi.boolean().required(),
         }
     }, { abortEarly: false, messages: messages, }),
@@ -42,6 +43,7 @@ export const ProductValidation = {
             amount: Joi.number().allow(),
             unitMeasurement: Joi.string().allow(),
             productType: Joi.string().allow(),
+            toCook: Joi.boolean().allow(),
             isActive: Joi.boolean().allow(),
             show: Joi.boolean().allow(),
             add: Joi.boolean().allow(),
