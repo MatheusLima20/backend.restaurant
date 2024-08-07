@@ -6,7 +6,7 @@ import { RawMaterialView } from "../views/RawMaterialView";
 
 export const RawMaterialController = {
 
-    get: async (request: Request, response: Response) => {
+    getById: async (request: Request, response: Response) => {
 
         const { id } = request.params;
         const auth = request.auth;
@@ -19,7 +19,8 @@ export const RawMaterialController = {
 
             const rawMaterial = await rawMaterialEntity.find({
                 where: {
-                    fkPlatform: platform.id
+                    fkProduct: Number.parseInt(id) as any,
+                    fkPlatform: platform.id,
                 },
                 relations: {
                     fkProduct: true,
@@ -27,7 +28,7 @@ export const RawMaterialController = {
                 }
             });
 
-            const rawMaterialView = RawMaterialView.get(rawMaterial);
+            const rawMaterialView = RawMaterialView.getById(rawMaterial);
 
             return response.json({
                 data: rawMaterialView,
@@ -41,6 +42,105 @@ export const RawMaterialController = {
             });
         }
 
-    }
+    },
+
+    store: async (request: Request, response: Response) => {
+
+        const body = request.body;
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+
+            const rawMaterialEntity = dataSource.getRepository(RawMaterialEntity);
+
+            const rawMaterial = {
+                fkProduct: body.productId,
+                fkRawMaterial: body.rawMaterialId,
+                fkPlatform: platform.id,
+                amount: body.amount,
+                createdBy: user.id,
+            };
+
+            await rawMaterialEntity.save({
+                ...rawMaterial
+            });
+
+            return response.json({
+                message: "Dados salvos com sucesso.",
+            });
+
+        } catch (error) {
+            return response.status(404).json({
+                message: error,
+                error
+            });
+        }
+
+    },
+
+    patch: async (request: Request, response: Response) => {
+
+        const { id } = request.params;
+
+        const body = request.body;
+        const auth = request.auth;
+        const user = auth.user;
+
+        const rawMaterialId = Number.parseInt(id);
+
+        try {
+
+            const rawMaterialEntity = dataSource.getRepository(RawMaterialEntity);
+
+            const rawMaterial = {
+                fkProduct: body.productId,
+                fkRawMaterial: body.rawMaterialId,
+                amount: body.amount,
+                updatedBy: user.id,
+            };
+
+            await rawMaterialEntity.update(rawMaterialId, {
+                ...rawMaterial
+            });
+
+            return response.json({
+                message: "Dados salvos com sucesso.",
+            });
+
+        } catch (error) {
+            return response.status(404).json({
+                message: error,
+                error
+            });
+        }
+
+    },
+
+    delete: async (request: Request, response: Response) => {
+
+        const { id } = request.params;
+
+        const rawMaterialId = Number.parseInt(id);
+
+        try {
+
+            const rawMaterialEntity = dataSource.getRepository(RawMaterialEntity);
+
+            await rawMaterialEntity.delete(rawMaterialId);
+
+            return response.json({
+                message: "Dados salvos com sucesso.",
+            });
+
+        } catch (error) {
+            return response.status(404).json({
+                message: error,
+                error
+            });
+        }
+
+    },
 
 }

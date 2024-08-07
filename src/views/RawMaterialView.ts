@@ -3,7 +3,7 @@ import { RawMaterialEntity } from "../entity/RawMaterialEntity";
 
 export const RawMaterialView = {
 
-    get: (rawMaterials: Array<RawMaterialEntity>) => {
+    getById: (rawMaterials: Array<RawMaterialEntity>) => {
 
         return rawMaterials.map((rawMaterial: RawMaterialEntity) => {
             return {
