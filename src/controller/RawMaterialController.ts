@@ -24,7 +24,9 @@ export const RawMaterialController = {
                 },
                 relations: {
                     fkProduct: true,
-                    fkRawMaterial: true,
+                    fkRawMaterial:   {
+                        fkUnitMeasurement: true,
+                    },
                 }
             });
 

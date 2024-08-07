@@ -12,6 +12,7 @@ export const RawMaterialView = {
                 productName: rawMaterial.fkProduct.name,
                 materialId: rawMaterial.fkRawMaterial.id,
                 materialName: rawMaterial.fkRawMaterial.name,
+                materialUnitMeasurementName: rawMaterial.fkRawMaterial.fkUnitMeasurement.name,
                 amount: rawMaterial.amount,
             }
         });

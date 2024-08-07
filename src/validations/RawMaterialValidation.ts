@@ -3,7 +3,7 @@ import { messages } from "joi-translation-pt-br";
 
 export const RawMaterialValidation = {
 
-    get: celebrate({
+    getById: celebrate({
         [Segments.PARAMS]: {
             id: Joi.number().positive().required(),
         }

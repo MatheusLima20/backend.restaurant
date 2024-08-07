@@ -9,7 +9,7 @@ const routes = Router();
 routes.get(
     "/raw-material/:id",
     VerifyJWTMiddleware.verifyJWT,
-    RawMaterialValidation.get,
+    RawMaterialValidation.getById,
     RawMaterialController.getById,
 );
 
