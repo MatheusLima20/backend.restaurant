@@ -9,10 +9,7 @@ export const RawMaterialView = {
             return {
                 id: rawMaterial.id,
                 productId: rawMaterial.fkProduct.id,
-                productName: rawMaterial.fkProduct.name,
-                materialId: rawMaterial.fkRawMaterial.id,
-                materialName: rawMaterial.fkRawMaterial.name,
-                materialUnitMeasurementName: rawMaterial.fkRawMaterial.fkUnitMeasurement.name,
+                rawMaterialId: rawMaterial.fkRawMaterial.id,
                 amount: rawMaterial.amount,
             }
         });
