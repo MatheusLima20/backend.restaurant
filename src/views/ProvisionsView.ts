@@ -2,9 +2,9 @@ import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 
 export const ProductView = {
     get: (products: Array<ProvisionsEntity>) => {
-        
+
         return products.map((product) => {
-            
+
             return {
                 id: product.id,
                 name: product.name,
@@ -17,9 +17,9 @@ export const ProductView = {
         });
     },
     getPlates: (products: Array<ProvisionsEntity>) => {
-        
+
         return products.map((product) => {
-            
+
             return {
                 id: product.id,
                 name: product.name,
@@ -31,5 +31,12 @@ export const ProductView = {
                 isActive: product.isActive
             };
         });
+    },
+
+    store: (product: ProvisionsEntity) => {
+
+        return {
+            id: product.id,
+        };
     },
 };

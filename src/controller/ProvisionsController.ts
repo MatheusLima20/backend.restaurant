@@ -123,10 +123,13 @@ export const ProvisionsController = {
                 createdBy: user.id,
             }
 
-            await productRepository.save(product);
+            const productData = await productRepository.save(product);
+
+            const productView = ProductView.store(productData);
 
             return response.json(
                 {
+                    data: productView,
                     message: "Produto salvo com sucesso!",
                 }
             );

@@ -13,7 +13,7 @@ export const RawMaterialValidation = {
         [Segments.BODY]: {
             productId: Joi.number().positive().required(),
             rawMaterialId: Joi.number().positive().required(),
-            amount: Joi.number().positive().required(),
+            amount: Joi.number().required(),
         }
     }, { abortEarly: false, messages: messages }),
 
