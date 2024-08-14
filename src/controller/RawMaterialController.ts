@@ -14,12 +14,12 @@ export const RawMaterialController = {
         const platform = user.platform;
 
         try {
-
+            
             const rawMaterialEntity = dataSource.getRepository(RawMaterialEntity);
 
             const rawMaterial = await rawMaterialEntity.find({
                 where: {
-                    fkProduct: Number.parseInt(id) as any,
+                    fkProduct: { id: Number.parseInt(id) },
                     fkPlatform: platform.id,
                 },
                 relations: {
@@ -52,7 +52,7 @@ export const RawMaterialController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
-
+        
         try {
 
             const rawMaterialEntity = dataSource.getRepository(RawMaterialEntity);
@@ -64,7 +64,7 @@ export const RawMaterialController = {
                 amount: body.amount,
                 createdBy: user.id,
             };
-
+            
             await rawMaterialEntity.save({
                 ...rawMaterial
             });
@@ -108,7 +108,7 @@ export const RawMaterialController = {
             });
 
             return response.json({
-                message: "Dados salvos com sucesso.",
+                message: "Dados atualizados com sucesso.",
             });
 
         } catch (error) {
