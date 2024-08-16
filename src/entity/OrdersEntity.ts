@@ -16,6 +16,9 @@ export class OrderEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column({name: 'fk_product_id'})
+    fkProductId: number;
+
     @Column()
     description: string;
 

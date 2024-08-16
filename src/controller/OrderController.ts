@@ -184,6 +184,8 @@ export const OrderController = {
         const user = auth.user;
         const platform = user.platform;
 
+        const idProduct = Number.parseInt(body.idProduct);
+
         try {
 
             const orderRepository = dataSource.getRepository(OrderEntity);
@@ -202,7 +204,7 @@ export const OrderController = {
             }
 
             const product = await productRepository.findOne({
-                where: { id: Number.parseInt(body.idProduct) },
+                where: { id: idProduct },
                 relations: {
                     fkProductType: true
                 }
@@ -211,6 +213,7 @@ export const OrderController = {
             const status = !product.toCook ? 'finalizado' : undefined;
 
             const order: any = {
+                fkProductId: idProduct,
                 fkPlatform: platform.id,
                 fkTable: body.idTable,
                 fkBoxDay: boxDay.id,
@@ -265,7 +268,7 @@ export const OrderController = {
                 let amount = body?.amount;
                 const status = body?.status;
 
-                if (productId) {
+                if (productId && amount) {
                     product = await productRepository.findOne({
                         where: { id: Number.parseInt(productId) }
                     });
@@ -290,8 +293,17 @@ export const OrderController = {
 
                 const updatedBy = !oldOrder.isCancelled ? user.id : undefined;
 
+                if (status === 'finalizado') {
+
+                    const provisionsRepository = dataSource.getRepository(ProvisionsEntity);
+
+
+
+                }
+
                 const order: any = {
                     description: product?.name,
+                    fkProductId: productId,
                     value: product?.value,
                     amount: amount,
                     isCancelled: body?.isCancelled,
@@ -311,7 +323,6 @@ export const OrderController = {
                 });
 
             });
-
 
         } catch (error) {
 
