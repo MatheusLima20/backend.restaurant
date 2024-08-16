@@ -84,6 +84,7 @@ export const OrderView = {
         return orders.map((order) => {
             return{
                 id: order.id,
+                productId: order.fkProductId,
                 amount: order.amount,
                 productName: order.description,
                 isCancelled: order.isCancelled,

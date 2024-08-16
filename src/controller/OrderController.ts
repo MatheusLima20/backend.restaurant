@@ -7,6 +7,7 @@ import { OrderView } from "../views/OrderView";
 import { Like } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
 import dayjs = require("dayjs");
+import { RawMaterialEntity } from "../entity/RawMaterialEntity";
 
 export const OrderController = {
 
@@ -249,6 +250,7 @@ export const OrderController = {
 
         const auth = request.auth;
         const user = auth.user;
+        const platform = user.platform;
 
         const productId = body.productId;
 
@@ -296,7 +298,39 @@ export const OrderController = {
                 if (status === 'finalizado') {
 
                     const provisionsRepository = dataSource.getRepository(ProvisionsEntity);
+                    const rawMaterialRepository = dataSource.getRepository(RawMaterialEntity);
+                    
+                    const rawMaterial = await rawMaterialRepository.find({
+                        where: {
+                            fkPlatform: platform.id,
+                            fkProduct: {
+                                id: Number.parseInt(productId),
+                            }
+                        },
+                        relations: {
+                            fkRawMaterial: true,
+                        }
+                    });
 
+                    if (rawMaterial.length) {
+
+                        for (let index = 0; index < rawMaterial.length; index++) {
+                            const material = rawMaterial[index];
+                            const provision = await provisionsRepository.findOne({
+                                where: {
+                                    id: material.fkRawMaterial.id,
+                                    fkPlatform: platform.id,
+                                }
+                            });
+                            const low = provision.amount - material.amount;
+                            const newProvision = {
+                                amount: low
+                            }
+                            const provisionMerger = provisionsRepository.merge(provision, newProvision);
+                            await provisionsRepository.update(provision.id, provisionMerger);
+                        }
+
+                    }
 
 
                 }
