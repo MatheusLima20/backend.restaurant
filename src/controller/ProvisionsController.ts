@@ -234,7 +234,7 @@ export const ProvisionsController = {
 
     },
 
-    patchLowStockByOrder: async (request: Request, response: Response) => {
+    patchLowStock: async (request: Request, response: Response) => {
 
         const { id } = request.params;
 
