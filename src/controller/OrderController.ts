@@ -253,6 +253,7 @@ export const OrderController = {
         const platform = user.platform;
 
         const productId = body.productId;
+        const isOpen = body?.isOpen;
 
         try {
 
@@ -295,11 +296,11 @@ export const OrderController = {
 
                 const updatedBy = !oldOrder.isCancelled ? user.id : undefined;
 
-                if (status === 'finalizado') {
+                if (status === 'finalizado' && isOpen === undefined) {
 
                     const provisionsRepository = dataSource.getRepository(ProvisionsEntity);
                     const rawMaterialRepository = dataSource.getRepository(RawMaterialEntity);
-                    
+
                     const rawMaterial = await rawMaterialRepository.find({
                         where: {
                             fkPlatform: platform.id,
@@ -322,7 +323,9 @@ export const OrderController = {
                                     fkPlatform: platform.id,
                                 }
                             });
-                            const low = provision.amount - material.amount;
+                            const orderAmount = oldOrder.amount;
+                            const low = (provision.amount) -
+                                (material.amount * orderAmount);
                             const newProvision = {
                                 amount: low
                             }
@@ -341,7 +344,7 @@ export const OrderController = {
                     value: product?.value,
                     amount: amount,
                     isCancelled: body?.isCancelled,
-                    isOpen: body?.isOpen,
+                    isOpen: isOpen,
                     paymentMethod: body?.paymentMethod,
                     status: status,
                     updatedBy: updatedBy,
