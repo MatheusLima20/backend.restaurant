@@ -250,7 +250,6 @@ export const OrderController = {
 
         const auth = request.auth;
         const user = auth.user;
-        const platform = user.platform;
 
         const productId = body.productId;
         const isOpen = body?.isOpen;
@@ -295,48 +294,6 @@ export const OrderController = {
                 }
 
                 const updatedBy = !oldOrder.isCancelled ? user.id : undefined;
-
-                if (status === 'finalizado' && isOpen === undefined) {
-
-                    const provisionsRepository = dataSource.getRepository(ProvisionsEntity);
-                    const rawMaterialRepository = dataSource.getRepository(RawMaterialEntity);
-
-                    const rawMaterial = await rawMaterialRepository.find({
-                        where: {
-                            fkPlatform: platform.id,
-                            fkProduct: {
-                                id: Number.parseInt(productId),
-                            }
-                        },
-                        relations: {
-                            fkRawMaterial: true,
-                        }
-                    });
-
-                    if (rawMaterial.length) {
-
-                        for (let index = 0; index < rawMaterial.length; index++) {
-                            const material = rawMaterial[index];
-                            const provision = await provisionsRepository.findOne({
-                                where: {
-                                    id: material.fkRawMaterial.id,
-                                    fkPlatform: platform.id,
-                                }
-                            });
-                            const orderAmount = oldOrder.amount;
-                            const low = (provision.amount) -
-                                (material.amount * orderAmount);
-                            const newProvision = {
-                                amount: low
-                            }
-                            const provisionMerger = provisionsRepository.merge(provision, newProvision);
-                            await provisionsRepository.update(provision.id, provisionMerger);
-                        }
-
-                    }
-
-
-                }
 
                 const order: any = {
                     description: product?.name,

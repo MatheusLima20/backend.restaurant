@@ -5,6 +5,8 @@ import { UnitMeasurementEntity } from "../entity/UnitMeasurementEntity";
 import { ProductView } from "../views/ProvisionsView";
 import dayjs = require("dayjs");
 import { ProductTypeEntity } from "../entity/ProductTypeEntity";
+import { RawMaterialEntity } from "../entity/RawMaterialEntity";
+import { OrderEntity } from "../entity/OrdersEntity";
 
 export const ProvisionsController = {
 
@@ -224,10 +226,76 @@ export const ProvisionsController = {
 
             return response.status(404).json(
                 {
-                    message: "Erro ao salvar gastos", error: error
+                    message: "Erro ao salvar produtos", error: error
                 }
             );
 
+        }
+
+    },
+
+    patchLowStockByOrder: async (request: Request, response: Response) => {
+
+        const { id } = request.params;
+
+        const body = request.body;
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        const productId = body.productId;
+
+        try {
+
+            const provisionsRepository = dataSource.getRepository(ProvisionsEntity);
+            const rawMaterialRepository = dataSource.getRepository(RawMaterialEntity);
+            const orderEntity = dataSource.getRepository(OrderEntity);
+
+            const orderId: number = Number.parseInt(id);
+                const oldOrder = await orderEntity.findOne({
+                    where: { id: orderId }
+                });
+
+            const rawMaterial = await rawMaterialRepository.find({
+                where: {
+                    fkPlatform: platform.id,
+                    fkProduct: {
+                        id: Number.parseInt(productId),
+                    }
+                },
+                relations: {
+                    fkRawMaterial: true,
+                }
+            });
+
+            if (rawMaterial.length) {
+
+                for (let index = 0; index < rawMaterial.length; index++) {
+                    const material = rawMaterial[index];
+                    const provision = await provisionsRepository.findOne({
+                        where: {
+                            id: material.fkRawMaterial.id,
+                            fkPlatform: platform.id,
+                        }
+                    });
+                    const orderAmount = oldOrder.amount;
+                    const low = (provision.amount) -
+                        (material.amount * orderAmount);
+                    const newProvision = {
+                        amount: low
+                    }
+                    const provisionMerger = provisionsRepository.merge(provision, newProvision);
+                    await provisionsRepository.update(provision.id, provisionMerger);
+                }
+
+            }
+
+        } catch (error) {
+            return response.status(404).json(
+                {
+                    message: "Erro ao salvar stock", error: error
+                }
+            );
         }
 
     },
