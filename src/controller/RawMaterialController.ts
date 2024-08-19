@@ -177,6 +177,10 @@ export const RawMaterialController = {
 
             }
 
+            return response.json({
+                message: "Dados atualizados com sucesso.",
+            });
+
         } catch (error) {
             return response.status(404).json(
                 {
