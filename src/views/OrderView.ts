@@ -36,6 +36,7 @@ export const OrderView = {
                 id: order.id,
                 isOpen: order.isOpen,
                 amount: order.amount,
+                productId: order.fkProductId,
                 productName: order.description,
                 productType: order.productType,
                 value: order.value,

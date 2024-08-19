@@ -27,6 +27,13 @@ routes.patch(
     RawMaterialController.patch
 );
 
+routes.patch(
+    "/raw-material-low-stock/:orderid/:productid",
+    VerifyJWTMiddleware.verifyJWT,
+    RawMaterialValidation.patchLowStock,
+    RawMaterialController.patchLowStock
+);
+
 routes.delete(
     "/raw-material/",
     VerifyJWTMiddleware.verifyJWT,

@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { dataSource } from "../data.source";
 import { RawMaterialEntity } from "../entity/RawMaterialEntity";
 import { RawMaterialView } from "../views/RawMaterialView";
+import { ProvisionsEntity } from "../entity/ProvisionsEntity";
+import { OrderEntity } from "../entity/OrdersEntity";
 
 
 export const RawMaterialController = {
@@ -14,7 +16,7 @@ export const RawMaterialController = {
         const platform = user.platform;
 
         try {
-            
+
             const rawMaterialEntity = dataSource.getRepository(RawMaterialEntity);
 
             const rawMaterial = await rawMaterialEntity.find({
@@ -24,7 +26,7 @@ export const RawMaterialController = {
                 },
                 relations: {
                     fkProduct: true,
-                    fkRawMaterial:   {
+                    fkRawMaterial: {
                         fkUnitMeasurement: true,
                     },
                 }
@@ -52,7 +54,7 @@ export const RawMaterialController = {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
-        
+
         try {
 
             const rawMaterialEntity = dataSource.getRepository(RawMaterialEntity);
@@ -64,7 +66,7 @@ export const RawMaterialController = {
                 amount: body.amount,
                 createdBy: user.id,
             };
-            
+
             await rawMaterialEntity.save({
                 ...rawMaterial
             });
@@ -116,6 +118,71 @@ export const RawMaterialController = {
                 message: error,
                 error
             });
+        }
+
+    },
+
+    patchLowStock: async (request: Request, response: Response) => {
+
+        const { orderid, productid } = request.params;
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        const orderId: number = Number.parseInt(orderid);
+        const productId: number = Number.parseInt(productid);
+
+        try {
+
+            const provisionsRepository = dataSource.getRepository(ProvisionsEntity);
+            const rawMaterialRepository = dataSource.getRepository(RawMaterialEntity);
+            const orderEntity = dataSource.getRepository(OrderEntity);
+
+            const oldOrder = await orderEntity.findOne({
+                where: { id: orderId }
+            });
+
+            const rawMaterial = await rawMaterialRepository.find({
+                where: {
+                    fkPlatform: platform.id,
+                    fkProduct: {
+                        id: productId,
+                    }
+                },
+                relations: {
+                    fkRawMaterial: true,
+                }
+            });
+
+            if (rawMaterial.length) {
+
+                for (let index = 0; index < rawMaterial.length; index++) {
+                    const material = rawMaterial[index];
+                    const provision = await provisionsRepository.findOne({
+                        where: {
+                            id: material.fkRawMaterial.id,
+                            fkPlatform: platform.id,
+                        }
+                    });
+                    const orderAmount = oldOrder.amount;
+                    const low = (provision.amount) -
+                        (material.amount * orderAmount);
+                    const newProvision = {
+                        amount: low
+                    }
+                    const provisionMerger = provisionsRepository.merge(provision, newProvision);
+                    await provisionsRepository.update(provision.id, provisionMerger);
+                }
+
+            }
+
+        } catch (error) {
+            return response.status(404).json(
+                {
+                    message: "Erro ao salvar stock", error: error
+                }
+            );
         }
 
     },
