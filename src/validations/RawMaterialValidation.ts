@@ -31,13 +31,9 @@ export const RawMaterialValidation = {
 
     patchLowStock: celebrate({
         [Segments.PARAMS]: {
-            id: Joi.number().positive().required()
+            orderid: Joi.number().positive().required(),
+            productid: Joi.number().positive().required(),
         },
-
-        [Segments.BODY]: {
-            productId: Joi.number().positive().required(),
-            rawMaterialId: Joi.number().positive().required(),
-        }
     }, { abortEarly: false, messages: messages }),
 
     delete: celebrate({
