@@ -42,7 +42,7 @@ routes.post(
 
 routes.post(
     "/platform-register",
-    UserValidation.storeCompany,
+    UserValidation.storePlatform,
     UserController.storePlatform
 );
 

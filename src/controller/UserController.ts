@@ -546,7 +546,7 @@ export const UserController = {
             await dataSource.transaction(
                 async (transactionalEntityManager) => {
 
-                    const planEntity = dataSource.getRepository(PlanEntity);
+                    const planRepository = dataSource.getRepository(PlanEntity);
 
                     const platformEntity =
                         transactionalEntityManager.getRepository(
@@ -565,6 +565,10 @@ export const UserController = {
                     const statesEntity =
                         transactionalEntityManager.getRepository(StatesEntity);
 
+                    const planEntity = await planRepository.findOne({
+                        where: { name: plan }
+                    });
+
                     const password = AdmLogin.hashPassword(dataUser.password);
 
                     const companyData = {
@@ -575,6 +579,8 @@ export const UserController = {
 
                     const platform = {
                         name: dataUser.platformName,
+                        isMonthPlan: isMonthPlan,
+                        fkPlan: planEntity,
                     };
 
                     const user = {
@@ -638,6 +644,8 @@ export const UserController = {
                     const platformStore = await platformEntity.save({
                         name: platform.name,
                         fkCompany: companyStore,
+                        fkPlan: platform.fkPlan,
+                        isMonthPlan: platform.isMonthPlan,
                     } as PlatformEntity);
 
                     const userType = await userTypeEntity.findOne({

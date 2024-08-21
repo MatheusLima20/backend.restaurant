@@ -77,7 +77,7 @@ export const UserValidation = {
         }
     }, { abortEarly: false, messages: messages, }),
 
-    storeCompany: celebrate({
+    storePlatform: celebrate({
         [Segments.BODY]: {
             cpfcnpj: Joi.string().required().min(5),
             platformName: Joi.string().required().min(5),
