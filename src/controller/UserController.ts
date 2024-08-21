@@ -597,6 +597,16 @@ export const UserController = {
                         addressCodePostal: addressCodePostal,
                     };
 
+                    const userType = await userTypeEntity.findOne({
+                        where: { name: "SUPER" },
+                    });
+
+                    if (!userType) {
+                        return response.status(404).json({
+                            message: "Tipo de usuário não encontrado.",
+                        });
+                    }
+
                     const emailStored = await userEntity.findOne({
                         where: {
                             email: user.email,
@@ -647,16 +657,6 @@ export const UserController = {
                         fkPlan: platform.fkPlan,
                         isMonthPlan: platform.isMonthPlan,
                     } as PlatformEntity);
-
-                    const userType = await userTypeEntity.findOne({
-                        where: { name: "SUPER" },
-                    });
-
-                    if (!userType) {
-                        return response.status(404).json({
-                            message: "Tipo de usuário não encontrado.",
-                        });
-                    }
 
                     const userStore = await userEntity.save({
                         fkCompany: companyDataBase,
