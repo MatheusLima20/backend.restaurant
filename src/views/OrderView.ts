@@ -9,12 +9,16 @@ export const OrderView = {
 
         orders.map((order) => {
             total += order.value * order.amount;
+            const createdAt = order.createdAt;
             values.push({
                 id: order.id,
                 isOpen: order.isOpen,
                 amount: order.amount,
                 productName: order.description,
+                productType: order.productType,
                 value: order.value,
+                deliveryDate: order.deliveryDate,
+                createdAt: createdAt,
             });
         });
 
@@ -43,7 +47,7 @@ export const OrderView = {
                 status: order.status,
                 observation: order.observation,
                 createdBy: users[index].name,
-                createdAt: createdAt
+                createdAt: createdAt,
             });
         });
 

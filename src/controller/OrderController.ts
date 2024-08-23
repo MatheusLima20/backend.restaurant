@@ -7,12 +7,11 @@ import { OrderView } from "../views/OrderView";
 import { Like } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
 import dayjs = require("dayjs");
-import { RawMaterialEntity } from "../entity/RawMaterialEntity";
 
 export const OrderController = {
 
     getByDate: async (request: Request, response: Response) => {
-
+        
         const { date } = request.params;
 
         const auth = request.auth;
@@ -293,7 +292,12 @@ export const OrderController = {
 
                 }
 
+                const date: any = dayjs().format("YYYY-MM-DD HH:mm:ss");
+
                 const updatedBy = !oldOrder.isCancelled ? user.id : undefined;
+
+                const deliveryDate: any = status === 'finalizado'
+                    && oldOrder.status !== 'finalizado' ? date : undefined;
 
                 const order: any = {
                     description: product?.name,
@@ -305,7 +309,8 @@ export const OrderController = {
                     paymentMethod: body?.paymentMethod,
                     status: status,
                     updatedBy: updatedBy,
-                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
+                    deliveryDate: deliveryDate,
+                    updatedAt: date
                 };
 
                 const spendingMerger = orderEntity.merge(oldOrder, order)
