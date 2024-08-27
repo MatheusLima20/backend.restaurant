@@ -204,7 +204,7 @@ export const RawMaterialController = {
             await rawMaterialEntity.delete(rawMaterialId);
 
             return response.json({
-                message: "Dados salvos com sucesso.",
+                message: "Dados deletados com sucesso.",
             });
 
         } catch (error) {

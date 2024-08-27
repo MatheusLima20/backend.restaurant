@@ -35,7 +35,7 @@ routes.patch(
 );
 
 routes.delete(
-    "/raw-material/",
+    "/raw-material/:id",
     VerifyJWTMiddleware.verifyJWT,
     RawMaterialValidation.delete,
     RawMaterialController.delete
