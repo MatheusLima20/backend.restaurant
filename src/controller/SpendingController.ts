@@ -74,6 +74,7 @@ export const SpendingController = {
                 name: body.name,
                 value: body.value,
                 amount: body.amount,
+                unitMeasurement: body.unitMeasurement,
                 fkPlatform: platform.id,
                 createdBy: user.id
             };
@@ -125,6 +126,7 @@ export const SpendingController = {
                 const spending = {
                     name: body.name,
                     value: body.value,
+                    unitMeasurement: body.unitMeasurement,
                     amount: body.amount,
                     updatedBy: user.id,
                     updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")

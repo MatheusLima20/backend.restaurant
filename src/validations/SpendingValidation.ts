@@ -16,6 +16,7 @@ export const SpendingValidation = {
         [Segments.BODY]: {
             name: Joi.string().required(),
             value: Joi.number().required().positive(),
+            unitMeasurement: Joi.string().required(),
             amount: Joi.number().required().positive(),
         }
 
@@ -31,6 +32,7 @@ export const SpendingValidation = {
             name: Joi.string().required(),
             value: Joi.number().required().positive(),
             amount: Joi.number().required().positive(),
+            unitMeasurement: Joi.string().allow(),
         }
 
     }, { abortEarly: false, messages: messages, }),

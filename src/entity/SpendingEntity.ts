@@ -23,6 +23,9 @@ export class SpendingEntity {
     @Column({name: 'fk_platform'})
     fkPlatform: number;
 
+    @Column({ name: "unitMeasurement" })
+    unitMeasurement: string;
+
     @Column({ name: 'created_by', nullable: true, })
     createdBy: number;
 

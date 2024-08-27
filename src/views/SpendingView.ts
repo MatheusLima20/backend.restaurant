@@ -1,4 +1,3 @@
-import dayjs = require("dayjs");
 import { SpendingEntity } from "../entity/SpendingEntity";
 
 export const SpendingView = {
@@ -9,7 +8,7 @@ export const SpendingView = {
 
         spendings.map((spending) => {
 
-            const createdAt = dayjs(spending.createdAt).format('DD/MM/YYYY HH:mm:ss');
+            const createdAt = spending.createdAt;
 
             const amount = spending.amount;
 
@@ -19,6 +18,7 @@ export const SpendingView = {
                 {
                     id: spending.id,
                     name: spending.name,
+                    unitMeasurement: spending.unitMeasurement,
                     amount: amount,
                     value: value,
                     createdAt: createdAt,
