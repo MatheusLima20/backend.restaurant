@@ -451,6 +451,35 @@ export const UserController = {
                         transactionalEntityManager.getRepository(
                             UserTypeEntity
                         );
+                    const platformRepository = dataSource.getRepository(PlatformEntity);
+
+                    const platformEntity = await platformRepository.findOne({
+                        where: {
+                            id: platform.id,
+                        },
+                        relations: {
+                            fkPlan: true,
+                        }
+                    });
+
+                    const totalUsers = await userEntity.find({
+                        where: {
+                            isActive: true,
+                            fkPlatform: {
+                                id: platform.id
+                            }
+                        }
+                    });
+
+                    const maxUsersPlan = platformEntity.fkPlan.maxUsers;
+
+                    const moreThanMaxUsersPlan = totalUsers.length > maxUsersPlan;
+
+                    if (moreThanMaxUsersPlan) {
+                        return response.status(404).json({
+                            message: "Limite de usuários cadastrados atingido.",
+                        });
+                    }
 
                     const password = AdmLogin.hashPassword(dataUser.password);
 
@@ -872,6 +901,8 @@ export const UserController = {
 
         const userType = user.userType;
 
+        const isActive = body.isActive;
+
         if (userType !== "SUPER") {
             return response.status(404).json({
                 message: "Usuário sem permissão.",
@@ -884,6 +915,37 @@ export const UserController = {
 
                     const userEntity = transactionalEntityManager.getRepository(UserEntity);
                     const userTypeEntity = dataSource.getRepository(UserTypeEntity);
+                    const platformRepository = dataSource.getRepository(PlatformEntity);
+
+                    if (isActive) {
+                        const platformEntity = await platformRepository.findOne({
+                            where: {
+                                id: platform.id,
+                            },
+                            relations: {
+                                fkPlan: true,
+                            }
+                        });
+
+                        const totalUsers = await userEntity.find({
+                            where: {
+                                isActive: true,
+                                fkPlatform: {
+                                    id: platform.id
+                                }
+                            }
+                        });
+
+                        const maxUsersPlan = platformEntity.fkPlan.maxUsers;
+
+                        const moreThanMaxUsersPlan = totalUsers.length > maxUsersPlan;
+
+                        if (moreThanMaxUsersPlan) {
+                            return response.status(404).json({
+                                message: "Limite de usuários cadastrados atingido.",
+                            });
+                        }
+                    }
 
                     let password = body.password;
                     let passwordRepeated = body.passwordRepeated;

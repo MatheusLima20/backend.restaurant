@@ -20,6 +20,7 @@ export const Authorization = {
                             id: user.fkPlatform.id,
                             name: user.fkPlatform.name,
                         },
+                        plan: user.fkPlatform.fkPlan.name,
                     },
                 },
                 "secret",
@@ -32,16 +33,17 @@ export const Authorization = {
 
             const nameProviderArray = providerName.split(" ");
 
-            const fistProviderName = nameProviderArray[0];
+            const fistName = nameProviderArray[0];
 
             return response.json({
                 message: "Logado com sucesso!",
                 user: {
-                    name: fistProviderName,
+                    name: fistName,
                     userType: user.fkUserType.name,
                     token,
                     platformId: user.fkPlatform.id,
                     platformName: user.fkPlatform.name,
+                    plan: user.fkPlatform.fkPlan.name,
                 },
             });
         } catch (error) {
@@ -74,14 +76,14 @@ export const Authorization = {
                             name: userType
                         }
                     },
-                    relations: ["fkPlatform", "fkUserType"],
+                    relations: ["fkPlatform", "fkUserType", 'fkPlatform.fkPlan'],
                 });
             }
 
             if (!userType) {
                 user = await userRepository.findOne({
                     where: { email: email, isActive: true },
-                    relations: ["fkPlatform", "fkUserType"],
+                    relations: ["fkPlatform", "fkUserType", 'fkPlatform.fkPlan'],
                 });
 
             }
