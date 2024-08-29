@@ -4,6 +4,8 @@ import { BoxDayEntity } from "../entity/BoxDayEntity";
 import { BoxDayView } from "../views/BoxDayView";
 import { OrderEntity } from "../entity/OrdersEntity";
 import dayjs = require("dayjs");
+import { PlatformEntity } from "../entity/PlatformEntity";
+import { Like } from "typeorm";
 
 export const BoxDayController = {
 
@@ -75,6 +77,16 @@ export const BoxDayController = {
 
             const boxDayRepository = dataSource.getRepository(BoxDayEntity);
             const orderRepository = dataSource.getRepository(OrderEntity);
+            const platformRepository = dataSource.getRepository(PlatformEntity);
+
+            const platformEntity = await platformRepository.findOne({
+                where: {
+                    id: platform.id,
+                },
+                relations: {
+                    fkPlan: true,
+                }
+            });
 
             const order = await orderRepository.findOne({
                 where: { fkPlatform: platform.id, isOpen: true }
@@ -102,8 +114,31 @@ export const BoxDayController = {
                 );
             }
 
+            const boxdays = await boxDayRepository.find({
+                where: {
+                    createdAt: Like(`%${dayjs().format('YYYY-MM-DD')}%`) as any,
+                    fkPlatform: platform.id
+                }
+            });
+
+            const plan = platformEntity.fkPlan;
+
+            const maxBoxdaysPlan = plan.maxBoxDay;
+
+            const totalBoxdays = boxdays.length;
+
+            const moreThanMaxBoxdays = totalBoxdays >= maxBoxdaysPlan;
+
+            if (moreThanMaxBoxdays) {
+                return response.status(404).json(
+                    {
+                        message: "Máximo de caixas diário foi atingido."
+                    }
+                );
+            }
+
             const startValue = dataBody.startValue ? dataBody.startValue : 0;
-            
+
             const boxDay: any = {
                 startValue: startValue,
                 fkPlatform: platform.id,

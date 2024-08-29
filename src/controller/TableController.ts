@@ -3,6 +3,7 @@ import { dataSource } from "../data.source";
 import { TableEntity } from "../entity/TableEntity ";
 import { TableView } from "../views/TableView";
 import { OrderEntity } from "../entity/OrdersEntity";
+import { PlatformEntity } from "../entity/PlatformEntity";
 
 export const TableController = {
 
@@ -20,12 +21,12 @@ export const TableController = {
                 where: { fkPlatform: platform.id, isActive: true },
             });
 
-            const isOcuppied: boolean [] = [];
+            const isOcuppied: boolean[] = [];
 
-            var amountPendings: OrderEntity [] = [];
-            
+            var amountPendings: OrderEntity[] = [];
+
             if (table.length) {
-                
+
                 for (let index = 0; index < table.length; index++) {
                     const element = table[index];
                     const orders = await orderEntity.find({
@@ -39,11 +40,11 @@ export const TableController = {
                     isOcuppied.push(orders.length !== 0);
                     const pendings = orders.filter((value) => value.status === "pendente");
 
-                    amountPendings = amountPendings.concat(pendings);    
+                    amountPendings = amountPendings.concat(pendings);
                 }
 
             }
-            
+
             const tableView = TableView.get(table, isOcuppied, amountPendings);
 
             return response.json({
@@ -69,12 +70,38 @@ export const TableController = {
         try {
 
             const tableRepository = dataSource.getRepository(TableEntity);
+            const platformRepository = dataSource.getRepository(PlatformEntity);
+
+            const platformEntity = await platformRepository.findOne({
+                where: {
+                    id: platform.id,
+                },
+                relations: {
+                    fkPlan: true,
+                }
+            });
+
+            const plan = platformEntity.fkPlan;
+
+            const maxTablesPlan = plan.maxTables;
 
             const table = await tableRepository.find({
                 where: { fkPlatform: platform.id, isActive: true }
             });
 
-            const name = "Mesa: " + (table.length + 1);
+            const totalTables = table.length;
+
+            const moreThanMaxTables = totalTables >= maxTablesPlan;
+
+            if (moreThanMaxTables) {
+                return response.status(404).json(
+                    {
+                        message: "Máximo de mesas foi atingido."
+                    }
+                );
+            }
+
+            const name = "Mesa: " + (totalTables + 1);
 
             const tableNew: any = {
                 name: name,
@@ -134,10 +161,10 @@ export const TableController = {
                     }
                 });
 
-                if(!isActive && ordersTable.length !== 0) {
+                if (!isActive && ordersTable.length !== 0) {
                     return response.status(404).json(
                         {
-                            message: "Existe(m) pedido(s) aberto(s) na mesa.", 
+                            message: "Existe(m) pedido(s) aberto(s) na mesa.",
                             error: "Mesa"
                         }
                     );
