@@ -48,6 +48,50 @@ export const RawMaterialController = {
 
     },
 
+    getProfit: async (request: Request, response: Response) => {
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+            const rawMaterialRepository = dataSource.getRepository(RawMaterialEntity);
+
+            const rawMaterialEntity = await rawMaterialRepository.find({
+                where: {
+                    fkPlatform: platform.id,
+                    fkProduct: {
+                        isActive: true
+                    }
+                },
+                order: {
+                    fkProduct: {
+                        name: 'ASC',
+                    }
+                },
+                relations: {
+                    fkProduct: {
+                        fkProductType: true
+                    },
+                    fkRawMaterial: true,
+                }
+            });
+
+            const productView = RawMaterialView.getProfit(rawMaterialEntity)
+
+            return response.json({
+                data: productView,
+                message: "Dados encontrados com sucesso.",
+            });
+        } catch (error) {
+            return response.status(404).json({
+                message: error,
+                error
+            });
+        }
+
+    },
+
     store: async (request: Request, response: Response) => {
 
         const body = request.body;

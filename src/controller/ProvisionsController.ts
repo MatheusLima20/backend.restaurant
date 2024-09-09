@@ -230,6 +230,6 @@ export const ProvisionsController = {
 
         }
 
-    },    
+    },
 
 };

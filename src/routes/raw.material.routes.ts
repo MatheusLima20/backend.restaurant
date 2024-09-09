@@ -13,6 +13,12 @@ routes.get(
     RawMaterialController.getById,
 );
 
+routes.get(
+    "/profit-plates/",
+    VerifyJWTMiddleware.verifyJWT,
+    RawMaterialController.getProfit
+);
+
 routes.post(
     "/raw-material/",
     VerifyJWTMiddleware.verifyJWT,
