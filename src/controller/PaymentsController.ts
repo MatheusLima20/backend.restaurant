@@ -12,8 +12,8 @@ export const PaymentsController = {
         let chargeInput = {
             items: [
                 {
-                    "name": "Meu Produto",
-                    "value": 5990,
+                    "name": "Plano Iniciante",
+                    "value": 59890,
                     "amount": 1
                 }
             ],
@@ -26,8 +26,8 @@ export const PaymentsController = {
                         "birth": "1990-08-29",
                         "phone_number": "5144916523"
                     },
-                    "installments": 1,
-                    "payment_token": "47f13d72c883c1547ae4a0df11eb46194f333f85",
+                    "installments": 3,
+                    "payment_token": "db81217ab9a87e457ff8b5b5e4630516959504ee",
                     "billing_address": {
                         "street": "Avenida Juscelino Kubitschek",
                         "number": "909",
