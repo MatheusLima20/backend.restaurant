@@ -4,7 +4,6 @@ import { efiOptions } from "../credentials";
 import { dataSource } from "../data.source";
 import { AddressEntity } from "../entity/AddressEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
-import { Int32, IntegerType } from "typeorm";
 
 
 export const PaymentsController = {
@@ -62,26 +61,20 @@ export const PaymentsController = {
             const annualValue = planEntity.annualValue;
 
             const planValue = isMonth ? monthValue : annualValue * 12;
-
+            
             const dataBody = {
                 planName: planName,
                 clientInstallments: body.clientInstallments,
                 paymentToken: body.paymentToken,
             }
 
-            const cpfcnpj = platformEntity.fkCompany.cpfcnpj;
-
-            let cpfOrCnpj: any = { "cpf": cpfcnpj };
-
-            if (Number.parseInt(cpfcnpj) > 11) {
-                cpfOrCnpj = { "cnpj": cpfcnpj };
-            }
+            const value = parseFloat((planValue * 100).toFixed(2));
             
             let chargeInput = {
                 items: [
                     {
                         "name": planName,
-                        "value": new Int32(planValue),
+                        "value": value,
                         "amount": 1
                     }
                 ],
@@ -89,7 +82,7 @@ export const PaymentsController = {
                     "credit_card": {
                         "customer": {
                             "name": user.name,
-                            ...cpfOrCnpj,
+                            "cpf": '94271564656',
                             "email": user.email,
                             "birth": "1990-08-29",
                             "phone_number": addressEntity.phoneNumber.toString(),
@@ -103,7 +96,7 @@ export const PaymentsController = {
                             "zipcode": addressEntity.addressCodePostal.toString(),
                             "city": addressEntity.city,
                             "complement": "",
-                            "state": addressEntity.fkState.name
+                            "state": addressEntity.fkState.uf
                         }
                     }
                 }
@@ -114,7 +107,7 @@ export const PaymentsController = {
             return response.json({ message: "Operação realizada com sucesso!" });
 
         } catch (error) {
-            return response.status(404).json({ message: "Erro no pagamento." });
+            return response.status(404).json({ message: "Erro no pagamento." + error });
         }
 
     },
