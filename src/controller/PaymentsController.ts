@@ -49,6 +49,7 @@ export const PaymentsController = {
                 }
             });
 
+            const userName = body.name;
 
             const planEntity = platformEntity.fkPlan;
 
@@ -81,7 +82,7 @@ export const PaymentsController = {
                 payment: {
                     "credit_card": {
                         "customer": {
-                            "name": user.name,
+                            "name": userName,
                             "cpf": '94271564656',
                             "email": user.email,
                             "birth": "1990-08-29",

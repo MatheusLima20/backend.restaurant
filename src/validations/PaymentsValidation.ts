@@ -5,6 +5,7 @@ export const PaymentsValidation = {
     paymentPlatformCreditCard: celebrate(
         {
             [Segments.BODY]: {
+                name: Joi.string().required(),
                 clientInstallments: Joi.number().required(),
                 paymentToken: Joi.string().required(),
             },
