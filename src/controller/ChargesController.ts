@@ -71,7 +71,7 @@ export const ChargesController = {
                 items: [
                     {
                         name: planName,
-                        value: value,
+                        value: 1000,
                         amount: 1,
                     },
                 ],
@@ -102,7 +102,7 @@ export const ChargesController = {
             await efipay.createOneStepCharge({}, chargeInput);
 
             return response.json({
-                message: "Operação realizada com sucesso!",
+                message: "Pagamento realizado com sucesso!",
             });
         } catch (error) {
             return response
