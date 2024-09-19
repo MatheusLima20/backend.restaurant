@@ -1,7 +1,7 @@
 import { celebrate, Joi, Segments } from "celebrate";
 import { messages } from "joi-translation-pt-br";
 
-export const PaymentsValidation = {
+export const ChargesValidation = {
     paymentPlatformCreditCard: celebrate(
         {
             [Segments.BODY]: {

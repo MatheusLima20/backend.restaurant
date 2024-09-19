@@ -10,8 +10,8 @@ import {
 import { OrderEntity } from "./OrdersEntity";
 import { UserEntity } from "./UserEntity";
 
-@Entity({ name: "payments" })
-export class PaymentsEntity {
+@Entity({ name: "charges" })
+export class ChargesEntity {
 
     @PrimaryGeneratedColumn()
     id: number;

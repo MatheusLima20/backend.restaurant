@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { PaymentsController } from "../controller/PaymentsController";
+import { ChargesController } from "../controller/ChargesController";
 import { VerifyJWTMiddleware } from "../middlwares/validations/VerifyJWTMiddleware";
-import { PaymentsValidation } from "../validations/PaymentsValidation";
+import { ChargesValidation } from "../validations/ChargesValidation";
 
 const routes = Router();
 
@@ -10,8 +10,8 @@ const routes = Router();
 routes.post(
     "/payment-platform-credit-card",
     VerifyJWTMiddleware.verifyJWT,
-    PaymentsValidation.paymentPlatformCreditCard,
-    PaymentsController.paymentPlatformCreditCard
+    ChargesValidation.paymentPlatformCreditCard,
+    ChargesController.paymentPlatformCreditCard
 );
 
 //#endregion
