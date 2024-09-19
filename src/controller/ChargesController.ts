@@ -66,7 +66,7 @@ export const ChargesController = {
             };
 
             const value = parseFloat((planValue * 100).toFixed(2));
-
+            
             let chargeInput = {
                 items: [
                     {
