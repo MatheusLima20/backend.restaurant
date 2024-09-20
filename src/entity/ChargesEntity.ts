@@ -10,8 +10,6 @@ import {
 import { OrderEntity } from "./OrdersEntity";
 import { UserEntity } from "./UserEntity";
 
-export type ChargesType = "MENSALIDADE";
-
 @Entity({ name: "charges" })
 export class ChargesEntity {
     @PrimaryGeneratedColumn()
@@ -29,7 +27,16 @@ export class ChargesEntity {
     platform: number;
 
     @Column()
+    payer: string;
+
+    @Column()
+    amount: number;
+
+    @Column()
     salary: string;
+
+    @Column()
+    description: string;
 
     @Column({ name: "is_pay", default: false })
     isPay: boolean;

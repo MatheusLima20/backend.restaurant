@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import EfiPay from "sdk-typescript-apis-efi";
 import { efiOptions } from "../credentials";
 import { dataSource } from "../data.source";
 import { AddressEntity } from "../entity/AddressEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
+import { ChargesEntity } from "../entity/ChargesEntity";
 
 export const ChargesController = {
     paymentPlatformCreditCard: async (request: Request, response: Response) => {
@@ -66,7 +67,7 @@ export const ChargesController = {
             };
 
             const value = parseFloat((planValue * 100).toFixed(2));
-            
+
             let chargeInput = {
                 items: [
                     {
@@ -104,6 +105,32 @@ export const ChargesController = {
             return response.json({
                 message: "Pagamento realizado com sucesso!",
             });
+        } catch (error) {
+            return response
+                .status(404)
+                .json({ message: "Erro no pagamento." + error });
+        }
+    },
+
+    generateBilling: async (request: Request, response: Response, next: NextFunction) => {
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+
+            const chargesRepository = dataSource.getRepository(ChargesEntity);
+
+            const chargesEntity = await chargesRepository.findOne({
+                where: {
+                    platform: platform.id,
+                    isPay: false,
+                }
+            });
+
+            
+
         } catch (error) {
             return response
                 .status(404)
