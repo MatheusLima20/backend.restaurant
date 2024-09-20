@@ -71,7 +71,7 @@ export const ChargesController = {
                 items: [
                     {
                         name: planName,
-                        value: 1000,
+                        value: value,
                         amount: 1,
                     },
                 ],
