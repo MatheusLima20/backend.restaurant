@@ -10,7 +10,7 @@
         "@types/jsonwebtoken": "^8.5.8",
         "@types/node": "^16.11.10",
         "@types/nodemailer": "^6.4.7",
-        "nodemon": "^2.0.15",
+        "nodemon": "^3.1.7",
         "ts-node": "10.9.1",
         "typescript": "5.4.5"
     },
