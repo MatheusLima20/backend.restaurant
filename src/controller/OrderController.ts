@@ -7,6 +7,7 @@ import { OrderView } from "../views/OrderView";
 import { Like } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
 import dayjs = require("dayjs");
+import { platform } from "os";
 
 export const OrderController = {
 
@@ -258,6 +259,7 @@ export const OrderController = {
             dataSource.transaction(async (transactionalEntityManager) => {
 
                 const orderEntity = transactionalEntityManager.getRepository(OrderEntity);
+                const boxDayRepository = dataSource.getRepository(BoxDayEntity);
                 const productRepository = dataSource.getRepository(ProvisionsEntity);
 
                 const orderId: number = Number.parseInt(id);
@@ -265,13 +267,16 @@ export const OrderController = {
                     where: { id: orderId }
                 });
 
-                let product: any;
+                let product: ProvisionsEntity;
                 let amount = body?.amount;
                 const status = body?.status;
 
                 if (productId && amount) {
                     product = await productRepository.findOne({
-                        where: { id: Number.parseInt(productId) }
+                        where: { id: Number.parseInt(productId) },
+                        relations: {
+                            fkProductType: true,
+                        }
                     });
 
                     if (amount < 0) {
@@ -289,6 +294,31 @@ export const OrderController = {
                             }
                         );
                     }
+
+                    const platform = user.platform;
+
+                    const boxDay = await boxDayRepository.findOne({
+                        where: { fkPlatform: platform.id, isOpen: true }
+                    });
+
+                    const order: any = {
+                        fkProductId: product.id,
+                        fkPlatform: platform.id,
+                        fkTable: oldOrder.fkTable,
+                        fkBoxDay: boxDay.id,
+                        description: product.name,
+                        observation: body.observation,
+                        amount: body?.amount * -1,
+                        status: 'cancelado',
+                        isCancelled: true,
+                        isOpen: false,
+                        value: product.value,
+                        productType: product.fkProductType.name,
+                        createdBy: user.id,
+                        updatedBy: user.id,
+                    }
+        
+                    await orderEntity.save({ ...order });
 
                 }
 
