@@ -47,6 +47,7 @@ export const Authorization = {
                 },
             });
         } catch (error) {
+            console.log(error)
             return response.status(404).json({
                 error,
                 message: "Não foi possivel validar o login.",
@@ -79,7 +80,7 @@ export const Authorization = {
                     relations: ["fkPlatform", "fkUserType", 'fkPlatform.fkPlan'],
                 });
             }
-
+            
             if (!userType) {
                 user = await userRepository.findOne({
                     where: { email: email, isActive: true },
@@ -87,8 +88,8 @@ export const Authorization = {
                 });
 
             }
-
-            if (!user) {
+            
+            if (user === undefined) {
                 return response
                     .status(404)
                     .json({ message: "Usuário ou senha incorretos!" });

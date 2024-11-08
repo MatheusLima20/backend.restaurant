@@ -6,7 +6,7 @@ import { customErrors } from "./middlwares/CustomErrors/CelebrationMiddleware";
 import * as cors from "cors";
 import * as http from "http";
 import { dataSource } from "./data.source";
-import { Server } from "socket.io";
+import { SocketClass } from "./utils/socket/socket";
 
 const host: string = process.env.HOST_NAME;
 const port: number = Number.parseInt(process.env.PORT);
@@ -40,27 +40,9 @@ app.use(customErrors());
 
 const httpServer = http.createServer(app);
 
-const io = new Server(httpServer, {
-    cors: {
-        origin: socket_origin,
-        methods: ["GET", "POST", "PATCH"],
-    },
-});
+const socket = new SocketClass(httpServer, socket_origin);
 
-io.on("connection", (socket) => {
-
-    socket.on("platform", (data) => {
-        socket.join(data);
-    });
-
-    socket.on("send_orders", (data) => {
-        socket.to(data.platform).emit("receive_orders", data);
-    });
-
-    socket.on("send_status", (data) => {
-        socket.to(data.platform).emit("receive_status", data);
-    });
-});
+socket.runSocket(socket);
 
 dataSource.initialize().then(() => {
     httpServer.listen(port, host, () => {
