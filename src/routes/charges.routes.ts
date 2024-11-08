@@ -14,6 +14,12 @@ routes.post(
     ChargesController.paymentPlatformCreditCard
 );
 
+routes.post(
+    "/generate-billing",
+    VerifyJWTMiddleware.verifyJWT,
+    ChargesController.generateBilling,
+);
+
 //#endregion
 
 

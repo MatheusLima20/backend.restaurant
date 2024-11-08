@@ -1,14 +1,11 @@
-import dayjs = require("dayjs");
 import { ContentEntity } from "../entity/ContentEntity";
+import { dateFormatter } from "../utils/date/date";
 
 export const ContentView = {
     get: (contents: Array<ContentEntity>) => {
         return contents.map((content) => {
-
-            const createdAt = dayjs(content.createdAt)
-                .format('DD/MM/YYYY HH:mm:ss');
-            const updatedAt = dayjs(content.updatedAt)
-                .format('DD/MM/YYYY HH:mm:ss');
+            const createdAt = dateFormatter.dateTimebr(content.createdAt);
+            const updatedAt = dateFormatter.dateTimebr(content.updatedAt);
 
             return {
                 id: content.id,
@@ -23,18 +20,14 @@ export const ContentView = {
                 contentType: content.contentType,
                 viewsAmount: content.viewsAmount,
                 createdAt: createdAt,
-                updatedAt: updatedAt
+                updatedAt: updatedAt,
             };
         });
     },
 
     getById: (content: ContentEntity) => {
-
-
-        const createdAt = dayjs(content.createdAt)
-            .format('DD/MM/YYYY HH:mm:ss');
-        const updatedAt = dayjs(content.updatedAt)
-            .format('DD/MM/YYYY HH:mm:ss');
+        const createdAt = dateFormatter.dateTimebr(content.createdAt);
+        const updatedAt = dateFormatter.dateTimebr(content.updatedAt);
 
         return {
             id: content.id,
@@ -50,9 +43,8 @@ export const ContentView = {
     },
     getByTag: (contents: Array<ContentEntity>) => {
         return contents.map((content) => {
-
-            const createdAt = dayjs(content.createdAt);
-            const updatedAt = dayjs(content.updatedAt);
+            const createdAt = dateFormatter.dateTimebr(content.createdAt);
+            const updatedAt = dateFormatter.dateTimebr(content.updatedAt);
 
             return {
                 id: content.id,
@@ -78,9 +70,7 @@ export const ContentView = {
 
             const host = process.env.PRODUCTION_HOST;
 
-            const imageUrl = filePath
-                ? `${host}/download${filePath} `
-                : null;
+            const imageUrl = filePath ? `${host}/download${filePath} ` : null;
 
             return {
                 id: content.id,
