@@ -10,7 +10,7 @@ import { StatesEntity } from "../entity/StatesEntity";
 import { cpf } from "cpf-cnpj-validator";
 import { CompanyEntity } from "../entity/CompanyEntity";
 import { getAddressByCEP } from "cep-address-finder";
-import { StringFormatter } from "../utils/string.formatter/string.formatter";
+import { stringFormatter } from "../utils/formatter/string/string.formatter";
 import { dataSource } from "../services/database/database";
 import dayjs = require("dayjs");
 import { PlanEntity } from "../entity/PlanEntity";
@@ -117,11 +117,11 @@ export const UserController = {
                 });
             }
 
-            const userCpf: string = StringFormatter.OnlyNumber(dataUser.cpf);
-            const phoneNumber: Number = StringFormatter.OnlyNumber(
+            const userCpf: string = stringFormatter.onlyNumberString(dataUser.cpf);
+            const phoneNumber: Number = stringFormatter.onlyNumberInt(
                 addressBody.phoneNumber
             );
-            const addressCodePostal: Number = StringFormatter.OnlyNumber(
+            const addressCodePostal: Number = stringFormatter.onlyNumberInt(
                 addressBody.addressCodePostal
             );
 
@@ -309,10 +309,10 @@ export const UserController = {
 
             const address = dataUser.address;
 
-            const addressCodePostal = StringFormatter.OnlyNumber(
+            const addressCodePostal = stringFormatter.onlyNumberInt(
                 address.addressCodePostal
             );
-            const phoneNumber = StringFormatter.OnlyNumber(address.phoneNumber);
+            const phoneNumber = stringFormatter.onlyNumberInt(address.phoneNumber);
 
             const getAddressCodePostal = await UserController.getCep(
                 addressCodePostal
@@ -554,10 +554,10 @@ export const UserController = {
 
             const address = dataUser.address;
 
-            const addressCodePostal = StringFormatter.OnlyNumber(
+            const addressCodePostal = stringFormatter.onlyNumberInt(
                 address.addressCodePostal
             );
-            const phoneNumber = StringFormatter.OnlyNumber(address.phoneNumber);
+            const phoneNumber = stringFormatter.onlyNumberInt(address.phoneNumber);
 
             const getAddressCodePostal = await UserController.getCep(
                 addressCodePostal
@@ -756,11 +756,11 @@ export const UserController = {
 
             const address = dataUser.address;
 
-            const userCpf: string = StringFormatter.OnlyNumber(dataUser.cpf);
-            const phoneNumber: number = StringFormatter.OnlyNumber(
+            const userCpf: string = stringFormatter.onlyNumberString(dataUser.cpf);
+            const phoneNumber: number = stringFormatter.onlyNumberInt(
                 address.phoneNumber
             );
-            const addressCodePostal: number = StringFormatter.OnlyNumber(
+            const addressCodePostal: number = stringFormatter.onlyNumberInt(
                 address.addressCodePostal
             );
 

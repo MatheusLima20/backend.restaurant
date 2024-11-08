@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CompanyEntity } from "../entity/CompanyEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
-import { StringFormatter } from "../utils/string.formatter/string.formatter";
+import { stringFormatter } from "../utils/formatter/string/string.formatter";
 import { dataSource } from "../services/database/database";
 
 
@@ -11,7 +11,7 @@ export const PlatformController = {
 
         const paramsCNPJ = request.params;
 
-        const cnpj: string = StringFormatter.OnlyNumber(paramsCNPJ.cnpj);
+        const cnpj: string = stringFormatter.onlyNumberString(paramsCNPJ.cnpj);
 
         try {
 
