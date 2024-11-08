@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 import { OrderEntity } from "../entity/OrdersEntity";
 import { ProvisionsEntity } from "../entity/ProvisionsEntity";
 import { BoxDayEntity } from "../entity/BoxDayEntity";
@@ -7,7 +7,6 @@ import { OrderView } from "../views/OrderView";
 import { Like } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
 import dayjs = require("dayjs");
-import { platform } from "os";
 
 export const OrderController = {
 

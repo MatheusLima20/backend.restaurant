@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { VerifyJWTMiddleware } from "../middlwares/validations/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../services/security/verifications/VerifyJWTMiddleware";
 import { ContentValidation } from "../validations/ContentValidation";
 import { ContentController } from "../controller/ContentController";
 import { UploadFile } from "../middlwares/Files/UploadFilesMiddlware";

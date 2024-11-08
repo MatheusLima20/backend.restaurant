@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { CompanyEntity } from "../entity/CompanyEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
 import { StringFormatter } from "../utils/string.formatter/string.formatter";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 
 
 export const PlatformController = {

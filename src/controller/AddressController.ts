@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { AddressEntity } from "../entity/AddressEntity";
 import { AddressView } from "../views/AddressView";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 
 
 export const AddressController = {

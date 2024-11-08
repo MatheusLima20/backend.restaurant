@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 import { RawMaterialEntity } from "../entity/RawMaterialEntity";
 import { RawMaterialView } from "../views/RawMaterialView";
 import { ProvisionsEntity } from "../entity/ProvisionsEntity";

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { OrderController } from "../controller/OrderController";
 import { OrderValidation } from "../validations/OrderValidation";
-import { VerifyJWTMiddleware } from "../middlwares/validations/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../services/security/verifications/VerifyJWTMiddleware";
 
 
 const routes = Router();

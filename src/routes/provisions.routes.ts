@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { VerifyJWTMiddleware } from "../middlwares/validations/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../services/security/verifications/VerifyJWTMiddleware";
 import { ProvisionsController } from "../controller/ProvisionsController";
 import { ProductValidation as ProvisionsValidation } from "../validations/ProductValidation";
 

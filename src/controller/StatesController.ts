@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { StatesEntity } from "../entity/StatesEntity";
 import { StatesView } from "../views/StatesView";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 
 export const StatesController = {
     get: async (request: Request, response: Response) => {

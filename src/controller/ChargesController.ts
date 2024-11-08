@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import EfiPay from "sdk-typescript-apis-efi";
 import { efiOptions } from "../credentials";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 import { AddressEntity } from "../entity/AddressEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
 import { ChargesEntity } from "../entity/ChargesEntity";

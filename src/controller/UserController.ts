@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { UserView } from "../views/UserView";
-import { AdmLogin } from "../middlwares/validations/AdmLogin";
+import { AdmLogin } from "../services/security/encripty/AdmLogin";
 import { UserEntity } from "../entity/UserEntity";
-import { Address, RequestAuth, User } from "../types/express";
+import { Address, RequestAuth, User } from "../@types/express";
 import { AddressEntity } from "../entity/AddressEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
 import { UserTypeEntity } from "../entity/UserTypeEntity";
@@ -11,7 +11,7 @@ import { cpf } from "cpf-cnpj-validator";
 import { CompanyEntity } from "../entity/CompanyEntity";
 import { getAddressByCEP } from "cep-address-finder";
 import { StringFormatter } from "../utils/string.formatter/string.formatter";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 import dayjs = require("dayjs");
 import { PlanEntity } from "../entity/PlanEntity";
 

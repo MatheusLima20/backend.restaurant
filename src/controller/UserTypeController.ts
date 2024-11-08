@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UserTypeEntity } from "../entity/UserTypeEntity";
 import { UserTypeView } from "../views/UserTypeView";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 
 
 export const UserTypeController = {

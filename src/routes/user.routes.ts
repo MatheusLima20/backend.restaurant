@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { UserController } from "../controller/UserController";
-import { Authorization } from "../middlwares/validations/AuthorizationMiddleware";
-import { VerifyJWTMiddleware } from "../middlwares/validations/VerifyJWTMiddleware";
+import { Authorization } from "../services/security/authorization/AuthorizationMiddleware";
+import { VerifyJWTMiddleware } from "../services/security/verifications/VerifyJWTMiddleware";
 import { UserValidation } from "../validations/UserValidation";
 
 

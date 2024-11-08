@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 import { TableEntity } from "../entity/TableEntity ";
 import { TableView } from "../views/TableView";
 import { OrderEntity } from "../entity/OrdersEntity";

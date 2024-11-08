@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { VerifyJWTMiddleware } from "../middlwares/validations/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../services/security/verifications/VerifyJWTMiddleware";
 import { BoxDayController } from "../controller/BoxDayController";
 import { BoxDayValidation } from "../validations/BoxDayValidation";
 

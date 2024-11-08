@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-import { AdmLogin } from "./AdmLogin";
-import { UserEntity } from "../../entity/UserEntity";
-import { dataSource } from "../../data.source";
+import { AdmLogin } from "../encripty/AdmLogin";
+import { UserEntity } from "../../../entity/UserEntity";
+import { dataSource } from "../../database/database";
 
 export const Authorization = {
     auth: async (request: Request, response: Response) => {

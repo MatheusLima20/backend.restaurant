@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 import { BoxDayEntity } from "../entity/BoxDayEntity";
 import { BoxDayView } from "../views/BoxDayView";
 import { OrderEntity } from "../entity/OrdersEntity";

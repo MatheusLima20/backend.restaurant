@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { VerifyJWTMiddleware } from "../middlwares/validations/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../services/security/verifications/VerifyJWTMiddleware";
 import { RawMaterialController } from "../controller/RawMaterialController";
 import { RawMaterialValidation } from "../validations/RawMaterialValidation";
 

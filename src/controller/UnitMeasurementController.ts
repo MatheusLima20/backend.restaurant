@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { dataSource } from "../data.source";
+import { dataSource } from "../services/database/database";
 import { UnitMeasurementEntity } from "../entity/UnitMeasurementEntity";
 import { UnitMeasurementView } from "../views/UnitMeasurementView";
 
