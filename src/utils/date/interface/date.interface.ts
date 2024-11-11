@@ -1,5 +1,13 @@
 export interface IDate {
-    dateTimebr(date: string | Date): string;
+    now(): string;
 
-    datebr(date: string | Date): string;
+    generatePaydays(period: number, payday: number): string[];
+
+    formatTimebr(date: string | Date): string;
+
+    formatbr(date: string | Date): string;
+
+    addDays(date: string | Date, days: number): string;
+
+    removeDays(date: string | Date, days: number): string;
 }

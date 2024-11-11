@@ -1,11 +1,11 @@
 import { ContentEntity } from "../entity/ContentEntity";
-import { dateFormatter } from "../utils/date/date";
+import { dateFormat } from "../utils/date/date";
 
 export const ContentView = {
     get: (contents: Array<ContentEntity>) => {
         return contents.map((content) => {
-            const createdAt = dateFormatter.dateTimebr(content.createdAt);
-            const updatedAt = dateFormatter.dateTimebr(content.updatedAt);
+            const createdAt = dateFormat.formatTimebr(content.createdAt);
+            const updatedAt = dateFormat.formatTimebr(content.updatedAt);
 
             return {
                 id: content.id,
@@ -26,8 +26,8 @@ export const ContentView = {
     },
 
     getById: (content: ContentEntity) => {
-        const createdAt = dateFormatter.dateTimebr(content.createdAt);
-        const updatedAt = dateFormatter.dateTimebr(content.updatedAt);
+        const createdAt = dateFormat.formatTimebr(content.createdAt);
+        const updatedAt = dateFormat.formatTimebr(content.updatedAt);
 
         return {
             id: content.id,
@@ -43,8 +43,8 @@ export const ContentView = {
     },
     getByTag: (contents: Array<ContentEntity>) => {
         return contents.map((content) => {
-            const createdAt = dateFormatter.dateTimebr(content.createdAt);
-            const updatedAt = dateFormatter.dateTimebr(content.updatedAt);
+            const createdAt = dateFormat.formatTimebr(content.createdAt);
+            const updatedAt = dateFormat.formatTimebr(content.updatedAt);
 
             return {
                 id: content.id,
