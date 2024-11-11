@@ -5,6 +5,7 @@ import { dataSource } from "../services/database/database";
 import { AddressEntity } from "../entity/AddressEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
 import { ChargesEntity } from "../entity/ChargesEntity";
+import { dateFormat } from "../utils/date/date";
 
 export const ChargesController = {
     paymentPlatformCreditCard: async (request: Request, response: Response) => {
@@ -112,29 +113,66 @@ export const ChargesController = {
         }
     },
 
-    generateBilling: async (request: Request, response: Response, next: NextFunction) => {
-
+    generateBilling: async (request: Request, response: Response) => {
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
 
+        const dates = dateFormat;
+
+        const payDays = dates.generatePaydays(12, 10);
+
         try {
-
             const chargesRepository = dataSource.getRepository(ChargesEntity);
+            const platformRepository = dataSource.getRepository(PlatformEntity);
 
-            const chargesEntity = await chargesRepository.findOne({
+            const hasCharges = await chargesRepository.findOne({
                 where: {
-                    platform: platform.id,
-                    isPay: false,
+                    isPay: false
                 }
             });
 
-            
+            if(hasCharges) {
+                return response.json({
+                    message: "Os pagamentos já foram gerados!",
+                });
+            }
 
+            const platformEntity = await platformRepository.findOne({
+                where: {
+                    id: platform.id,
+                },
+                relations: {
+                    fkPlan: true,
+                },
+            });
+
+            const planEntity = platformEntity.fkPlan;
+            const isMonth = platformEntity.isMonthPlan;
+
+            const monthValue = planEntity.monthValue;
+
+            const annualValue = planEntity.annualValue;
+
+            const planValue = isMonth ? monthValue : annualValue;
+
+            for (let index = 0; index < payDays.length; index++) {
+                const element = payDays[index];
+                await chargesRepository.save({
+                    value: planValue,
+                    platform: platform.id,
+                    payday: element,
+                    description: "Mensalidade.",
+                });
+            }
+
+            return response.json({
+                message: "Pagamentos gerados com sucesso!",
+            });
         } catch (error) {
             return response
                 .status(404)
-                .json({ message: "Erro no pagamento." + error });
+                .json({ message: "Erro ao gerar pagamentos." + error });
         }
     },
 };

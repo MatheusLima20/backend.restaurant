@@ -15,7 +15,7 @@ export class ChargesEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => OrderEntity, (order) => order.id)
+    @ManyToOne(() => OrderEntity, (order) => order.id, { nullable: true })
     @JoinColumn({ name: "fk_order" })
     fkOrder: OrderEntity;
 
@@ -26,14 +26,14 @@ export class ChargesEntity {
     @Column()
     platform: number;
 
-    @Column()
+    @Column({ nullable: true })
     payer: string;
 
     @Column()
-    amount: number;
+    payday: string;
 
-    @Column()
-    salary: string;
+    @Column({ type: "float" })
+    value: number;
 
     @Column()
     description: string;

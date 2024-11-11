@@ -30,14 +30,13 @@ class DateClass implements IDate {
     }
 
     generatePaydays(months: number, payday: number): string[] {
-
         const payDate = `YYYY-MM-${payday}`;
 
         const lessThenPayday = 30;
 
         const moreThenPayday = 60;
 
-        let today = dayjs(this.now()).format('YYYY-MM-DD');
+        let today = dayjs(this.now()).format("YYYY-MM-DD");
 
         const dates: string[] = [];
 
