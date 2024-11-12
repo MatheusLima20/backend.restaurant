@@ -3,8 +3,14 @@ import { IDate } from "./interface/date.interface";
 
 class DateClass implements IDate {
     now(): string {
-        const date = dayjs().format("DD/MM/YYYY HH:mm:ss");
+        const date = dayjs().format("YYYY-MM-DD HH:mm:ss");
         return date;
+    }
+
+    spaceBetweenDays(start: string, end: string): number {
+        const amountDays = dayjs(end).diff(start, "days");
+
+        return amountDays;
     }
 
     formatTimebr(date: string | Date): string {
@@ -29,24 +35,23 @@ class DateClass implements IDate {
         return newDate;
     }
 
-    generatePaydays(months: number, payday: number): string[] {
+    generatePaydays(
+        months: number,
+        payday: number,
+        lastCharge?: string
+    ): string[] {
         const payDate = `YYYY-MM-${payday}`;
 
-        const lessThenPayday = 30;
+        const freeMonth = 1;
 
-        const moreThenPayday = 60;
+        const startDateCharge = lastCharge ? lastCharge : this.now();
 
-        let today = dayjs(this.now()).format("YYYY-MM-DD");
-
+        let today = dayjs(startDateCharge).format("YYYY-MM-DD");
+        
         const dates: string[] = [];
 
         for (let index = 0; index < months; index++) {
-            const freeDays =
-                dayjs(today).get("D") > payday
-                    ? moreThenPayday
-                    : lessThenPayday;
-
-            const date = dayjs(today).add(freeDays, "day").format(payDate);
+            const date = dayjs(today).add(freeMonth, "month").format(payDate);
 
             today = date;
 

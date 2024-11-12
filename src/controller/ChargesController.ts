@@ -6,6 +6,8 @@ import { AddressEntity } from "../entity/AddressEntity";
 import { PlatformEntity } from "../entity/PlatformEntity";
 import { ChargesEntity } from "../entity/ChargesEntity";
 import { dateFormat } from "../utils/date/date";
+import { User } from "../@types/express";
+import { mathClass } from "../utils/math/math";
 
 export const ChargesController = {
     paymentPlatformCreditCard: async (request: Request, response: Response) => {
@@ -113,66 +115,77 @@ export const ChargesController = {
         }
     },
 
-    generateBilling: async (request: Request, response: Response) => {
-        const auth = request.auth;
-        const user = auth.user;
+    generateBilling: async (user: User) => {
         const platform = user.platform;
 
         const dates = dateFormat;
 
-        const payDays = dates.generatePaydays(12, 10);
+        const chargesRepository = dataSource.getRepository(ChargesEntity);
+        const platformRepository = dataSource.getRepository(PlatformEntity);
 
-        try {
-            const chargesRepository = dataSource.getRepository(ChargesEntity);
-            const platformRepository = dataSource.getRepository(PlatformEntity);
+        const lastCharges = await chargesRepository.findOne({
+            where: {
+                isPay: true,
+                platform: platform.id,
+            },
+            order: {
+                payday: "desc",
+            },
+        });
 
-            const hasCharges = await chargesRepository.findOne({
-                where: {
-                    isPay: false
-                }
-            });
+        const lastPayment = lastCharges?.payday;
 
-            if(hasCharges) {
-                return response.json({
-                    message: "Os pagamentos já foram gerados!",
-                });
+        const payDays = dates.generatePaydays(12, 10, lastPayment);
+
+        const hasCharges = await chargesRepository.findOne({
+            where: {
+                isPay: false,
+                platform: platform.id,
+            },
+        });
+
+        if (hasCharges) {
+            return;
+        }
+
+        const platformEntity = await platformRepository.findOne({
+            where: {
+                id: platform.id,
+            },
+            relations: {
+                fkPlan: true,
+            },
+        });
+
+        const planEntity = platformEntity.fkPlan;
+        const isMonth = platformEntity.isMonthPlan;
+
+        const monthValue = planEntity.monthValue;
+
+        const annualValue = planEntity.annualValue;
+
+        const planValue = isMonth ? monthValue : annualValue;
+
+        for (let index = 0; index < payDays.length; index++) {
+            const element = payDays[index];
+            let usedDays = null;
+            if (!index) {
+                const today = dateFormat.now();
+                const amountDays = dateFormat.spaceBetweenDays(
+                    today,
+                    element
+                );
+                const result = mathClass.valueDays(planValue, 30, amountDays);
+
+                usedDays = result;
             }
 
-            const platformEntity = await platformRepository.findOne({
-                where: {
-                    id: platform.id,
-                },
-                relations: {
-                    fkPlan: true,
-                },
+            await chargesRepository.save({
+                value: usedDays? usedDays : planValue,
+                platform: platform.id,
+                payday: element,
+                description: "Mensalidade.",
             });
-
-            const planEntity = platformEntity.fkPlan;
-            const isMonth = platformEntity.isMonthPlan;
-
-            const monthValue = planEntity.monthValue;
-
-            const annualValue = planEntity.annualValue;
-
-            const planValue = isMonth ? monthValue : annualValue;
-
-            for (let index = 0; index < payDays.length; index++) {
-                const element = payDays[index];
-                await chargesRepository.save({
-                    value: planValue,
-                    platform: platform.id,
-                    payday: element,
-                    description: "Mensalidade.",
-                });
-            }
-
-            return response.json({
-                message: "Pagamentos gerados com sucesso!",
-            });
-        } catch (error) {
-            return response
-                .status(404)
-                .json({ message: "Erro ao gerar pagamentos." + error });
         }
     },
 };

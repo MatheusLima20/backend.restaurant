@@ -12,8 +12,8 @@ import { CompanyEntity } from "../entity/CompanyEntity";
 import { getAddressByCEP } from "cep-address-finder";
 import { stringFormatter } from "../utils/formatter/string/string.formatter";
 import { dataSource } from "../services/database/database";
-import dayjs = require("dayjs");
 import { PlanEntity } from "../entity/PlanEntity";
+import { dateFormat } from "../utils/date/date";
 
 export const UserController = {
     verifyLogin: async (request: Request, response: Response) => {
@@ -813,7 +813,7 @@ export const UserController = {
                         email: dataUser.email,
                         password: passwordHashed,
                         fkUserType: userType,
-                        updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
+                        updatedAt: dateFormat.now()
                     };
 
                     const addressStore = {
@@ -823,7 +823,7 @@ export const UserController = {
                         phoneNumber: phoneNumber,
                         addressNumber: address.addressNumber,
                         addressCodePostal: addressCodePostal,
-                        updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
+                        updatedAt: dateFormat.now()
                     };
 
                     const userDataBase = await userEntity.findOne({

@@ -1,7 +1,7 @@
-import { IServer } from "./interface/server.interface";
-import { createServer, Server } from "http";
 import * as cors from "cors";
 import * as express from "express";
+import { IServer } from "./interface/server.interface";
+import { createServer, Server } from "http";
 import routes from "../../routes";
 import { customErrors } from "../../middlwares/CustomErrors/CelebrationMiddleware";
 

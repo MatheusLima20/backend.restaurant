@@ -10,4 +10,6 @@ export interface IDate {
     addDays(date: string | Date, days: number): string;
 
     removeDays(date: string | Date, days: number): string;
+
+    spaceBetweenDays(start: string, end: string): number;
 }

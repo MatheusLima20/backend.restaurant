@@ -23,7 +23,7 @@ const config: MysqlConnectionOptions = {
     subscribers: [process.env.PATH_SUBSCRIBER],
 };
 
-export class DatabaseClass implements IDatabase {
+class DatabaseClass implements IDatabase {
     connection: DataSource;
 
     constructor() {

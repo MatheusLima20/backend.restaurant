@@ -3,6 +3,8 @@ import * as jwt from "jsonwebtoken";
 import { AdmLogin } from "../encripty/AdmLogin";
 import { UserEntity } from "../../../entity/UserEntity";
 import { dataSource } from "../../database/database";
+import { ChargesController } from "../../../controller/ChargesController";
+import { User } from "../../../@types/express";
 
 export const Authorization = {
     auth: async (request: Request, response: Response) => {
@@ -35,22 +37,35 @@ export const Authorization = {
 
             const fistName = nameProviderArray[0];
 
+            const userLogged = {
+                name: fistName,
+                userType: user.fkUserType.name,
+                token,
+                platformId: user.fkPlatform.id,
+                platformName: user.fkPlatform.name,
+                plan: user.fkPlatform.fkPlan.name,
+            };
+
+            await ChargesController.generateBilling({
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                platform: {
+                    id: user.fkPlatform.id,
+                    name: user.fkPlatform.name,
+                },
+                userType: user.fkUserType.name,
+            });
+
             return response.json({
                 message: "Logado com sucesso!",
-                user: {
-                    name: fistName,
-                    userType: user.fkUserType.name,
-                    token,
-                    platformId: user.fkPlatform.id,
-                    platformName: user.fkPlatform.name,
-                    plan: user.fkPlatform.fkPlan.name,
-                },
+                user: userLogged,
             });
         } catch (error) {
-            console.log(error)
+            
             return response.status(404).json({
                 error,
-                message: "Não foi possivel validar o login.",
+                message: "Não foi possivel validar o login." + error,
             });
         }
     },
@@ -73,22 +88,31 @@ export const Authorization = {
             if (userType) {
                 user = await userRepository.findOne({
                     where: {
-                        email: email, isActive: true, fkUserType: {
-                            name: userType
-                        }
+                        email: email,
+                        isActive: true,
+                        fkUserType: {
+                            name: userType,
+                        },
                     },
-                    relations: ["fkPlatform", "fkUserType", 'fkPlatform.fkPlan'],
+                    relations: [
+                        "fkPlatform",
+                        "fkUserType",
+                        "fkPlatform.fkPlan",
+                    ],
                 });
             }
-            
+
             if (!userType) {
                 user = await userRepository.findOne({
                     where: { email: email, isActive: true },
-                    relations: ["fkPlatform", "fkUserType", 'fkPlatform.fkPlan'],
+                    relations: [
+                        "fkPlatform",
+                        "fkUserType",
+                        "fkPlatform.fkPlan",
+                    ],
                 });
-
             }
-            
+
             if (user === undefined) {
                 return response
                     .status(404)
@@ -119,5 +143,4 @@ export const Authorization = {
             });
         }
     },
-
 };
