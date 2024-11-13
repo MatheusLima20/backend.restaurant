@@ -8,8 +8,40 @@ import { ChargesEntity } from "../entity/ChargesEntity";
 import { dateFormat } from "../utils/date/date";
 import { User } from "../@types/express";
 import { mathClass } from "../utils/math/math";
+import { ChargesView } from "../views/ChargesView";
 
 export const ChargesController = {
+    get: async (request: Request, response: Response) => {
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+
+            const chargesRepository = dataSource.getRepository(ChargesEntity);
+
+            const chargesEntity = await chargesRepository.find({
+                where: {
+                    platform: platform.id,
+                },
+                take: 12,
+            });
+
+            const chargesView = ChargesView.get(chargesEntity);
+
+            return response.json({
+                data: chargesView,
+                message: "Dados coletados com sucesso!",
+            });
+
+        } catch (error) {
+            return response
+                .status(404)
+                .json({ message: "Erro ao buscar contas." + error });
+        }
+    },
+
     paymentPlatformCreditCard: async (request: Request, response: Response) => {
         const body = request.body;
 
@@ -24,6 +56,7 @@ export const ChargesController = {
         try {
             const platformRepository = dataSource.getRepository(PlatformEntity);
             const addressRepository = dataSource.getRepository(AddressEntity);
+            const chargesRepository = dataSource.getRepository(ChargesEntity);
 
             const addressEntity = await addressRepository.findOne({
                 where: {
@@ -49,19 +82,23 @@ export const ChargesController = {
                 },
             });
 
+            const chargesEntity = await chargesRepository.findOne({
+                where: {
+                    isPay: false,
+                    platform: platform.id,
+                },
+                order: {
+                    createdAt: "ASC",
+                },
+            });
+
             const userName = body.name;
 
             const planEntity = platformEntity.fkPlan;
 
-            const isMonth = platformEntity.isMonthPlan;
-
             const planName = planEntity.name;
 
-            const monthValue = planEntity.monthValue;
-
-            const annualValue = planEntity.annualValue;
-
-            const planValue = isMonth ? monthValue : annualValue;
+            const planValue = chargesEntity.value;
 
             const dataBody = {
                 planName: planName,
@@ -104,6 +141,16 @@ export const ChargesController = {
             };
 
             await efipay.createOneStepCharge({}, chargeInput);
+
+            const today = dateFormat.now();
+
+            const chargeMerge = chargesRepository.merge(chargesEntity, {
+                isPay: true,
+                paidIn: today,
+                payer: userName,
+            });
+
+            await chargesRepository.update(chargesEntity.id, chargeMerge);
 
             return response.json({
                 message: "Pagamento realizado com sucesso!",
@@ -171,17 +218,14 @@ export const ChargesController = {
             let usedDays = null;
             if (!index) {
                 const today = dateFormat.now();
-                const amountDays = dateFormat.spaceBetweenDays(
-                    today,
-                    element
-                );
+                const amountDays = dateFormat.spaceBetweenDays(today, element);
                 const result = mathClass.valueDays(planValue, 30, amountDays);
 
                 usedDays = result;
             }
 
             await chargesRepository.save({
-                value: usedDays? usedDays : planValue,
+                value: usedDays ? usedDays : planValue,
                 platform: platform.id,
                 payday: element,
                 description: "Mensalidade.",

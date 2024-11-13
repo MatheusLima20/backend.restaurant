@@ -7,6 +7,8 @@ const routes = Router();
 
 //#region Send Messages
 
+routes.get("/charges", VerifyJWTMiddleware.verifyJWT, ChargesController.get);
+
 routes.post(
     "/payment-platform-credit-card",
     VerifyJWTMiddleware.verifyJWT,
@@ -17,10 +19,9 @@ routes.post(
 routes.post(
     "/generate-billing",
     VerifyJWTMiddleware.verifyJWT,
-    ChargesController.generateBilling,
+    ChargesController.generateBilling
 );
 
 //#endregion
-
 
 module.exports = routes;

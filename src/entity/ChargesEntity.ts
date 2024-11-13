@@ -32,6 +32,9 @@ export class ChargesEntity {
     @Column()
     payday: string;
 
+    @Column({ name: "paid_in", nullable: true })
+    paidIn: string;
+
     @Column({ type: "float" })
     value: number;
 
