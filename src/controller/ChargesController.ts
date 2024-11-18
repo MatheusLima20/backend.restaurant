@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import EfiPay from "sdk-typescript-apis-efi";
 import { efiOptions } from "../credentials";
 import { dataSource } from "../services/database/database";

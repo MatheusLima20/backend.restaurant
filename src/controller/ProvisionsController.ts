@@ -5,6 +5,7 @@ import { UnitMeasurementEntity } from "../entity/UnitMeasurementEntity";
 import { ProductView } from "../views/ProvisionsView";
 import dayjs = require("dayjs");
 import { ProductTypeEntity } from "../entity/ProductTypeEntity";
+import { LogController } from "./LogContoller";
 
 export const ProvisionsController = {
 
@@ -126,6 +127,16 @@ export const ProvisionsController = {
             const productData = await productRepository.save(product);
 
             const productView = ProductView.store(productData);
+
+            const message = `Produto salvo por: ${user.name}, 
+                    Nome: ${product.name}, Valor: ${product.value}, Tipo: ${productType.name}.`;
+
+                await LogController.store(
+                    user,
+                    "Produto Salvo",
+                    message,
+                    "Salvo"
+                );
 
             return response.json(
                 {

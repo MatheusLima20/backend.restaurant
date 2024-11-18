@@ -6,6 +6,8 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 
+export type ContentType = "LOG" | "PHOTO" | "PROFILE";
+
 @Entity({ name: "content" })
 export class ContentEntity {
     @PrimaryGeneratedColumn()
@@ -15,7 +17,7 @@ export class ContentEntity {
     path: string;
 
     @Column({ name: "type", nullable: true })
-    contentType: string;
+    contentType: ContentType;
 
     @Column({ name: "file_name", nullable: true })
     fileName: string;
