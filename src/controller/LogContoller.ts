@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../@types/express";
 import { ContentEntity } from "../entity/ContentEntity";
 import { dataSource } from "../services/database/database";
-import { Between } from "typeorm";
+import { Between, Like } from "typeorm";
 import { LogView } from "../views/LogView";
 
 export type LogTag = "Salvo" | "Alterado" | "Excluido";
@@ -25,7 +25,7 @@ export const LogController = {
 
     get: async (request: Request, response: Response) => {
 
-        const { start, end } = request.params;
+        const { date } = request.params;
 
         const auth = request.auth;
         const user = auth.user;
@@ -39,7 +39,7 @@ export const LogController = {
                 where: {
                     fkPlatform: platform.id,
                     contentType: 'LOG',
-                    createdAt: Between(start, end) as any,
+                    createdAt: Like(`%${date}%`) as any,
                 }
             });
 
