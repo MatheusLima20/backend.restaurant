@@ -6,7 +6,8 @@ export function customErrors() {
 
     return (error: any, request: Request, response: Response, next: NextFunction) => {
         if (!isCelebrateError(error)) {
-            return next(error);
+            next(error);
+            return;
         }
 
         const errorDetails = error.details;
@@ -21,7 +22,7 @@ export function customErrors() {
             Archive.delete(file);
         }
 
-        return response.status(404).json({
+        response.status(404).send({
             error: error.message,
             message: errorObject.message,
         });
