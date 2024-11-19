@@ -164,7 +164,7 @@ export const ChargesController = {
 
     generateBilling: async (user: User) => {
         const platform = user.platform;
-        console.log(platform)
+        
         const dates = dateFormat;
 
         const chargesRepository = dataSource.getRepository(ChargesEntity);
