@@ -28,11 +28,11 @@ export class ServerClass implements IServer {
 
     constructor() {
         this.app = express();
-        this.addResourcesServer();
+        this.addResources();
         this.server = createServer(this.app);
     }
 
-    private addResourcesServer(): void {    
+    private addResources(): void {    
         
         const app = this.app;
 
@@ -44,7 +44,7 @@ export class ServerClass implements IServer {
 
         app.use(routes);
 
-        app.use(customErrors() as any);
+        app.use(customErrors());
     }
 
     public start(): void {
