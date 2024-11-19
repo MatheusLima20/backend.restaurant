@@ -3,11 +3,8 @@ import { AddressEntity } from "../entity/AddressEntity";
 import { AddressView } from "../views/AddressView";
 import { dataSource } from "../services/database/database";
 
-
 export const AddressController = {
-
     getByUserId: async (request: Request, response: Response) => {
-
         const auth = request.auth;
 
         const user = auth.user;
@@ -17,35 +14,31 @@ export const AddressController = {
         const { id } = request.params;
 
         try {
-
             const addressRepository = dataSource.getRepository(AddressEntity);
 
             const address = await addressRepository.findOne({
-                where: { fkUser: id as any, fkPlatform: platform.id as any},
-                relations: ["fkState"]
+                where: { fkUser: id as any, fkPlatform: platform.id as any },
+                relations: ["fkState"],
             });
 
             if (!address) {
-                return response.status(404).json({
-                    message: "Endereço não encontrado"
+                response.status(404).send({
+                    message: "Endereço não encontrado",
                 });
+                return;
             }
 
             const addressView = AddressView.getById(address);
 
-            return response.json({
+            response.send({
                 data: addressView,
-                message: "Dados encontrados com sucesso!"
+                message: "Dados encontrados com sucesso!",
             });
-
+            
         } catch (error) {
-
-            return response.status(404).json({
-                message: error
+            response.status(404).send({
+                message: error,
             });
-
         }
-
-    }
-
-}
+    },
+};

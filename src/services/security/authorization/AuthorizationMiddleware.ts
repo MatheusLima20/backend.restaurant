@@ -57,13 +57,13 @@ export const Authorization = {
                 userType: user.fkUserType.name,
             });
 
-            return response.json({
+            response.json({
                 message: "Logado com sucesso!",
                 user: userLogged,
             });
         } catch (error) {
             
-            return response.status(404).json({
+            response.status(404).json({
                 error,
                 message: "Não foi possivel validar o login." + error,
             });
@@ -114,9 +114,9 @@ export const Authorization = {
             }
 
             if (user === undefined) {
-                return response
+                response
                     .status(404)
-                    .json({ message: "Usuário ou senha incorretos!" });
+                    .send({ message: "Usuário ou senha incorretos!" });
             }
 
             const password = user.password;
@@ -128,16 +128,16 @@ export const Authorization = {
                 password
             );
             if (!isValidPassword) {
-                return response
+                response
                     .status(404)
-                    .json({ message: "Usuário ou senha incorretos!" });
+                    .send({ message: "Usuário ou senha incorretos!" });
             }
 
             request.body = user;
 
             next();
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 error,
                 message: '"Não foi possivel validar o login."',
             });

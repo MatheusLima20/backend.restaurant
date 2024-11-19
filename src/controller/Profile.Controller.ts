@@ -16,12 +16,12 @@ export const ProfileController = {
                 },
             });
             const profileView = ProfileView.getByUserId(profile);
-            return response.json({
+            response.send({
                 message: "Prefil encontrado com sucesso!",
                 data: profileView,
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }

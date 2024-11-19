@@ -19,7 +19,7 @@ export const UploadFile = {
 
         try {
             form.parse(params.request, (error: any, fields: Fields, files: Files) => {
-                const file: File = files.file as File;
+                const file: File = (files.file as File[]) [0];
 
                 if (!file) {
                     params.request.body = { ...fields };
@@ -70,7 +70,7 @@ export const UploadFile = {
             response.sendFile(file);
 
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 error,
                 message: "Arquivo não encontrado.",
             });

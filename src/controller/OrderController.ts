@@ -21,10 +21,11 @@ export const OrderController = {
         const userType = user.userType;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 data: [],
                 message: "Usuário sem permissão.",
             });
+            return;
         }
 
         try {
@@ -42,12 +43,12 @@ export const OrderController = {
 
             const orderView = OrderView.getByDate(order);
 
-            return response.json({
+            response.send({
                 data: orderView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error,
             });
@@ -87,12 +88,12 @@ export const OrderController = {
 
             const orderView = OrderView.getByTable(orders, users);
 
-            return response.json({
+            response.send({
                 data: orderView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error,
             });
@@ -130,12 +131,12 @@ export const OrderController = {
 
             const orderView = OrderView.getByBoxDay(orders, users);
 
-            return response.json({
+            response.send({
                 data: orderView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error,
             });
@@ -162,12 +163,12 @@ export const OrderController = {
 
             const orderView = OrderView.getByStatus(orders);
 
-            return response.json({
+            response.send({
                 data: orderView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error,
             });
@@ -193,10 +194,11 @@ export const OrderController = {
             });
 
             if (!boxDay) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "Nenhum caixa aberto",
                     error: "Erro",
                 });
+                return;
             }
 
             const product = await productRepository.findOne({
@@ -229,11 +231,11 @@ export const OrderController = {
 
             await LogController.store(user, "Pedido Salvo", message, "Salvo");
 
-            return response.json({
+            response.send({
                 message: "Pedido salvo com sucesso!",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error,
             });
@@ -283,12 +285,13 @@ export const OrderController = {
                     const verifyAmount = amount < 1;
 
                     if (verifyAmount) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message:
                                 "A quantidade para cancelar é maior ou " +
                                 "igual a registrada.",
                             error: "Quantidade menor.",
                         });
+                        return;
                     }
 
                     const platform = user.platform;
@@ -355,12 +358,12 @@ export const OrderController = {
                     "Alterado"
                 );
 
-                return response.json({
+                response.send({
                     message: "Pedido alterado com sucesso!",
                 });
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Erro ao salvar prato " + error,
                 error: error,
             });
@@ -432,12 +435,12 @@ export const OrderController = {
                     );
                 }
 
-                return response.json({
+                response.send({
                     message: "Pedido alterado com sucesso!",
                 });
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Erro ao salvar prato " + error,
                 error: error,
             });
@@ -478,17 +481,19 @@ export const OrderController = {
                 });
 
                 if (!ordersTable1.length) {
-                    return response.status(404).json({
+                    response.status(404).send({
                         message: "Mesa sem pedidos.",
                         error: "Erro na troca ",
                     });
+                    return;
                 }
 
                 if (ordersTable2.length) {
-                    return response.status(404).json({
+                    response.status(404).send({
                         message: "A Mesa já está ocupada.",
                         error: "Erro na troca ",
                     });
+                    return;
                 }
 
                 const table = {
@@ -526,12 +531,12 @@ export const OrderController = {
                     "Alterado"
                 );
 
-                return response.json({
+                response.send({
                     message: "Mesa atualizado com sucesso!",
                 });
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Erro ao trocar mesas.",
                 error: error,
             });

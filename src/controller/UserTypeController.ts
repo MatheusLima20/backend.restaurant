@@ -15,20 +15,21 @@ export const UserTypeController = {
             const userType = await userTypeRepository.find();
 
             if (!userType) {
-                response.status(404).json({
+                response.status(404).send({
                     message: "Nenhum dado encontrado."
                 });
+                return;
             }
 
             const userTypeView = UserTypeView.get(userType);
 
-            response.json({
+            response.send({
                 data: userTypeView,
                 message: "Dados encontrados com sucesso."
             });
 
         } catch (error) {
-            response.status(404).json({
+            response.status(404).send({
                 message: error
             });
         }

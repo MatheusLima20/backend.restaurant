@@ -6,9 +6,7 @@ import { Like } from "typeorm";
 import dayjs = require("dayjs");
 
 export const SpendingController = {
-
     get: async (request: Request, response: Response) => {
-
         const { date } = request.params;
 
         const auth = request.auth;
@@ -18,12 +16,12 @@ export const SpendingController = {
         const userType = user.userType;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 data: [],
                 message: "Usuário sem permissão.",
             });
+            return;
         }
-        
 
         try {
             const spendingRepository = dataSource.getRepository(SpendingEntity);
@@ -31,27 +29,25 @@ export const SpendingController = {
             const spending = await spendingRepository.find({
                 where: {
                     fkPlatform: platform.id,
-                    createdAt: Like(`%${date}%`) as any
+                    createdAt: Like(`%${date}%`) as any,
                 },
-                order: { createdAt: 'DESC' }
+                order: { createdAt: "DESC" },
             });
 
             const spendingView = SpendingView.get(spending);
 
-            return response.json({
+            response.send({
                 data: spendingView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
-
     },
 
     store: async (request: Request, response: Response) => {
-
         const body = request.body;
 
         const auth = request.auth;
@@ -61,13 +57,13 @@ export const SpendingController = {
         const userType = user.userType;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Usuário sem permissão.",
             });
+            return;
         }
 
         try {
-
             const spendingEntity = dataSource.getRepository(SpendingEntity);
 
             const spending = {
@@ -76,30 +72,23 @@ export const SpendingController = {
                 amount: body.amount,
                 unitMeasurement: body.unitMeasurement,
                 fkPlatform: platform.id,
-                createdBy: user.id
+                createdBy: user.id,
             };
 
             await spendingEntity.save(spending);
 
-            return response.json({
-                message: "Gastos salvos com sucesso!"
+            response.send({
+                message: "Gastos salvos com sucesso!",
             });
-
-
         } catch (error) {
-
-            return response.status(404).json(
-                {
-                    message: "Erro ao salvar gastos", error: error
-                }
-            );
-
+            response.status(404).send({
+                message: "Erro ao salvar gastos",
+                error: error,
+            });
         }
-
     },
 
     patch: async (request: Request, response: Response) => {
-
         const { id } = request.params;
 
         const body = request.body;
@@ -110,16 +99,16 @@ export const SpendingController = {
         const userType = user.userType;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Usuário sem permissão.",
             });
+            return;
         }
 
         try {
-
             dataSource.transaction(async (transactionalEntityManager) => {
-
-                const spendingEntity = transactionalEntityManager.getRepository(SpendingEntity);
+                const spendingEntity =
+                    transactionalEntityManager.getRepository(SpendingEntity);
 
                 const spendingId: number = Number.parseInt(id);
 
@@ -129,34 +118,29 @@ export const SpendingController = {
                     unitMeasurement: body.unitMeasurement,
                     amount: body.amount,
                     updatedBy: user.id,
-                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
+                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss"),
                 };
 
                 const oldSpending = await spendingEntity.findOne({
-                    where: { id: spendingId }
+                    where: { id: spendingId },
                 });
 
-                const spendingMerger = spendingEntity.merge(oldSpending, spending)
+                const spendingMerger = spendingEntity.merge(
+                    oldSpending,
+                    spending
+                );
 
                 await spendingEntity.update(spendingId, spendingMerger);
 
-                return response.json({
-                    message: "Gastos alterados com sucesso!"
+                response.send({
+                    message: "Gastos alterados com sucesso!",
                 });
-
             });
-
-
         } catch (error) {
-
-            return response.status(404).json(
-                {
-                    message: "Erro ao salvar gastos", error: error
-                }
-            );
-
+            response.status(404).send({
+                message: "Erro ao salvar gastos",
+                error: error,
+            });
         }
-
     },
-
 };

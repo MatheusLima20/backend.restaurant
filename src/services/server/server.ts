@@ -44,7 +44,7 @@ export class ServerClass implements IServer {
 
         app.use(routes);
 
-        app.use(customErrors());
+        app.use(customErrors() as any);
     }
 
     public start(): void {

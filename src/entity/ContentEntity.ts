@@ -6,7 +6,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 
-export type ContentType = "LOG" | "PHOTO" | "PROFILE";
+export type ContentType = "LOG" | "PHOTO" | "PROFILE" | "ARCHIVE" | "DOC" | "IMG";
 
 @Entity({ name: "content" })
 export class ContentEntity {

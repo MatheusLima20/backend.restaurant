@@ -45,12 +45,12 @@ export const LogController = {
 
             const logView = LogView.get(contentEntity);
 
-            return response.json({
+            response.send({
                 data: logView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error,
             });

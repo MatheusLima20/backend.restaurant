@@ -51,12 +51,12 @@ export const BoxDayController = {
 
             const boxDayView = BoxDayView.get(boxDay, totalBoxs)
 
-            return response.json({
+            response.send({
                 data: boxDayView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error, error
             });
         }
@@ -93,12 +93,13 @@ export const BoxDayController = {
             });
 
             if (order) {
-                return response.status(404).json(
+                response.status(404).send(
                     {
                         message: "Existe pedido(s) em aberto!",
                         error: "Existe pedido(s) aberto."
                     }
                 );
+                return;
             }
 
             const oldBoxDay = await boxDayRepository.findOne({
@@ -106,12 +107,13 @@ export const BoxDayController = {
             });
 
             if (oldBoxDay) {
-                return response.status(404).json(
+                response.status(404).send(
                     {
                         message: "Já existe um caixa aberto!",
                         error: "Existe um caixa aberto."
                     }
                 );
+                return;
             }
 
             const boxdays = await boxDayRepository.find({
@@ -130,11 +132,12 @@ export const BoxDayController = {
             const moreThanMaxBoxdays = totalBoxdays >= maxBoxdaysPlan;
 
             if (moreThanMaxBoxdays) {
-                return response.status(404).json(
+                response.status(404).send(
                     {
                         message: "Máximo de caixas diário foi atingido."
                     }
                 );
+                return;
             }
 
             const startValue = dataBody.startValue ? dataBody.startValue : 0;
@@ -147,7 +150,7 @@ export const BoxDayController = {
 
             await boxDayRepository.save(boxDay);
 
-            return response.json(
+            response.send(
                 {
                     message: "Caixa salvo com sucesso!",
                 }
@@ -156,7 +159,7 @@ export const BoxDayController = {
 
         } catch (error) {
 
-            return response.status(404).json(
+            response.status(404).send(
                 { message: "Erro ao cadastrar o caixa!", error }
             );
 
@@ -185,12 +188,13 @@ export const BoxDayController = {
                 });
 
                 if (order) {
-                    return response.status(404).json(
+                    response.status(404).send(
                         {
                             message: "Ainda existem pedido(s) aberto(s)!",
                             error: "Ainda existem pedido(s) aberto(s)!"
                         }
                     );
+                    return;
                 }
 
                 const boxDayOpen = await boxDayEntity.find({
@@ -202,12 +206,13 @@ export const BoxDayController = {
                 });
 
                 if (boxDayOpen.length && !oldBoxDay.isOpen) {
-                    return response.status(404).json(
+                    response.status(404).send(
                         {
                             message: "Somente um caixa pode ficar aberto!",
                             error: "Existem pedidos abertos."
                         }
                     );
+                    return;
                 }
 
                 const boxDay = {
@@ -220,7 +225,7 @@ export const BoxDayController = {
 
                 await boxDayEntity.update(boxDayId, spendingMerger);
 
-                return response.json({
+                response.send({
                     message: "Caixa atualizado com sucesso!"
                 });
 
@@ -229,7 +234,7 @@ export const BoxDayController = {
 
         } catch (error) {
 
-            return response.status(404).json(
+            response.status(404).send(
                 {
                     message: "Erro ao salvar caixa.", error: error
                 }

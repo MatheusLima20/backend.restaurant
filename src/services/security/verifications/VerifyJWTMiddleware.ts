@@ -8,7 +8,7 @@ export const VerifyJWTMiddleware = {
 
         if (!authorization) {
 
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Token Inexistente.",
                 error: "Token Inexistente."
             });
@@ -33,7 +33,7 @@ export const VerifyJWTMiddleware = {
 
         } catch (error) {
 
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Token Expirado.",
                 error: error
             });

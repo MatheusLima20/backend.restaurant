@@ -47,12 +47,12 @@ export const TableController = {
 
             const tableView = TableView.get(table, isOcuppied, amountPendings);
 
-            return response.json({
+            response.send({
                 data: tableView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error, error
             });
         }
@@ -94,11 +94,12 @@ export const TableController = {
             const moreThanMaxTables = totalTables >= maxTablesPlan;
 
             if (moreThanMaxTables) {
-                return response.status(404).json(
+                response.status(404).send(
                     {
                         message: "Máximo de mesas foi atingido."
                     }
                 );
+                return;
             }
 
             const name = "Mesa: " + (totalTables + 1);
@@ -111,7 +112,7 @@ export const TableController = {
 
             await tableRepository.save(tableNew);
 
-            return response.json(
+            response.send(
                 {
                     message: "Mesa salva com sucesso!",
                 }
@@ -120,7 +121,7 @@ export const TableController = {
 
         } catch (error) {
 
-            return response.status(404).json(
+            response.status(404).send(
                 { message: "Erro ao cadastrar mesa!", error }
             );
 
@@ -162,12 +163,13 @@ export const TableController = {
                 });
 
                 if (!isActive && ordersTable.length !== 0) {
-                    return response.status(404).json(
+                    response.status(404).send(
                         {
                             message: "Existe(m) pedido(s) aberto(s) na mesa.",
                             error: "Mesa"
                         }
                     );
+                    return;
                 }
 
                 const table = {
@@ -180,7 +182,7 @@ export const TableController = {
 
                 await tableEntity.update(tableId, spendingMerger);
 
-                return response.json({
+                response.send({
                     message: "Mesa atualizada com sucesso!"
                 });
 
@@ -189,7 +191,7 @@ export const TableController = {
 
         } catch (error) {
 
-            return response.status(404).json(
+            response.status(404).send(
                 {
                     message: "Erro ao salvar mesa.", error: error
                 }

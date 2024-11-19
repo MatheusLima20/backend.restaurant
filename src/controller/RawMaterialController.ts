@@ -34,13 +34,13 @@ export const RawMaterialController = {
 
             const rawMaterialView = RawMaterialView.getById(rawMaterial);
 
-            return response.json({
+            response.send({
                 data: rawMaterialView,
                 message: "Dados encontrados com sucesso.",
             });
 
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error
             });
@@ -79,12 +79,12 @@ export const RawMaterialController = {
 
             const productView = RawMaterialView.getProfit(rawMaterialEntity)
 
-            return response.json({
+            response.send({
                 data: productView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error
             });
@@ -115,12 +115,12 @@ export const RawMaterialController = {
                 ...rawMaterial
             });
 
-            return response.json({
+            response.send({
                 message: "Dados salvos com sucesso.",
             });
 
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error
             });
@@ -153,12 +153,12 @@ export const RawMaterialController = {
                 ...rawMaterial
             });
 
-            return response.json({
+            response.send({
                 message: "Dados atualizados com sucesso.",
             });
 
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error
             });
@@ -221,12 +221,12 @@ export const RawMaterialController = {
 
             }
 
-            return response.json({
+            response.send({
                 message: "Dados atualizados com sucesso.",
             });
 
         } catch (error) {
-            return response.status(404).json(
+            response.status(404).send(
                 {
                     message: "Erro ao salvar stock", error: error
                 }
@@ -247,12 +247,12 @@ export const RawMaterialController = {
 
             await rawMaterialEntity.delete(rawMaterialId);
 
-            return response.json({
+            response.send({
                 message: "Dados deletados com sucesso.",
             });
 
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error
             });

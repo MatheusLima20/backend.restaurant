@@ -15,12 +15,12 @@ export const StatesController = {
 
             const statesView = StatesView.get(statesDataBase);
 
-            return response.json({
+            response.send({
                 data: statesView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }

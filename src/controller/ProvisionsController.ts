@@ -27,12 +27,12 @@ export const ProvisionsController = {
 
             const productView = ProductView.get(products);
 
-            return response.json({
+            response.send({
                 data: productView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error
             });
@@ -58,12 +58,12 @@ export const ProvisionsController = {
 
             const productView = ProductView.getPlates(products)
 
-            return response.json({
+            response.send({
                 data: productView,
                 message: "Dados encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
                 error
             });
@@ -84,9 +84,10 @@ export const ProvisionsController = {
         const userType = user.userType;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Usuário sem permissão.",
             });
+            return;
         }
 
         try {
@@ -138,7 +139,7 @@ export const ProvisionsController = {
                     "Salvo"
                 );
 
-            return response.json(
+            response.send(
                 {
                     data: productView,
                     message: "Produto salvo com sucesso!",
@@ -148,7 +149,7 @@ export const ProvisionsController = {
 
         } catch (error) {
 
-            return response.status(404).json(
+            response.status(404).send(
                 { message: "Erro ao cadastrar o produto!", error }
             );
 
@@ -169,9 +170,10 @@ export const ProvisionsController = {
         const userType = user.userType;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Usuário sem permissão.",
             });
+            return;
         }
         try {
 
@@ -224,7 +226,7 @@ export const ProvisionsController = {
 
                 await productEntity.update(productId, spendingMerger);
 
-                return response.json({
+                response.send({
                     message: "Produtos alterados com sucesso!"
                 });
 
@@ -233,7 +235,7 @@ export const ProvisionsController = {
 
         } catch (error) {
 
-            return response.status(404).json(
+            response.status(404).send(
                 {
                     message: "Erro ao salvar produtos", error: error
                 }

@@ -20,14 +20,14 @@ export const UserController = {
         try {
             const name: string = request.auth.user.name;
 
-            return response.json({
+            response.send({
                 data: {
                     name: name,
                 },
                 message: "Token Valido.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -68,12 +68,12 @@ export const UserController = {
             });
 
             const userView = UserView.getUsers(users);
-            return response.json({
+            response.send({
                 data: userView,
                 message: "Usuários encontrados com sucesso.",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -91,10 +91,10 @@ export const UserController = {
             });
 
             if (!user) {
-                return response.json({ message: "Usuário não encontrado!" });
+                response.send({ message: "Usuário não encontrado!" });
             }
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -112,9 +112,10 @@ export const UserController = {
             const passwordRepeated = dataUser.passwordRepeated;
 
             if (password !== passwordRepeated) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "As senhas não conferem.",
                 });
+                return;
             }
 
             const userCpf: string = stringFormatter.onlyNumberString(dataUser.cpf);
@@ -128,9 +129,10 @@ export const UserController = {
             const isValidCPF = cpf.isValid(userCpf);
 
             if (!isValidCPF) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "O CPF é invalido.",
                 });
+                return;
             }
 
             const getAddressCodePostal = await UserController.getCep(
@@ -138,9 +140,10 @@ export const UserController = {
             );
 
             if (!getAddressCodePostal) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "Cep não encontrado.",
                 });
+                return;
             }
 
             const city = getAddressCodePostal.city;
@@ -165,10 +168,11 @@ export const UserController = {
                     });
 
                     if (!companyPlatform) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message:
                                 "Plataforma da empresa não foi encontrada.",
                         });
+                        return;
                     }
 
                     const platformDataBase = await platformRepository.findOne({
@@ -176,9 +180,10 @@ export const UserController = {
                     });
 
                     if (!platformDataBase) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Plataforma não encontrada.",
                         });
+                        return;
                     }
 
                     const userType = await userTypeRepository.findOne({
@@ -186,9 +191,10 @@ export const UserController = {
                     });
 
                     if (!userType) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Tipo de usuário não encontrado.",
                         });
+                        return;
                     }
 
                     const user = {
@@ -215,9 +221,10 @@ export const UserController = {
                     });
 
                     if (emailStored) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Email já cadastrado.",
                         });
+                        return;
                     }
 
                     const userDataBase = await userRepository.findOne({
@@ -229,9 +236,10 @@ export const UserController = {
                     });
 
                     if (userDataBase) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Usuário já cadastrado.",
                         });
+                        return;
                     }
 
                     const userStore = await userRepository.save({
@@ -248,9 +256,10 @@ export const UserController = {
                     });
 
                     if (!stateData) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Estado não encontrado.",
                         });
+                        return;
                     }
 
                     const addressStore = await addressRepository.save({
@@ -268,14 +277,14 @@ export const UserController = {
 
                     const userView = UserView.store(userStore, addressStore);
 
-                    return response.json({
+                    response.send({
                         data: userView,
                         message: "Dados cadastrados com sucesso!",
                     });
                 }
             );
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -291,9 +300,10 @@ export const UserController = {
         const userType = userAuth.userType;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Usuário sem permissão.",
             });
+            return;
         }
 
         try {
@@ -302,7 +312,7 @@ export const UserController = {
             //const isValidCPF = cpf.isValid(userCPF);
 
             /*if (!isValidCPF) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "O CPF é invalido.",
                 });
             }*/
@@ -319,9 +329,10 @@ export const UserController = {
             );
 
             if (!getAddressCodePostal) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "Cep não encontrado.",
                 });
+                return;
             }
 
             const city = getAddressCodePostal.city;
@@ -364,9 +375,10 @@ export const UserController = {
                     });
 
                     if (emailStored) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Email já cadastrado.",
                         });
+                        return;
                     }
 
                     const userType = await userTypeEntity.findOne({
@@ -374,9 +386,10 @@ export const UserController = {
                     });
 
                     if (!userType) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Tipo de usuário não encontrado.",
                         });
+                        return;
                     }
 
                     const userStore = await userEntity.save({
@@ -394,9 +407,10 @@ export const UserController = {
                     });
 
                     if (!stateData) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Estado não encontrado.",
                         });
+                        return;
                     }
 
                     const addressStore = await addressEntity.save({
@@ -414,14 +428,14 @@ export const UserController = {
 
                     const userView = UserView.store(userStore, addressStore);
 
-                    return response.json({
+                    response.send({
                         data: userView,
                         message: "Dados cadastrados com sucesso!",
                     });
                 }
             );
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -437,9 +451,10 @@ export const UserController = {
         const userType = user.userType;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Usuário sem permissão.",
             });
+            return;
         }
 
         try {
@@ -476,9 +491,10 @@ export const UserController = {
                     const moreThanMaxUsersPlan = totalUsers.length > maxUsersPlan;
 
                     if (moreThanMaxUsersPlan) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Limite de usuários cadastrados atingido.",
                         });
+                        return;
                     }
 
                     const password = AdmLogin.hashPassword(dataUser.password);
@@ -496,9 +512,10 @@ export const UserController = {
                     });
 
                     if (emailStored) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Email já cadastrado.",
                         });
+                        return;
                     }
 
                     const userType = await userTypeEntity.findOne({
@@ -506,9 +523,10 @@ export const UserController = {
                     });
 
                     if (!userType) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Tipo de usuário não encontrado.",
                         });
+                        return;
                     }
 
                     await userEntity.save({
@@ -521,13 +539,13 @@ export const UserController = {
                         createdBy: user.id,
                     } as UserEntity);
 
-                    return response.json({
+                    response.send({
                         message: "Dados cadastrados com sucesso!",
                     });
                 }
             );
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -547,7 +565,7 @@ export const UserController = {
             const isValidCPF = cpf.isValid(userCpfcnpj);
 
             if (!isValidCNPJ && !isValidCPF) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "O CPF/CNPJ é invalido.",
                 });
             }*/
@@ -564,9 +582,10 @@ export const UserController = {
             );
 
             if (!getAddressCodePostal) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "Cep não encontrado.",
                 });
+                return;
             }
 
             const city = getAddressCodePostal.city;
@@ -631,9 +650,10 @@ export const UserController = {
                     });
 
                     if (!userType) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Tipo de usuário não encontrado.",
                         });
+                        return;
                     }
 
                     const emailStored = await userEntity.findOne({
@@ -643,9 +663,10 @@ export const UserController = {
                     });
 
                     if (emailStored) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Email já cadastrado.",
                         });
+                        return;
                     }
 
                     const stateData = await statesEntity.findOne({
@@ -653,9 +674,10 @@ export const UserController = {
                     });
 
                     if (!stateData) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Estado não encontrado.",
                         });
+                        return;
                     }
 
                     const companyDataBase = await companyEntity.findOne({
@@ -668,9 +690,10 @@ export const UserController = {
                         });
 
                         if (platformDataBase) {
-                            return response.status(404).json({
+                            response.status(404).send({
                                 message: "A plataforma já está cadastrada.",
                             });
+                            return;
                         }
                     }
 
@@ -714,14 +737,14 @@ export const UserController = {
                         addressStore
                     );
 
-                    return response.json({
+                    response.send({
                         data: userView,
                         message: "Dados cadastrados com sucesso!",
                     });
                 }
             );
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -739,9 +762,10 @@ export const UserController = {
         const userType = authUser.userType;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Usuário sem permissão.",
             });
+            return;
         }
 
         try {
@@ -749,9 +773,10 @@ export const UserController = {
             const passwordRepeated = dataUser.passwordRepeated;
 
             if (password !== passwordRepeated) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "As senhas não conferem.",
                 });
+                return;
             }
 
             const address = dataUser.address;
@@ -767,7 +792,7 @@ export const UserController = {
             /*const isValidCPF = cpf.isValid(userCpf);
       
             if (!isValidCPF) {
-              return response.status(404).json({
+              response.status(404).send({
                 message: "O CPF é invalido.",
               });
             }*/
@@ -777,9 +802,10 @@ export const UserController = {
             );
 
             if (!getAddressCodePostal) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "Cep não encontrado.",
                 });
+                return;
             }
 
             const city = getAddressCodePostal.city;
@@ -801,9 +827,10 @@ export const UserController = {
                     });
 
                     if (!userType) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Tipo de usuário não encontrado.",
                         });
+                        return;
                     }
 
                     const user = {
@@ -834,9 +861,10 @@ export const UserController = {
                     });
 
                     if (!userDataBase) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Usuário não cadastrado.",
                         });
+                        return;
                     }
 
                     const userMerge = userEntity.merge(userDataBase, user);
@@ -848,9 +876,10 @@ export const UserController = {
                     });
 
                     if (!stateData) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Estado não encontrado.",
                         });
+                        return;
                     }
 
                     const addressDataBase = await addressEntity.findOne({
@@ -872,14 +901,14 @@ export const UserController = {
                         addressMerge
                     );
 
-                    return response.json({
+                    response.send({
                         data: userView,
                         message: "Dados atualizados com sucesso!",
                     });
                 }
             );
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -904,9 +933,10 @@ export const UserController = {
         const isActive = body.isActive;
 
         if (userType !== "SUPER") {
-            return response.status(404).json({
+            response.status(404).send({
                 message: "Usuário sem permissão.",
             });
+            return;
         }
 
         try {
@@ -941,9 +971,10 @@ export const UserController = {
                         const moreThanMaxUsersPlan = totalUsers.length > maxUsersPlan;
 
                         if (moreThanMaxUsersPlan) {
-                            return response.status(404).json({
+                            response.status(404).send({
                                 message: "Limite de usuários cadastrados atingido.",
                             });
+                            return;
                         }
                     }
 
@@ -955,7 +986,7 @@ export const UserController = {
                         const isSamePassword = password === passwordRepeated;
 
                         if (!isSamePassword) {
-                            return response.json({
+                            response.send({
                                 message: "As senhas não conferem!"
                             });
                         }
@@ -969,9 +1000,10 @@ export const UserController = {
                     });
 
                     if (!userType) {
-                        return response.status(404).json({
+                        response.status(404).send({
                             message: "Tipo de usuário não encontrado",
                         });
+                        return;
                     }
 
                     const userData = {
@@ -997,13 +1029,13 @@ export const UserController = {
 
                     await userEntity.update({ id: userId }, userMerger);
 
-                    return response.json({
+                    response.send({
                         message: "Usuário atualizado com sucesso!"
                     });
                 }
             );
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -1023,7 +1055,7 @@ export const UserController = {
                     });
 
                     if (!user)
-                        return response.json({
+                        response.send({
                             message: "Usuário não encontrado!",
                         });
 
@@ -1031,7 +1063,7 @@ export const UserController = {
                 }
             );
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -1044,7 +1076,7 @@ export const UserController = {
 
             return cep;
         } catch (error) {
-            return undefined;
+            undefined;
         }
     },
 
@@ -1056,12 +1088,12 @@ export const UserController = {
 
             const cepView = UserView.cep(value);
 
-            return response.json({
+            response.send({
                 data: cepView,
                 message: "Dados encontrados com sucesso!",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }

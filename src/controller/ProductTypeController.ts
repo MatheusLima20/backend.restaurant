@@ -15,20 +15,21 @@ export const ProductTypeController = {
             const productType = await productTypeRepository.find();
 
             if (!productType) {
-                response.status(404).json({
+                response.status(404).send({
                     message: "Nenhum dado encontrado."
                 });
+                return;
             }
 
             const productTypeView = ProductTypeView.get(productType);
 
-            response.json({
+            response.send({
                 data: productTypeView,
                 message: "Dados encontrados com sucesso."
             });
 
         } catch (error) {
-            response.status(404).json({
+            response.status(404).send({
                 message: error
             });
         }

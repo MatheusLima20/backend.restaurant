@@ -30,15 +30,15 @@ export const ChargesController = {
 
             const chargesView = ChargesView.get(chargesEntity);
 
-            return response.json({
+            response.send({
                 data: chargesView,
                 message: "Dados coletados com sucesso!",
             });
 
         } catch (error) {
-            return response
+            response
                 .status(404)
-                .json({ message: "Erro ao buscar contas." + error });
+                .send({ message: "Erro ao buscar contas." + error });
         }
     },
 
@@ -152,19 +152,19 @@ export const ChargesController = {
 
             await chargesRepository.update(chargesEntity.id, chargeMerge);
 
-            return response.json({
+            response.send({
                 message: "Pagamento realizado com sucesso!",
             });
         } catch (error) {
-            return response
+            response
                 .status(404)
-                .json({ message: "Erro no pagamento." + error });
+                .send({ message: "Erro no pagamento." + error });
         }
     },
 
     generateBilling: async (user: User) => {
         const platform = user.platform;
-
+        console.log(platform)
         const dates = dateFormat;
 
         const chargesRepository = dataSource.getRepository(ChargesEntity);

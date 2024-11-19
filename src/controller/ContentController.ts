@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ContentEntity } from "../entity/ContentEntity";
+import { ContentEntity, ContentType } from "../entity/ContentEntity";
 import { IsNull, Like, Not } from "typeorm";
 import { UploadFile } from "../middlwares/Files/UploadFilesMiddlware";
 import { ContentView } from "../views/ContentView";
@@ -18,7 +18,7 @@ export const ContentController = {
                 next: next,
             });
         } catch (error) {
-            return response.json({ message: error });
+            response.send({ message: error });
         }
     },
 
@@ -42,12 +42,12 @@ export const ContentController = {
 
             const contentView = ContentView.get(content);
 
-            return response.json({
+            response.send({
                 data: contentView,
                 message: "Dados encontrados com Sucesso!",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -57,9 +57,9 @@ export const ContentController = {
         const { tag, companyCPFCNPJ, type } = request.params;
 
         try {
-            const platformRepository =dataSource. getRepository(PlatformEntity);
-            const companyRepository =dataSource. getRepository(CompanyEntity);
-            const contentRepository =dataSource. getRepository(ContentEntity);
+            const platformRepository = dataSource.getRepository(PlatformEntity);
+            const companyRepository = dataSource.getRepository(CompanyEntity);
+            const contentRepository = dataSource.getRepository(ContentEntity);
 
             const company = await companyRepository.findOne({
                 where: {
@@ -77,7 +77,7 @@ export const ContentController = {
                 take: 9,
                 where: {
                     tag: tag,
-                    contentType: type,
+                    contentType: type as ContentType,
                     visible: true,
                     fkPlatform: platform.id,
                 },
@@ -89,12 +89,12 @@ export const ContentController = {
 
             const contentView = ContentView.getByTag(content);
 
-            return response.json({
+            response.send({
                 message: "Dados salvos com sucesso!",
                 data: contentView,
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -104,9 +104,9 @@ export const ContentController = {
         const { companyCPFCNPJ, type } = request.params;
 
         try {
-            const platformRepository =dataSource. getRepository(PlatformEntity);
-            const companyRepository =dataSource. getRepository(CompanyEntity);
-            const contentRepository =dataSource. getRepository(ContentEntity);
+            const platformRepository = dataSource.getRepository(PlatformEntity);
+            const companyRepository = dataSource.getRepository(CompanyEntity);
+            const contentRepository = dataSource.getRepository(ContentEntity);
 
             const company = await companyRepository.findOne({
                 where: {
@@ -120,15 +120,13 @@ export const ContentController = {
                 },
             });
 
-            let where = {
-                visible: true,
-                fkPlatform: platform.id,
-                contentType: type,
-            };
-
             const content = await contentRepository.find({
                 take: 9,
-                where: where,
+                where: {
+                    visible: true,
+                    fkPlatform: platform.id,
+                    contentType: type as ContentType,
+                },
                 order: {
                     createdAt: "DESC",
                 },
@@ -137,12 +135,12 @@ export const ContentController = {
 
             const contentView = ContentView.getByTag(content);
 
-            return response.json({
+            response.send({
                 message: "Dados salvos com sucesso!",
                 data: contentView,
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -152,9 +150,9 @@ export const ContentController = {
         const { companyCPFCNPJ, search } = request.params;
 
         try {
-            const platformRepository =dataSource. getRepository(PlatformEntity);
-            const companyRepository =dataSource. getRepository(CompanyEntity);
-            const contentRepository =dataSource. getRepository(ContentEntity);
+            const platformRepository = dataSource.getRepository(PlatformEntity);
+            const companyRepository = dataSource.getRepository(CompanyEntity);
+            const contentRepository = dataSource.getRepository(ContentEntity);
 
             const company = await companyRepository.findOne({
                 where: {
@@ -219,17 +217,17 @@ export const ContentController = {
             const wipeArray = totalContent.filter((value) => {
                 const duplicatedArray = newArray.has(value.id);
                 newArray.add(value.id);
-                return !duplicatedArray;
+                !duplicatedArray;
             });
 
             const contentView = ContentView.getByTag(wipeArray);
 
-            return response.json({
+            response.send({
                 message: "Dados encontrados com sucesso!",
                 data: contentView,
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -239,7 +237,7 @@ export const ContentController = {
         const { id } = request.params;
 
         try {
-            const contentRepository =dataSource. getRepository(ContentEntity);
+            const contentRepository = dataSource.getRepository(ContentEntity);
 
             const content = await contentRepository.findOne({
                 where: {
@@ -250,12 +248,12 @@ export const ContentController = {
 
             const contentView = ContentView.getById(content);
 
-            return response.json({
+            response.send({
                 message: "Dados salvos com sucesso!",
                 data: contentView,
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -266,7 +264,7 @@ export const ContentController = {
         const platform = user.platform;
 
         try {
-            const contentRepository =dataSource. getRepository(ContentEntity);
+            const contentRepository = dataSource.getRepository(ContentEntity);
 
             const content = await contentRepository.find({
                 where: {
@@ -277,12 +275,12 @@ export const ContentController = {
 
             const contentView = ContentView.getImages(content);
 
-            return response.json({
+            response.send({
                 message: "Dados salvos com sucesso!",
                 result: contentView,
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -297,7 +295,7 @@ export const ContentController = {
         const file = dataBody.file;
 
         try {
-            const contentRepository =dataSource. getRepository(ContentEntity);
+            const contentRepository = dataSource.getRepository(ContentEntity);
 
             await contentRepository.save({
                 title: dataBody.title,
@@ -313,7 +311,7 @@ export const ContentController = {
                 createdBy: user.id as any,
             });
 
-            return response.json({
+            response.send({
                 message: "Dados salvos com sucesso!",
             });
         } catch (error) {
@@ -321,7 +319,7 @@ export const ContentController = {
                 Archive.delete(file);
             }
 
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -337,7 +335,7 @@ export const ContentController = {
         const file = dataBody.file;
 
         try {
-            const contentRepository = dataSource. getRepository(ContentEntity);
+            const contentRepository = dataSource.getRepository(ContentEntity);
 
             const contentId = Number.parseInt(id);
 
@@ -366,7 +364,7 @@ export const ContentController = {
 
             await contentRepository.update(contentId, contentMerge);
 
-            return response.json({
+            response.send({
                 message: "Dados atualizados com sucesso!",
             });
         } catch (error) {
@@ -374,7 +372,7 @@ export const ContentController = {
                 Archive.delete(file);
             }
 
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -384,7 +382,7 @@ export const ContentController = {
         const { id } = request.params;
 
         try {
-            const contentRepository =dataSource. getRepository(ContentEntity);
+            const contentRepository = dataSource.getRepository(ContentEntity);
 
             const contentId = Number.parseInt(id);
 
@@ -393,7 +391,7 @@ export const ContentController = {
             });
 
             const newContent = {
-                viewsAmount: oldContent.viewsAmount += 1,
+                viewsAmount: (oldContent.viewsAmount += 1),
             };
 
             const contentMerge = contentRepository.merge(
@@ -403,12 +401,11 @@ export const ContentController = {
 
             await contentRepository.update(contentId, contentMerge);
 
-            return response.json({
+            response.send({
                 message: "Dados atualizados com sucesso!",
             });
         } catch (error) {
-
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }
@@ -418,7 +415,7 @@ export const ContentController = {
         const { id } = request.params;
 
         try {
-            const contentRepository =dataSource. getRepository(ContentEntity);
+            const contentRepository = dataSource.getRepository(ContentEntity);
 
             const archive = await contentRepository.findOne({
                 where: {
@@ -428,9 +425,10 @@ export const ContentController = {
             });
 
             if (!archive) {
-                return response.status(404).json({
+                response.status(404).send({
                     message: "Arquivo não encontrado!",
                 });
+                return;
             }
 
             const archiveName = archive.fileName;
@@ -442,10 +440,11 @@ export const ContentController = {
             });
 
             if (content) {
-                return response.status(404).json({
+                response.status(404).send({
                     message:
                         "Não é possível apagar a imagem, pois ela está sendo utilizada!",
                 });
+                return;
             }
 
             await contentRepository.remove(archive);
@@ -459,11 +458,11 @@ export const ContentController = {
                 Archive.delete(file);
             }
 
-            return response.json({
+            response.send({
                 message: "Dados deletados com sucesso!",
             });
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).send({
                 message: error,
             });
         }

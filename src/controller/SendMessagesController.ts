@@ -28,10 +28,10 @@ export const SendMessagesController = {
             });
 
 
-            return response.json({ data: result });
+            response.send({ data: result });
 
         } catch (error) {
-            return response.status(404).json({ error });
+            response.status(404).send({ error });
         }
 
     },
@@ -44,7 +44,7 @@ export const SendMessagesController = {
 
         } catch (error) {
             
-            return response.status(404).json({ error });
+            response.status(404).send({ error });
         }
 
     },

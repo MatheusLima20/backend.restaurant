@@ -25,9 +25,10 @@ export const PlatformController = {
             });
 
             if (!company) {
-                return response.status(404).json({
+                response.status(404).json({
                     message: "Empresa não encontrada."
                 });
+                return;
             }
 
             const platform = await platformEntity.findOne({
@@ -37,23 +38,26 @@ export const PlatformController = {
             });
 
             if (!platform) {
-                return response.status(404).json({
+                response.status(404).json({
                     message: "Plataforma não encontrada."
                 });
+                return;
             }
 
-            return response.json({
+            response.json({
                 message: "Plataforma encontrada com sucesso!",
                 data: {
                     platformId: platform.id,
                     platformName: platform.name,
                 },
             });
+            return;
 
         } catch (error) {
-            return response.status(404).json({
+            response.status(404).json({
                 message: error
             });
+            return;
         }
 
     },
