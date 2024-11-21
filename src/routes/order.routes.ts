@@ -49,6 +49,13 @@ routes.patch(
 );
 
 routes.patch(
+    "/order-subtract/:id",
+    VerifyJWTMiddleware.verifyJWT,
+    OrderValidation.patchSubtract,
+    OrderController.patchSubtract
+);
+
+routes.patch(
     "/orders/",
     VerifyJWTMiddleware.verifyJWT,
     OrderValidation.patchs,

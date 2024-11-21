@@ -5,7 +5,7 @@ import { dataSource } from "../services/database/database";
 import { Between, Like } from "typeorm";
 import { LogView } from "../views/LogView";
 
-export type LogTag = "Salvo" | "Alterado" | "Excluido";
+export type LogTag = "Salvo" | "Alterado" | "Cancelado" | "Excluido";
 
 export const LogController = {
     store: async (user: User, title: string, message: string, tag: LogTag) => {

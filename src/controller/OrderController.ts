@@ -257,68 +257,14 @@ export const OrderController = {
             dataSource.transaction(async (transactionalEntityManager) => {
                 const orderEntity =
                     transactionalEntityManager.getRepository(OrderEntity);
-                const boxDayRepository = dataSource.getRepository(BoxDayEntity);
-                const productRepository =
-                    dataSource.getRepository(ProvisionsEntity);
 
                 const orderId: number = Number.parseInt(id);
                 const oldOrder = await orderEntity.findOne({
                     where: { id: orderId },
                 });
 
-                let product: ProvisionsEntity;
                 let amount = body?.amount;
                 const status = body?.status;
-
-                if (productId && amount) {
-                    product = await productRepository.findOne({
-                        where: { id: Number.parseInt(productId) },
-                        relations: {
-                            fkProductType: true,
-                        },
-                    });
-
-                    if (amount < 0) {
-                        amount = oldOrder.amount + amount;
-                    }
-
-                    const verifyAmount = amount < 1;
-
-                    if (verifyAmount) {
-                        response.status(404).send({
-                            message:
-                                "A quantidade para cancelar é maior ou " +
-                                "igual a registrada.",
-                            error: "Quantidade menor.",
-                        });
-                        return;
-                    }
-
-                    const platform = user.platform;
-
-                    const boxDay = await boxDayRepository.findOne({
-                        where: { fkPlatform: platform.id, isOpen: true },
-                    });
-
-                    const order: any = {
-                        fkProductId: product.id,
-                        fkPlatform: platform.id,
-                        fkTable: oldOrder.fkTable,
-                        fkBoxDay: boxDay.id,
-                        description: product.name,
-                        observation: body.observation,
-                        amount: body?.amount * -1,
-                        status: "cancelado",
-                        isCancelled: true,
-                        isOpen: false,
-                        value: product.value,
-                        productType: product.fkProductType.name,
-                        createdBy: user.id,
-                        updatedBy: user.id,
-                    };
-
-                    await orderEntity.save({ ...order });
-                }
 
                 const date: any = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
@@ -330,9 +276,7 @@ export const OrderController = {
                         : undefined;
 
                 const order: any = {
-                    description: product?.name,
                     fkProductId: productId,
-                    value: product?.value,
                     amount: amount,
                     isCancelled: body?.isCancelled,
                     isOpen: isOpen,
@@ -349,7 +293,135 @@ export const OrderController = {
 
                 const message = `Pedido alterado por: ${user.name}, 
                 Cod: ${order.id}, Produto: ${order.description}, Quantidade: ${amount},
-                 Status: ${status}, Cancelado: ${body.isCancelled}.`;
+                 Status: ${order.status}, Cancelado: ${body.isCancelled}.`;
+
+                await LogController.store(
+                    user,
+                    "Pedido Alterado",
+                    message,
+                    "Alterado"
+                );
+
+                response.send({
+                    message: "Pedido alterado com sucesso!",
+                });
+            });
+        } catch (error) {
+            response.status(404).send({
+                message: "Erro ao salvar prato " + error,
+                error: error,
+            });
+        }
+    },
+
+    patchSubtract: async (request: Request, response: Response) => {
+        const { id } = request.params;
+
+        const body = request.body;
+
+        const auth = request.auth;
+        const user = auth.user;
+
+        const productId = body.productId;
+        const isOpen = body?.isOpen;
+
+        try {
+            dataSource.transaction(async (transactionalEntityManager) => {
+                const orderEntity =
+                    transactionalEntityManager.getRepository(OrderEntity);
+                const boxDayRepository = dataSource.getRepository(BoxDayEntity);
+                const tableRepository = dataSource.getRepository(TableEntity);
+                const productRepository =
+                    dataSource.getRepository(ProvisionsEntity);
+
+                const orderId: number = Number.parseInt(id);
+                const oldOrder = await orderEntity.findOne({
+                    where: { id: orderId },
+                });
+
+                const amount: number = body.amount;
+
+                const product: ProvisionsEntity =
+                    await productRepository.findOne({
+                        where: { id: Number.parseInt(productId) },
+                        relations: {
+                            fkProductType: true,
+                        },
+                    });
+
+                const newAmount = oldOrder.amount - amount;
+
+                const verifyAmount = amount < 1;
+
+                if (verifyAmount) {
+                    response.status(404).send({
+                        message:
+                            "A quantidade para cancelar é maior ou igual a registrada.",
+                        error: "Quantidade menor.",
+                    });
+                    return;
+                }
+
+                const platform = user.platform;
+
+                const boxDay = await boxDayRepository.findOne({
+                    where: { fkPlatform: platform.id, isOpen: true },
+                });
+
+                const newStatus =
+                    oldOrder.status === "pendente"
+                        ? "cancelado"
+                        : oldOrder.status;
+
+                const orderCancelled: any = {
+                    fkProductId: product.id,
+                    fkPlatform: platform.id,
+                    fkTable: oldOrder.fkTable,
+                    fkBoxDay: boxDay.id,
+                    description: product.name,
+                    observation: body.observation,
+                    amount: body.amount,
+                    status: newStatus,
+                    isCancelled: true,
+                    isOpen: false,
+                    value: product.value,
+                    productType: product.fkProductType.name,
+                    createdBy: user.id,
+                    updatedBy: user.id,
+                };
+
+                await orderEntity.save({ ...orderCancelled });
+
+                const tableEntity = await tableRepository.findOne({
+                    where: {
+                        id: orderCancelled.fkTable,
+                    },
+                });
+
+                const messageCancelled = `Pedido cancelado por: ${user.name}, 
+                        Produto: ${orderCancelled.description}, Quantidade: ${orderCancelled.amount},
+                        Status: Cancelado, ${tableEntity.name}.`;
+
+                await LogController.store(
+                    user,
+                    "Pedido Cancelado",
+                    messageCancelled,
+                    "Cancelado"
+                );
+
+                const order: any = {
+                    amount: newAmount,
+                    updatedBy: user.id,
+                };
+
+                const spendingMerger = orderEntity.merge(oldOrder, order);
+
+                await orderEntity.update(orderId, spendingMerger);
+
+                const message = `Pedido alterado por: ${user.name}, 
+                Cod: ${order.id}, Produto: ${order.description}, 
+                 Quantidade Cancelada: ${amount}, Restante: ${newAmount} 
+                 Status: ${order.status}`;
 
                 await LogController.store(
                     user,

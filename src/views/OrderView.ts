@@ -91,6 +91,7 @@ export const OrderView = {
                 id: order.id,
                 productId: order.fkProductId,
                 amount: order.amount,
+                value: order.value,
                 productName: order.description,
                 isCancelled: order.isCancelled,
                 idTable: order.fkTable,

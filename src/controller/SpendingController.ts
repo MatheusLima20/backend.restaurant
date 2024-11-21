@@ -55,13 +55,7 @@ export const SpendingController = {
         const platform = user.platform;
 
         const userType = user.userType;
-
-        if (userType !== "SUPER") {
-            response.status(404).send({
-                message: "Usuário sem permissão.",
-            });
-            return;
-        }
+        console.log('ok')
 
         try {
             const spendingEntity = dataSource.getRepository(SpendingEntity);

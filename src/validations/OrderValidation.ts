@@ -54,6 +54,19 @@ export const OrderValidation = {
 
     }, { abortEarly: false, messages: messages, }),
 
+    patchSubtract: celebrate({
+
+        [Segments.PARAMS]: {
+            id: Joi.number().required().positive(),
+        },
+
+        [Segments.BODY]: {
+            productId: Joi.number().allow().positive(),
+            amount: Joi.number().positive().required(),
+        }
+
+    }, { abortEarly: false, messages: messages, }),
+
     patchs: celebrate({
 
         [Segments.BODY]: {
