@@ -5,7 +5,6 @@ import { UnitMeasurementEntity } from "../entity/UnitMeasurementEntity";
 import { ProductView } from "../views/ProvisionsView";
 import dayjs = require("dayjs");
 import { ProductTypeEntity } from "../entity/ProductTypeEntity";
-import { LogController } from "./LogContoller";
 
 export const ProvisionsController = {
     get: async (request: Request, response: Response) => {
