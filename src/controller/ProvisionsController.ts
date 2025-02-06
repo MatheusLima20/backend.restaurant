@@ -8,21 +8,20 @@ import { ProductTypeEntity } from "../entity/ProductTypeEntity";
 import { LogController } from "./LogContoller";
 
 export const ProvisionsController = {
-
     get: async (request: Request, response: Response) => {
-
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
         try {
-            const productRepository = dataSource.getRepository(ProvisionsEntity);
+            const productRepository =
+                dataSource.getRepository(ProvisionsEntity);
 
             const products = await productRepository.find({
                 where: { fkPlatform: platform.id, isPlate: false },
-                order: { createdAt: 'desc' },
+                order: { createdAt: "desc" },
                 relations: {
                     fkUnitMeasurement: true,
-                }
+                },
             });
 
             const productView = ProductView.get(products);
@@ -34,29 +33,31 @@ export const ProvisionsController = {
         } catch (error) {
             response.status(404).send({
                 message: error,
-                error
+                error,
             });
         }
-
     },
 
     getPlates: async (request: Request, response: Response) => {
-
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
 
         try {
-            const productRepository = dataSource.getRepository(ProvisionsEntity);
+            const productRepository =
+                dataSource.getRepository(ProvisionsEntity);
 
             const products = await productRepository.find({
                 where: { fkPlatform: platform.id, isPlate: true },
                 relations: {
-                    fkProductType: true
-                }
+                    fkProductType: true,
+                },
+                order: {
+                    createdAt: "desc",
+                },
             });
 
-            const productView = ProductView.getPlates(products)
+            const productView = ProductView.getPlates(products);
 
             response.send({
                 data: productView,
@@ -65,14 +66,12 @@ export const ProvisionsController = {
         } catch (error) {
             response.status(404).send({
                 message: error,
-                error
+                error,
             });
         }
-
     },
 
     store: async (request: Request, response: Response) => {
-
         const body = request.body;
 
         const auth = request.auth;
@@ -91,23 +90,26 @@ export const ProvisionsController = {
         }
 
         try {
-
-            const productRepository = dataSource.getRepository(ProvisionsEntity);
-            const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
-            const productTypeRepository = dataSource.getRepository(ProductTypeEntity);
+            const productRepository =
+                dataSource.getRepository(ProvisionsEntity);
+            const unitMeasurementRepository = dataSource.getRepository(
+                UnitMeasurementEntity
+            );
+            const productTypeRepository =
+                dataSource.getRepository(ProductTypeEntity);
 
             let unitMeasurement: UnitMeasurementEntity;
             let productType: ProductTypeEntity;
 
             if (body.unitMeasurement) {
                 unitMeasurement = await unitMeasurementRepository.findOne({
-                    where: { name: body.unitMeasurement as any }
+                    where: { name: body.unitMeasurement as any },
                 });
             }
 
             if (body.productType) {
                 productType = await productTypeRepository.findOne({
-                    where: { name: body.productType as any }
+                    where: { name: body.productType as any },
                 });
             }
 
@@ -123,42 +125,24 @@ export const ProvisionsController = {
                 fkUnitMeasurement: unitMeasurement,
                 fkProductType: productType,
                 createdBy: user.id,
-            }
+            };
 
             const productData = await productRepository.save(product);
 
             const productView = ProductView.store(productData);
 
-            const message = `Produto salvo por: ${user.name}, 
-                    Nome: ${product.name}, Valor: ${product.value}, Tipo: ${productType.name}.`;
-
-                await LogController.store(
-                    user,
-                    "Produto Salvo",
-                    message,
-                    "Salvo"
-                );
-
-            response.send(
-                {
-                    data: productView,
-                    message: "Produto salvo com sucesso!",
-                }
-            );
-
-
+            response.send({
+                data: productView,
+                message: "Produto salvo com sucesso!",
+            });
         } catch (error) {
-
-            response.status(404).send(
-                { message: "Erro ao cadastrar o produto!", error }
-            );
-
+            response
+                .status(404)
+                .send({ message: "Erro ao cadastrar o produto!", error });
         }
-
     },
 
     patch: async (request: Request, response: Response) => {
-
         const { id } = request.params;
 
         const body = request.body;
@@ -176,31 +160,33 @@ export const ProvisionsController = {
             return;
         }
         try {
-
             dataSource.transaction(async (transactionalEntityManager) => {
-
-                const productEntity = transactionalEntityManager.getRepository(ProvisionsEntity);
-                const unitMeasurementRepository = dataSource.getRepository(UnitMeasurementEntity);
-                const productTypeRepository = dataSource.getRepository(ProductTypeEntity);
+                const productEntity =
+                    transactionalEntityManager.getRepository(ProvisionsEntity);
+                const unitMeasurementRepository = dataSource.getRepository(
+                    UnitMeasurementEntity
+                );
+                const productTypeRepository =
+                    dataSource.getRepository(ProductTypeEntity);
 
                 let unitMeasurement: UnitMeasurementEntity;
                 let productType: ProductTypeEntity;
 
                 if (body.unitMeasurement) {
                     unitMeasurement = await unitMeasurementRepository.findOne({
-                        where: { name: body.unitMeasurement as any }
+                        where: { name: body.unitMeasurement as any },
                     });
                 }
 
                 if (body.productType) {
                     productType = await productTypeRepository.findOne({
-                        where: { name: body.productType as any }
+                        where: { name: body.productType as any },
                     });
                 }
                 const productId: number = Number.parseInt(id);
 
                 const oldProduct = await productEntity.findOne({
-                    where: { id: productId }
+                    where: { id: productId },
                 });
 
                 let amount: number = body.amount;
@@ -219,30 +205,22 @@ export const ProvisionsController = {
                     fkUnitMeasurement: unitMeasurement,
                     fkProductType: productType,
                     updatedBy: user.id,
-                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
+                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss"),
                 };
 
-                const spendingMerger = productEntity.merge(oldProduct, product)
+                const spendingMerger = productEntity.merge(oldProduct, product);
 
                 await productEntity.update(productId, spendingMerger);
 
                 response.send({
-                    message: "Produtos alterados com sucesso!"
+                    message: "Produtos alterados com sucesso!",
                 });
-
             });
-
-
         } catch (error) {
-
-            response.status(404).send(
-                {
-                    message: "Erro ao salvar produtos", error: error
-                }
-            );
-
+            response.status(404).send({
+                message: "Erro ao salvar produtos",
+                error: error,
+            });
         }
-
     },
-
 };

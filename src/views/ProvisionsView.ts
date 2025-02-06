@@ -28,7 +28,8 @@ export const ProductView = {
                 productType: product.fkProductType.name,
                 show: product.show,
                 toCook: product.toCook,
-                isActive: product.isActive
+                isActive: product.isActive,
+                createdAt: product.createdAt
             };
         });
     },
