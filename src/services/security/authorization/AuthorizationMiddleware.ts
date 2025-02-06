@@ -4,7 +4,6 @@ import { AdmLogin } from "../encripty/AdmLogin";
 import { UserEntity } from "../../../entity/UserEntity";
 import { dataSource } from "../../database/database";
 import { ChargesController } from "../../../controller/ChargesController";
-import { User } from "../../../@types/express";
 
 export const Authorization = {
     auth: async (request: Request, response: Response) => {

@@ -226,11 +226,6 @@ export const OrderController = {
 
             await orderRepository.save({ ...order });
 
-            const message = `Pedido realizado por: ${user.name}, 
-                Cod: ${product.id}, Produto: ${product.name}, Quantidade: ${order.amount}.`;
-
-            await LogController.store(user, "Pedido Salvo", message, "Salvo");
-
             response.send({
                 message: "Pedido salvo com sucesso!",
             });

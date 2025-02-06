@@ -9,6 +9,9 @@ import {
 } from "typeorm";
 import { OrderEntity } from "./OrdersEntity";
 import { UserEntity } from "./UserEntity";
+import { ChargesType } from "../@types/charges";
+import { BoxDayEntity } from "./BoxDayEntity";
+
 
 @Entity({ name: "charges" })
 export class ChargesEntity {
@@ -23,13 +26,20 @@ export class ChargesEntity {
     @JoinColumn({ name: "fk_user" })
     fkUser: UserEntity;
 
+    @ManyToOne(() => BoxDayEntity, (boxday) => boxday.id, { nullable: true })
+    @JoinColumn({ name: "fk_boxday" })
+    fkBoxDay: BoxDayEntity;
+
     @Column()
     platform: number;
 
     @Column({ nullable: true })
     payer: string;
 
-    @Column()
+    @Column({ nullable: true })
+    type: ChargesType;
+
+    @Column({ nullable: true })
     payday: string;
 
     @Column({ name: "paid_in", nullable: true })
@@ -38,7 +48,7 @@ export class ChargesEntity {
     @Column({ type: "float" })
     value: number;
 
-    @Column()
+    @Column({ nullable: true })
     description: string;
 
     @Column({ name: "is_pay", default: false })

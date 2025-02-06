@@ -7,13 +7,24 @@ const routes = Router();
 
 //#region Send Messages
 
-routes.get("/charges", VerifyJWTMiddleware.verifyJWT, ChargesController.get);
+routes.get(
+    "/charges/:type",
+    VerifyJWTMiddleware.verifyJWT,
+    ChargesController.get
+);
 
 routes.post(
     "/payment-platform-credit-card",
     VerifyJWTMiddleware.verifyJWT,
     ChargesValidation.paymentPlatformCreditCard,
     ChargesController.paymentPlatformCreditCard
+);
+
+routes.post(
+    "/charges",
+    VerifyJWTMiddleware.verifyJWT,
+    ChargesValidation.store,
+    ChargesController.store
 );
 
 //#endregion

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../@types/express";
 import { ContentEntity } from "../entity/ContentEntity";
 import { dataSource } from "../services/database/database";
-import { Between, Like } from "typeorm";
+import { Like } from "typeorm";
 import { LogView } from "../views/LogView";
 
 export type LogTag = "Salvo" | "Alterado" | "Cancelado" | "Excluido";
@@ -40,6 +40,9 @@ export const LogController = {
                     fkPlatform: platform.id,
                     contentType: 'LOG',
                     createdAt: Like(`%${date}%`) as any,
+                },
+                order: {
+                    id: "DESC",
                 }
             });
 

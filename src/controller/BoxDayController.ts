@@ -6,11 +6,11 @@ import { OrderEntity } from "../entity/OrdersEntity";
 import dayjs = require("dayjs");
 import { PlatformEntity } from "../entity/PlatformEntity";
 import { Like } from "typeorm";
+import { ChargesEntity } from "../entity/ChargesEntity";
+import { TotalBoxday } from "../@types/boxday";
 
 export const BoxDayController = {
-
     get: async (request: Request, response: Response) => {
-
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
@@ -18,25 +18,47 @@ export const BoxDayController = {
         try {
             const boxDayRepository = dataSource.getRepository(BoxDayEntity);
             const orderEntity = dataSource.getRepository(OrderEntity);
+            const chargesEntity = dataSource.getRepository(ChargesEntity);
 
             const boxDay = await boxDayRepository.find({
                 where: { fkPlatform: platform.id },
-                order: { createdAt: 'DESC' },
-                take: 20
+                order: { createdAt: "DESC" },
+                take: 10,
             });
 
-            let totalBoxs = [];
+            let totalBoxers: TotalBoxday[] = [];
 
             for (let index = 0; index < boxDay.length; index++) {
-
                 let totalOrders = 0;
+                let totalWithdrawals = 0;
+                let totalReinforcements = 0;
 
                 const orders = await orderEntity.find({
                     where: {
                         fkBoxDay: boxDay[index].id,
                         isCancelled: false,
                         fkPlatform: platform.id,
-                    }
+                    },
+                });
+
+                const withdrawals = await chargesEntity.find({
+                    where: {
+                        platform: platform.id,
+                        type: "WITHDRAWALBOXDAY",
+                        fkBoxDay: {
+                            id: boxDay[index].id,
+                        },
+                    },
+                });
+
+                const reinforcements = await chargesEntity.find({
+                    where: {
+                        platform: platform.id,
+                        type: "REINFORCEMENTBOXDAY",
+                        fkBoxDay: {
+                            id: boxDay[index].id,
+                        },
+                    },
                 });
 
                 for (let index = 0; index < orders.length; index++) {
@@ -45,11 +67,26 @@ export const BoxDayController = {
                     totalOrders = totalOrders + totalOrder;
                 }
 
-                totalBoxs.push(totalOrders);
+                for (let index = 0; index < withdrawals.length; index++) {
+                    const withdrawal = withdrawals[index];
+                    const totalWithdrawal = withdrawal.value;
+                    totalWithdrawals = totalWithdrawals + totalWithdrawal;
+                }
 
+                for (let index = 0; index < reinforcements.length; index++) {
+                    const reinforcement = reinforcements[index];
+                    const totalReinforcement = reinforcement.value;
+                    totalReinforcements = totalReinforcements + totalReinforcement;
+                }
+
+                totalBoxers.push({
+                    totalOrders: totalOrders,
+                    totalWithdrawals: totalWithdrawals,
+                    totalReinforcement: totalReinforcements,
+                });
             }
 
-            const boxDayView = BoxDayView.get(boxDay, totalBoxs)
+            const boxDayView = BoxDayView.get(boxDay, totalBoxers);
 
             response.send({
                 data: boxDayView,
@@ -57,14 +94,13 @@ export const BoxDayController = {
             });
         } catch (error) {
             response.status(404).send({
-                message: error, error
+                message: error,
+                error,
             });
         }
-
     },
 
     store: async (request: Request, response: Response) => {
-
         const auth = request.auth;
 
         const user = auth.user;
@@ -74,7 +110,6 @@ export const BoxDayController = {
         const dataBody = request.body;
 
         try {
-
             const boxDayRepository = dataSource.getRepository(BoxDayEntity);
             const orderRepository = dataSource.getRepository(OrderEntity);
             const platformRepository = dataSource.getRepository(PlatformEntity);
@@ -85,42 +120,38 @@ export const BoxDayController = {
                 },
                 relations: {
                     fkPlan: true,
-                }
+                },
             });
 
             const order = await orderRepository.findOne({
-                where: { fkPlatform: platform.id, isOpen: true }
+                where: { fkPlatform: platform.id, isOpen: true },
             });
 
             if (order) {
-                response.status(404).send(
-                    {
-                        message: "Existe pedido(s) em aberto!",
-                        error: "Existe pedido(s) aberto."
-                    }
-                );
+                response.status(404).send({
+                    message: "Existe pedido(s) em aberto!",
+                    error: "Existe pedido(s) aberto.",
+                });
                 return;
             }
 
             const oldBoxDay = await boxDayRepository.findOne({
-                where: { isOpen: true, fkPlatform: platform.id }
+                where: { isOpen: true, fkPlatform: platform.id },
             });
 
             if (oldBoxDay) {
-                response.status(404).send(
-                    {
-                        message: "Já existe um caixa aberto!",
-                        error: "Existe um caixa aberto."
-                    }
-                );
+                response.status(404).send({
+                    message: "Já existe um caixa aberto!",
+                    error: "Existe um caixa aberto.",
+                });
                 return;
             }
 
             const boxdays = await boxDayRepository.find({
                 where: {
-                    createdAt: Like(`%${dayjs().format('YYYY-MM-DD')}%`) as any,
-                    fkPlatform: platform.id
-                }
+                    createdAt: Like(`%${dayjs().format("YYYY-MM-DD")}%`) as any,
+                    fkPlatform: platform.id,
+                },
             });
 
             const plan = platformEntity.fkPlan;
@@ -132,11 +163,9 @@ export const BoxDayController = {
             const moreThanMaxBoxdays = totalBoxdays >= maxBoxdaysPlan;
 
             if (moreThanMaxBoxdays) {
-                response.status(404).send(
-                    {
-                        message: "Máximo de caixas diário foi atingido."
-                    }
-                );
+                response.status(404).send({
+                    message: "Máximo de caixas diário foi atingido.",
+                });
                 return;
             }
 
@@ -146,102 +175,81 @@ export const BoxDayController = {
                 startValue: startValue,
                 fkPlatform: platform.id,
                 createdBy: user.id,
-            }
+            };
 
             await boxDayRepository.save(boxDay);
 
-            response.send(
-                {
-                    message: "Caixa salvo com sucesso!",
-                }
-            );
-
-
+            response.send({
+                message: "Caixa salvo com sucesso!",
+            });
         } catch (error) {
-
-            response.status(404).send(
-                { message: "Erro ao cadastrar o caixa!", error }
-            );
-
+            response
+                .status(404)
+                .send({ message: "Erro ao cadastrar o caixa!", error });
         }
-
     },
 
     patch: async (request: Request, response: Response) => {
-
         const { id } = request.params;
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
 
         try {
-
             const boxDayId: number = Number.parseInt(id);
 
             dataSource.transaction(async (transactionalEntityManager) => {
-
-                const boxDayEntity = transactionalEntityManager.getRepository(BoxDayEntity);
+                const boxDayEntity =
+                    transactionalEntityManager.getRepository(BoxDayEntity);
                 const orderEntity = dataSource.getRepository(OrderEntity);
 
                 const order = await orderEntity.findOne({
-                    where: { fkPlatform: platform.id, isOpen: true }
+                    where: { fkPlatform: platform.id, isOpen: true },
                 });
 
                 if (order) {
-                    response.status(404).send(
-                        {
-                            message: "Ainda existem pedido(s) aberto(s)!",
-                            error: "Ainda existem pedido(s) aberto(s)!"
-                        }
-                    );
+                    response.status(404).send({
+                        message: "Ainda existem pedido(s) aberto(s)!",
+                        error: "Ainda existem pedido(s) aberto(s)!",
+                    });
                     return;
                 }
 
                 const boxDayOpen = await boxDayEntity.find({
-                    where: { fkPlatform: platform.id, isOpen: true }
+                    where: { fkPlatform: platform.id, isOpen: true },
                 });
 
                 const oldBoxDay = await boxDayEntity.findOne({
-                    where: { id: boxDayId, fkPlatform: platform.id }
+                    where: { id: boxDayId, fkPlatform: platform.id },
                 });
 
                 if (boxDayOpen.length && !oldBoxDay.isOpen) {
-                    response.status(404).send(
-                        {
-                            message: "Somente um caixa pode ficar aberto!",
-                            error: "Existem pedidos abertos."
-                        }
-                    );
+                    response.status(404).send({
+                        message: "Somente um caixa pode ficar aberto!",
+                        error: "Existem pedidos abertos.",
+                    });
                     return;
                 }
 
                 const boxDay = {
                     isOpen: !oldBoxDay.isOpen,
                     updatedBy: user.id,
-                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss")
+                    updatedAt: dayjs().format("YYYY-MM-DD HH:mm:ss"),
                 };
 
-                const spendingMerger = boxDayEntity.merge(oldBoxDay, boxDay)
+                const spendingMerger = boxDayEntity.merge(oldBoxDay, boxDay);
 
                 await boxDayEntity.update(boxDayId, spendingMerger);
 
                 response.send({
-                    message: "Caixa atualizado com sucesso!"
+                    message: "Caixa atualizado com sucesso!",
                 });
-
             });
-
-
         } catch (error) {
-
-            response.status(404).send(
-                {
-                    message: "Erro ao salvar caixa.", error: error
-                }
-            );
-
+            response.status(404).send({
+                message: "Erro ao salvar caixa.",
+                error: error,
+            });
         }
-
     },
-
 };

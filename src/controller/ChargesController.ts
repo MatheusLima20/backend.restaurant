@@ -9,21 +9,25 @@ import { dateFormat } from "../utils/date/date";
 import { User } from "../@types/express";
 import { mathClass } from "../utils/math/math";
 import { ChargesView } from "../views/ChargesView";
+import { ChargesStore, ChargesType } from "../@types/charges";
+import { BoxDayEntity } from "../entity/BoxDayEntity";
+import { LogController } from "./LogContoller";
 
 export const ChargesController = {
     get: async (request: Request, response: Response) => {
+        const type: ChargesType = request.params.type as ChargesType;
 
         const auth = request.auth;
         const user = auth.user;
         const platform = user.platform;
 
         try {
-
             const chargesRepository = dataSource.getRepository(ChargesEntity);
 
             const chargesEntity = await chargesRepository.find({
                 where: {
                     platform: platform.id,
+                    type: type,
                 },
                 take: 12,
             });
@@ -34,7 +38,6 @@ export const ChargesController = {
                 data: chargesView,
                 message: "Dados coletados com sucesso!",
             });
-
         } catch (error) {
             response
                 .status(404)
@@ -164,16 +167,29 @@ export const ChargesController = {
 
     generateBilling: async (user: User) => {
         const platform = user.platform;
-        
+
         const dates = dateFormat;
 
         const chargesRepository = dataSource.getRepository(ChargesEntity);
         const platformRepository = dataSource.getRepository(PlatformEntity);
 
+        const hasCharges = await chargesRepository.findOne({
+            where: {
+                isPay: false,
+                platform: platform.id,
+                type: "MONTHLYFEE",
+            },
+        });
+
+        if (hasCharges) {
+            return;
+        }
+
         const lastCharges = await chargesRepository.findOne({
             where: {
                 isPay: true,
                 platform: platform.id,
+                type: "MONTHLYFEE",
             },
             order: {
                 payday: "desc",
@@ -183,17 +199,6 @@ export const ChargesController = {
         const lastPayment = lastCharges?.payday;
 
         const payDays = dates.generatePaydays(12, 10, lastPayment);
-
-        const hasCharges = await chargesRepository.findOne({
-            where: {
-                isPay: false,
-                platform: platform.id,
-            },
-        });
-
-        if (hasCharges) {
-            return;
-        }
 
         const platformEntity = await platformRepository.findOne({
             where: {
@@ -229,7 +234,64 @@ export const ChargesController = {
                 platform: platform.id,
                 payday: element,
                 description: "Mensalidade.",
+                type: "MONTHLYFEE",
             });
+        }
+    },
+
+    store: async (request: Request, response: Response) => {
+        const { type, value, description, isPay, boxdayId } = request.body;
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+            const chargesRepository = dataSource.getRepository(ChargesEntity);
+            const boxdayRepository = dataSource.getRepository(BoxDayEntity);
+
+            let boxday: BoxDayEntity;
+
+            if (boxdayId) {
+                boxday = await boxdayRepository.findOne({
+                    where: { id: boxdayId, fkPlatform: platform.id },
+                });
+
+                if (!boxday) {
+                    response
+                        .status(404)
+                        .send({ message: "Caixa não encontrado." });
+                    return;
+                }
+
+                if (!boxday.isOpen) {
+                    response.status(404).send({ message: "Caixa não aberto." });
+                    return;
+                }
+            }
+
+            const charges: ChargesStore = {
+                type: type,
+                value: value,
+                platform: platform.id,
+                description: description,
+                isPay: isPay,
+                fkBoxDay: boxday,
+            };
+
+            await chargesRepository.save(charges);
+
+            const message = `${type}: R$ ${value} : ${user.name}`;
+
+            await LogController.store(user, "Pagamento", message, "Salvo");
+
+            response.send({
+                message: "Pagamento realizado com sucesso!",
+            });
+        } catch (error) {
+            response
+                .status(404)
+                .send({ message: "Erro ao salvar pagamento." + error });
         }
     },
 };
