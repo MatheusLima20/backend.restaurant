@@ -31,7 +31,7 @@
         "joi-translation-pt-br": "^0.0.10",
         "jsonwebtoken": "^9.0.0",
         "mysql2": "^3.11.4",
-        "nodemailer": "^6.9.16",
+        "nodemailer": "^7.0.11",
         "pg": "^8.13.1",
         "reflect-metadata": "^0.2.2",
         "sdk-node-apis-efi": "^1.2.3",
