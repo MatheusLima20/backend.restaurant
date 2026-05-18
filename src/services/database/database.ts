@@ -1,15 +1,16 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { IDatabase } from "./interface/database.interface";
-import { MysqlConnectionOptions } from "typeorm/driver/mysql/MysqlConnectionOptions";
+import { DataSourceOptions } from "typeorm";
 import dotenv = require("dotenv");
+import { seed } from "./seed";
 dotenv.config();
 
 type DatabaseType = "mysql" | "mariadb";
 
 const databaseType: DatabaseType = process.env.DB_TYPE as DatabaseType;
 
-const config: MysqlConnectionOptions = {
+const config: DataSourceOptions = {
     type: databaseType,
     host: process.env.DB_HOST,
     port: Number.parseInt(process.env.DB_PORT),
@@ -18,13 +19,13 @@ const config: MysqlConnectionOptions = {
     database: process.env.DB_DATABASE,
     synchronize: true,
     logging: false,
-    entities: [process.env.PATH_ENTITY],
-    migrations: [process.env.PATH_MIGRATION],
-    subscribers: [process.env.PATH_SUBSCRIBER],
+    entities: [process.env.PATH_ENTITY || ""],
+    migrations: [process.env.PATH_MIGRATION || ""],
+    subscribers: [process.env.PATH_SUBSCRIBER || ""],
 };
 
 class DatabaseClass implements IDatabase {
-    connection: DataSource;
+    connection!: DataSource;
 
     constructor() {
         this.config();
@@ -33,8 +34,9 @@ class DatabaseClass implements IDatabase {
     private config(): void {
         this.connection = new DataSource(config);
     }
-    start(): void {
-        this.connection.initialize();
+    async start(): Promise<void> {
+        await this.connection.initialize();
+        await seed();
     }
 }
 

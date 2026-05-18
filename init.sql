@@ -1,0 +1,200 @@
+
+LOCK TABLES `platform` WRITE;
+
+INSERT INTO `platform` VALUES 
+(1,'Matheus Restaurante',1,127,'2024-09-02 11:32:50.505938','0000-00-00 00:00:00.000000',3,1),
+
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `plan`;
+
+
+CREATE TABLE `plan` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `month_value` float NOT NULL,
+  `annual_value` float NOT NULL,
+  `max_tables` int NOT NULL,
+  `max_users` int NOT NULL,
+  `tax_delivery` float NOT NULL,
+  `max_boxday` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+LOCK TABLES `plan` WRITE;
+
+
+INSERT INTO `plan` VALUES (1,'Iniciante','2024-07-23 12:06:06.584797','2024-07-24 14:55:05.745154',99.9,79.9,8,4,0.04,1),(2,'Profissional','2024-07-23 12:07:59.070770','2024-07-24 14:54:56.676411',149.9,129.9,20,8,0.04,2),(3,'Premium','2024-07-23 12:08:29.606514','2024-07-24 17:35:31.877679',239.9,209.9,30,15,0.035,3);
+
+
+UNLOCK TABLES;
+
+
+DROP TABLE IF EXISTS `address`;
+
+CREATE TABLE `address` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `main` tinyint NOT NULL,
+  `city` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `district` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `street` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `phone_number` bigint NOT NULL,
+  `address_number` int NOT NULL,
+  `address_code_postal` int NOT NULL,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `fk_user` int DEFAULT NULL,
+  `fk_platform` int DEFAULT NULL,
+  `fk_state` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_08ca36829097b08d3b780d4337d` (`fk_user`),
+  KEY `FK_dbec4b34d28e23f935b41556865` (`fk_platform`),
+  KEY `FK_b6b76a1068ed9faadef867a3907` (`fk_state`),
+  CONSTRAINT `FK_08ca36829097b08d3b780d4337d` FOREIGN KEY (`fk_user`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_b6b76a1068ed9faadef867a3907` FOREIGN KEY (`fk_state`) REFERENCES `states` (`id`),
+  CONSTRAINT `FK_dbec4b34d28e23f935b41556865` FOREIGN KEY (`fk_platform`) REFERENCES `platform` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `companies`;
+
+
+CREATE TABLE `companies` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `cpf_cnpj` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `company_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `corporate_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+LOCK TABLES `companies` WRITE;
+
+INSERT INTO `companies` VALUES 
+(6,'64897849889789','Restaurante Beira Mar','Matheus Lima Dos Santos','2025-09-29 16:30:59.511617','2025-09-29 16:30:59.511617');
+
+UNLOCK TABLES;
+
+LOCK TABLES `address` WRITE;
+
+INSERT INTO `address` VALUES 
+(6,1,'Paraipaba','Rosário','Rosário',85978541489,25,62685000,
+'2025-09-29 16:30:59.529376','2025-09-29 16:30:59.529376',11,6,6);
+
+UNLOCK TABLES;
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `cpf` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `is_active` tinyint NOT NULL DEFAULT '1',
+  `created_by` int DEFAULT NULL,
+  `updated_by` int DEFAULT NULL,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `fk_company` int DEFAULT NULL,
+  `fk_user_type` int DEFAULT NULL,
+  `fk_platform` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_9ea475fb82154af6f2840724479` (`fk_company`),
+  KEY `FK_9baca1a64c5ccaf59c4ea09050c` (`fk_user_type`),
+  KEY `FK_13c0bd3b36f6cdcbbcf199967b9` (`fk_platform`),
+  CONSTRAINT `FK_13c0bd3b36f6cdcbbcf199967b9` FOREIGN KEY (`fk_platform`) REFERENCES `platform` (`id`),
+  CONSTRAINT `FK_9baca1a64c5ccaf59c4ea09050c` FOREIGN KEY (`fk_user_type`) REFERENCES `user_type` (`id`),
+  CONSTRAINT `FK_9ea475fb82154af6f2840724479` FOREIGN KEY (`fk_company`) REFERENCES `companies` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+LOCK TABLES `user` WRITE;
+
+INSERT INTO `user` VALUES 
+(11,NULL,'matheus2096lima@gmail.com','Matheus Lima',
+'$2a$10$CgWRAmQxw/EGGRBl/3xtku8xHhdpkWZpUz8f8/jbae6r.2U.TEvRK',1,
+NULL,NULL,'2025-09-29 16:30:59.525423','2025-09-29 16:30:59.525423',NULL,10,6);
+
+UNLOCK TABLES;
+
+LOCK TABLES `product_type` WRITE;
+
+INSERT INTO `product_type` VALUES 
+(6,'PRATO','2025-09-29 16:33:34.717452','2025-09-29 16:33:34.717452'),
+(7,'GUARNIÇÃO','2025-09-29 16:33:34.725161','2025-09-29 16:33:34.725161'),
+(8,'BEBIDA','2025-09-29 16:33:34.729877','2025-09-29 16:33:34.729877'),
+(9,'SOBREMESA','2025-09-29 16:33:34.733202','2025-09-29 16:33:34.733202'),
+(10,'PETISCO','2025-09-29 16:33:34.737198','2025-09-29 16:33:34.737198'),
+(11,'DRINK','2025-09-29 16:33:34.740661','2025-09-29 16:33:34.740661'),
+(12,'LUNCH','2025-09-29 16:33:34.744506','2025-09-29 16:33:34.744506');
+
+UNLOCK TABLES;
+
+CREATE TABLE `states` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `uf` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `states` WRITE;
+
+INSERT INTO `states` VALUES 
+(1,'AC','Acre','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(2,'AL','Alagoas','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(3,'AM','Amazonas','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(4,'AP','Amapá','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(5,'BA','Bahia','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(6,'CE','Ceará','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(7,'DF','Distrito Federal','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(8,'ES','Espírito Santo','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(9,'GO','Goiás','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(10,'MA','Maranhão','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(11,'MG','Minas Gerais','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(12,'MS','Mato Grosso do Sul','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(13,'MT','Mato Grosso','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(14,'PA','Pará','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(15,'PB','Paraíba','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(16,'PE','Pernambuco','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(17,'PI','Piauí','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(18,'PR','Paraná','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(19,'RJ','Rio de Janeiro','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(20,'RN','Rio Grande do Norte','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(21,'RO','Rondonia','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(22,'RR','Roraima','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(23,'RS','Rio Grande do Sul','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(24,'SC','Santa Catarina','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(25,'SE','Sergipe','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841'),
+(26,'SP','São Paulo','2022-11-07 18:38:03.495841','2022-11-19 11:32:20.297060'),
+(27,'TO','Tocantins','2022-11-07 18:38:03.495841','2022-11-07 18:38:03.495841');
+
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `unit_measurement`;
+
+CREATE TABLE `unit_measurement` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+LOCK TABLES `unit_measurement` WRITE;
+
+INSERT INTO `unit_measurement` VALUES 
+(1,'KG','Quilo','2024-07-11 19:04:34.215608','2025-09-29 16:35:54.320132'),
+(2,'g','Gramas','2024-07-11 19:04:34.222985','2025-09-29 16:35:54.326461'),
+(3,'L','Litro','2024-07-11 19:04:34.228739','2025-09-29 16:35:54.329953'),
+(4,'ml','Mililitro','2024-07-11 19:04:34.234985','2025-09-29 16:35:54.333937'),
+(5,'CX','Caixa','2024-07-11 19:04:34.243014','2025-09-29 16:35:54.337799'),
+(13,'UN','Unidade','2024-07-11 19:27:17.863554','2025-09-29 16:35:54.342055'),
+(14,'PC','Pacote','2024-07-11 20:24:02.233702','2025-09-29 16:35:54.345616');
+
+UNLOCK TABLES;

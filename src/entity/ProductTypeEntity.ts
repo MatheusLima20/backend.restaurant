@@ -12,20 +12,22 @@ export type ProductType =
     | "BEBIDA"
     | "SOBREMESA"
     | "PETISCO"
+    | "ALMOÇO"
+    | "PF"
     ;
 
 @Entity({ name: "product_type" })
 export class ProductTypeEntity {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    name: ProductType;
+    name!: ProductType;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
-    createdAt: Date;
+    createdAt!: Date;
 
     @UpdateDateColumn({ type: "timestamp", name: "updated_at" })
-    updatedAt: Date;
+    updatedAt!: Date;
 }

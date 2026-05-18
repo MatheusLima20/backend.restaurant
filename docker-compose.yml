@@ -10,6 +10,7 @@ services:
       MYSQL_PASSWORD: "Q7!mZ@4Kp%9SxL2$"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   app:
     build:

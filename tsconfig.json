@@ -4,9 +4,10 @@
            "es5",
            "es6"
         ],
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
+        "rootDir": "./src",
         "outDir": "./build",
         "typeRoots" : ["src/@types", "./node_modules/@types"],
         "emitDecoratorMetadata": true,

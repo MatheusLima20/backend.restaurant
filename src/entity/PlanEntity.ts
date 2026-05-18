@@ -12,32 +12,32 @@ export type Plan = 'Iniciante' | 'Profissional' | 'Premium';
 export class PlanEntity {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    name: Plan;
+    name!: Plan;
 
     @Column({ name: 'month_value', type: "float" })
-    monthValue: number;
+    monthValue!: number;
 
     @Column({ name: 'annual_value', type: "float" })
-    annualValue: number;
+    annualValue!: number;
 
     @Column({ name: 'max_boxday' })
-    maxBoxDay: number;
+    maxBoxDay!: number;
 
     @Column({ name: 'max_tables' })
-    maxTables: number;
+    maxTables!: number;
 
     @Column({ name: 'max_users' })
-    maxUsers: number;
+    maxUsers!: number;
 
-    @Column({ name: 'tax_delivery' , type: "float" })
-    taxDelivery: number;
+    @Column({ name: 'tax_delivery', type: "float" })
+    taxDelivery!: number;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
-    createdAt: Date;
+    createdAt!: Date;
 
     @UpdateDateColumn({ type: "timestamp", name: "updated_at" })
-    updatedAt: Date;
+    updatedAt!: Date;
 }

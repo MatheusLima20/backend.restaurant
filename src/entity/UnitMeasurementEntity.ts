@@ -20,17 +20,17 @@ export type Unit =
 export class UnitMeasurementEntity {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    name: Unit;
+    name!: Unit;
 
     @Column()
-    description: string;
+    description!: string;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
-    createdAt: Date;
+    createdAt!: Date;
 
     @UpdateDateColumn({ type: "timestamp", name: "updated_at" })
-    updatedAt: Date;
+    updatedAt!: Date;
 }

@@ -15,44 +15,44 @@ import { UserTypeEntity } from "./UserTypeEntity";
 export class UserEntity {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column({ nullable: true, })
-    cpf: string;
+    cpf!: string;
 
     @ManyToOne(() => CompanyEntity, (company) => company.id, { nullable: true })
     @JoinColumn({ name: "fk_company" })
-    fkCompany: CompanyEntity;
+    fkCompany!: CompanyEntity;
 
     @Column()
-    email: string;
+    email!: string;
 
     @Column()
-    name: string;
+    name!: string;
 
     @Column({ nullable: false })
-    password: string;
+    password!: string;
 
     @ManyToOne(() => UserTypeEntity, (type) => type.id)
     @JoinColumn({ name: "fk_user_type" })
-    fkUserType: UserTypeEntity;
+    fkUserType!: UserTypeEntity;
 
     @ManyToOne(() => PlatformEntity, (platform) => platform.id)
     @JoinColumn({ name: "fk_platform" })
-    fkPlatform: PlatformEntity;
+    fkPlatform!: PlatformEntity;
 
     @Column({ name: "is_active", default: true })
-    isActive: boolean;
+    isActive!: boolean;
 
     @Column({ name: 'created_by', nullable: true })
-    createdBy: number;
+    createdBy!: number;
 
     @Column({ name: "updated_by", nullable: true })
-    updatedBy: number;
+    updatedBy!: number;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
-    createdAt: Date;
+    createdAt!: Date;
 
     @UpdateDateColumn({ type: "timestamp", name: "updated_at" })
-    updatedAt: Date;
+    updatedAt!: Date;
 }

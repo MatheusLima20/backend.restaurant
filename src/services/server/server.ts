@@ -1,5 +1,5 @@
-import * as cors from "cors";
-import * as express from "express";
+import cors from "cors";
+import express from "express";
 import { IServer } from "./interface/server.interface";
 import { createServer, Server } from "http";
 import routes from "../../routes";

@@ -14,29 +14,29 @@ import { PlanEntity } from "./PlanEntity";
 export class PlatformEntity {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    name: string;
+    name!: string;
 
     @ManyToOne(() => CompanyEntity, (company) => company.id)
     @JoinColumn({ name: "fk_company" })
-    fkCompany: CompanyEntity;
+    fkCompany!: CompanyEntity;
 
     @ManyToOne(() => PlanEntity, (plan) => plan.id, { nullable: true })
     @JoinColumn({ name: "fk_plan" })
-    fkPlan: PlanEntity;
+    fkPlan!: PlanEntity;
 
     @Column({ name: 'is_month_plan', default: true })
-    isMonthPlan: boolean;
+    isMonthPlan!: boolean;
 
     @Column({ name: "is_active", default: true })
-    isActive: boolean;
+    isActive!: boolean;
 
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
-    createdAt: Date;
+    createdAt!: Date;
 
     @UpdateDateColumn({ type: "timestamp", name: "updated_at" })
-    updatedAt: Date;
+    updatedAt!: Date;
 
 }
