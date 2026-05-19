@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { User } from "../@types/express";
-import { ContentEntity } from "../modules/content/entities/ContentEntity";
-import { dataSource } from "../services/database/database";
 import { Like } from "typeorm";
+import { User } from "../../../@types/express";
+import { dataSource } from "../../../services/database/database";
+import { ContentEntity } from "../../content/entities/ContentEntity";
 import { LogView } from "../views/LogView";
 
 export type LogTag = "Salvo" | "Alterado" | "Cancelado" | "Excluido";

@@ -1,6 +1,4 @@
-import { ContentEntity } from "../modules/content/entities/ContentEntity";
-import { dateFormat } from "../shared/utils/date/date";
-
+import { ContentEntity } from "../../content/entities/ContentEntity";
 
 export const LogView = {
     get: (contents: Array<ContentEntity>) => {

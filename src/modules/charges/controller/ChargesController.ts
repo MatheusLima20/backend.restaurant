@@ -8,10 +8,10 @@ import { mathClass } from "../../../shared/utils/math/math";
 import { ChargesView } from "../views/ChargesView";
 import { ChargesStore, ChargesType } from "../../../@types/charges";
 import { BoxDayEntity } from "../../boxday/entities/BoxDayEntity";
-import { LogController } from "../../../controller/LogContoller";
 import { ChargesEntity } from "../entities/ChargesEntity";
 import { PlatformEntity } from "../../platform/entities/PlatformEntity";
 import { AddressEntity } from "../../address/entities/AddressEntity";
+import { LogController } from "@modules/log/controller/LogContoller";
 
 export const ChargesController = {
     get: async (request: Request, response: Response) => {
