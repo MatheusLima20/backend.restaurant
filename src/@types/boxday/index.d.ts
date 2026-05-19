@@ -1,4 +1,4 @@
-import { BoxDayEntity } from "../../entity/BoxDayEntity";
+import { BoxDayEntity } from "../../modules/boxday/entities/BoxDayEntity";
 import { ChargesEntity } from "../../entity/ChargesEntity";
 
 export type TotalBoxday = {

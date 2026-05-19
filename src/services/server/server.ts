@@ -3,7 +3,7 @@ import express from "express";
 import { IServer } from "./interface/server.interface";
 import { createServer, Server } from "http";
 import routes from "../../routes";
-import { customErrors } from "../../middlwares/CustomErrors/CelebrationMiddleware";
+import { customErrors } from "../../shared/middlwares/CustomErrors/CelebrationMiddleware";
 
 const host: string = process.env.HOST_NAME;
 const port: number = Number.parseInt(process.env.PORT);

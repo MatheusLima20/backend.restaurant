@@ -1,0 +1,31 @@
+import { Router } from "express";
+import { SpendingController } from "../controller/SpendingController";
+import { VerifyJWTMiddleware } from "../../../services/security/verifications/VerifyJWTMiddleware";
+import { SpendingValidation } from "../validation/SpendingValidation";
+
+
+const routes = Router();
+
+routes.get(
+    "/spending/:date",
+    VerifyJWTMiddleware.verifyJWT,
+    SpendingValidation.get,
+    SpendingController.get
+);
+
+routes.post(
+    "/spending/",
+    VerifyJWTMiddleware.verifyJWT,
+    SpendingValidation.store,
+    SpendingController.store
+);
+
+routes.patch(
+    "/spending/:id",
+    VerifyJWTMiddleware.verifyJWT,
+    SpendingValidation.patch,
+    SpendingController.patch
+);
+
+
+module.exports = routes;

@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import "process";
-import { SocketClass } from "./utils/socket/socket";
+import 'module-alias/register';
+import { SocketClass } from "./shared/utils/socket/socket";
 import { ServerClass, serverClass } from "./services/server/server";
 import { databaseClass } from "./services/database/database";
 

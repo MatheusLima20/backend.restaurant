@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../@types/express";
-import { ContentEntity } from "../entity/ContentEntity";
+import { ContentEntity } from "../modules/content/entities/ContentEntity";
 import { dataSource } from "../services/database/database";
 import { Like } from "typeorm";
 import { LogView } from "../views/LogView";

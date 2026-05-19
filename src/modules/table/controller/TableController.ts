@@ -1,0 +1,224 @@
+import { Request, Response } from "express";
+import { dataSource } from "../../../services/database/database";
+import { TableEntity } from "../entities/TableEntity ";
+import { TableView } from "../views/TableView";
+import { OrderEntity } from "@modules/orders/entities/OrdersEntity";
+import { PlatformEntity } from "@modules/platform/entities/PlatformEntity";
+
+export const TableController = {
+
+    get: async (request: Request, response: Response) => {
+
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        try {
+            const tableRepository = dataSource.getRepository(TableEntity);
+            const orderEntity = dataSource.getRepository(OrderEntity);
+
+            const table = await tableRepository.find({
+                where: { fkPlatform: platform.id, isActive: true },
+            });
+
+            const isOcuppied: boolean[] = [];
+
+            var amountPendings: OrderEntity[] = [];
+
+            if (table.length) {
+
+                for (let index = 0; index < table.length; index++) {
+                    const element = table[index];
+                    const orders = await orderEntity.find({
+                        where: {
+                            fkPlatform: platform.id,
+                            fkTable: element.id,
+                            isOpen: true,
+                            isCancelled: false,
+                        }
+                    });
+                    isOcuppied.push(orders.length !== 0);
+                    const pendings = orders.filter((value) => value.status === "pendente");
+
+                    amountPendings = amountPendings.concat(pendings);
+                }
+
+            }
+
+            const tableView = TableView.get(table, isOcuppied, amountPendings);
+
+            response.send({
+                data: tableView,
+                message: "Dados encontrados com sucesso.",
+            });
+        } catch (error) {
+            response.status(404).send({
+                message: error, error
+            });
+        }
+
+    },
+
+    store: async (request: Request, response: Response) => {
+
+        const auth = request.auth;
+
+        const user = auth.user;
+
+        const platform = user.platform;
+
+        try {
+
+            const tableRepository = dataSource.getRepository(TableEntity);
+            const platformRepository = dataSource.getRepository(PlatformEntity);
+
+            const platformEntity = await platformRepository.findOne({
+                where: {
+                    id: platform.id,
+                },
+                relations: {
+                    fkPlan: true,
+                }
+            });
+
+            if(!platformEntity) {
+                response.status(404).send(
+                    {
+                        message: "Plataforma não encontrada.",
+                        error: "Plataforma não encontrada"
+                    }
+                );
+                return;
+            }
+
+            const plan = platformEntity.fkPlan;
+
+            const maxTablesPlan = plan.maxTables;
+
+            const table = await tableRepository.find({
+                where: { fkPlatform: platform.id, isActive: true }
+            });
+
+            const totalTables = table.length;
+
+            const moreThanMaxTables = totalTables >= maxTablesPlan;
+
+            if (moreThanMaxTables) {
+                response.status(404).send(
+                    {
+                        message: "Máximo de mesas foi atingido."
+                    }
+                );
+                return;
+            }
+
+            const name = "Mesa: " + (totalTables + 1);
+
+            const tableNew: any = {
+                name: name,
+                fkPlatform: platform.id,
+                createdBy: user.id,
+            }
+
+            await tableRepository.save(tableNew);
+
+            response.send(
+                {
+                    message: "Mesa salva com sucesso!",
+                }
+            );
+
+
+        } catch (error) {
+
+            response.status(404).send(
+                { message: "Erro ao cadastrar mesa!", error }
+            );
+
+        }
+
+    },
+
+    patch: async (request: Request, response: Response) => {
+
+        const { id } = request.params;
+        const body = request.body;
+        const auth = request.auth;
+        const user = auth.user;
+        const platform = user.platform;
+
+        const name = body.name;
+        const isActive = body.isActive;
+
+        try {
+
+            const tableId: number = Number.parseInt(id);
+
+            dataSource.transaction(async (transactionalEntityManager) => {
+
+                const tableEntity = transactionalEntityManager.getRepository(TableEntity);
+                const orderEntity = transactionalEntityManager.getRepository(OrderEntity);
+
+                const oldTable = await tableEntity.findOne({
+                    where: { id: tableId, fkPlatform: platform.id }
+                });
+
+                if (!oldTable) {
+                    response.status(404).send(
+                        {
+                            message: "Nenhuma mesa Encontrada.",
+                            error: "Mesa"
+                        }
+                    );
+                    return;
+                }
+
+                const ordersTable = await orderEntity.find({
+                    where: {
+                        fkTable: tableId,
+                        fkPlatform: platform.id,
+                        isCancelled: false,
+                        isOpen: true,
+                    }
+                });
+
+                if (!isActive && ordersTable.length !== 0) {
+                    response.status(404).send(
+                        {
+                            message: "Existe(m) pedido(s) aberto(s) na mesa.",
+                            error: "Mesa"
+                        }
+                    );
+                    return;
+                }
+
+                const table = {
+                    name: name,
+                    isActive: isActive,
+                    updatedBy: user.id
+                };
+
+                const spendingMerger = tableEntity.merge(oldTable, table)
+
+                await tableEntity.update(tableId, spendingMerger);
+
+                response.send({
+                    message: "Mesa atualizada com sucesso!"
+                });
+
+            });
+
+
+        } catch (error) {
+
+            response.status(404).send(
+                {
+                    message: "Erro ao salvar mesa.", error: error
+                }
+            );
+
+        }
+
+    },
+
+};

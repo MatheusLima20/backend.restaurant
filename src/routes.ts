@@ -1,26 +1,37 @@
-//#region Imports
 import { Router, Request, Response } from "express";
-import { readdirSync } from "fs";
-import path = require("path");
-//#endregion
+import { readdirSync, statSync } from "fs";
+import path from "path";
 
 const routes = Router();
 
 routes.get("/", (request: Request, response: Response) => {
-    response.send({ msg: "Serviço rodando." });
+  response.send({ msg: "Serviço rodando." });
 });
 
-//#region Return All Routes
+function loadRoutes(folderPath: string) {
+  const files = readdirSync(folderPath);
 
-readdirSync(path.join(__dirname, "./routes")).forEach((fileName) => {
-    const fullPath = path.join(__dirname, "./routes", fileName);
-    const isMap = fileName.includes(".map");
-    if (!isMap) {
-        const route = require(fullPath);
-        routes.use(route);
+  for (const fileName of files) {
+    const fullPath = path.join(folderPath, fileName);
+
+    const isDirectory = statSync(fullPath).isDirectory();
+
+    if (isDirectory) {
+      loadRoutes(fullPath);
+      continue;
     }
-});
 
-//#endregion
+    const isMapFile = fileName.endsWith(".map");
+    const isRouteFile = fileName.endsWith("routes.ts");
+
+    if (!isMapFile && isRouteFile) {
+      const route = require(fullPath);
+
+      routes.use(route.default || route);
+    }
+  }
+}
+
+loadRoutes(path.join(__dirname, "./modules"));
 
 export default routes;
