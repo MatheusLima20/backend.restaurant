@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import EfiPay from "sdk-typescript-apis-efi";
-import { efiOptions } from "../../../credentials";
+import { efiOptions } from "../../../config/efi.config";
 import { dataSource } from "../../../database/database";
 import { dateFormat } from "../../../shared/utils/date/date";
 import { User } from "../../../@types/express";
@@ -11,7 +11,7 @@ import { BoxDayEntity } from "../../boxday/entities/BoxDayEntity";
 import { ChargesEntity } from "../entities/ChargesEntity";
 import { PlatformEntity } from "../../platform/entities/PlatformEntity";
 import { AddressEntity } from "../../address/entities/AddressEntity";
-import { LogController } from "@modules/log/controller/LogContoller";
+import { LogController } from "@modules/log/controller/LogController";
 
 export const ChargesController = {
     get: async (request: Request, response: Response) => {

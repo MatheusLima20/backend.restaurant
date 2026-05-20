@@ -1,4 +1,5 @@
-import { ChargesEntity } from "../../entity/ChargesEntity";
+import { ChargesEntity } from "@modules/charges/entities/ChargesEntity";
+
 
 export type ChargesType =
     | "WITHDRAWALBOXDAY"

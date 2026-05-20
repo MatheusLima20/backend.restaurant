@@ -8,7 +8,7 @@ import { UserEntity } from "@modules/user/entities/UserEntity";
 import { BoxDayEntity } from "@modules/boxday/entities/BoxDayEntity";
 import { ProvisionsEntity } from "@modules/provisions/entities/ProvisionsEntity";
 import { TableEntity } from "@modules/table/entities/TableEntity ";
-import { LogController } from "@modules/log/controller/LogContoller";
+import { LogController } from "@modules/log/controller/LogController";
 
 export const OrderController = {
     getByDate: async (request: Request, response: Response) => {

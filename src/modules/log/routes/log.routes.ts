@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { VerifyJWTMiddleware } from "../../../services/security/verifications/VerifyJWTMiddleware";
-import { LogController } from "../../log/controller/LogContoller";
+import { LogController } from "../controller/LogController";
 
 
 const routes = Router();
