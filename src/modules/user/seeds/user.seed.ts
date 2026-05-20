@@ -1,8 +1,8 @@
 import { CompanyEntity } from "@modules/company/entities/CompanyEntity";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { PlanEntity } from "@modules/plan/entities/PlanEntity";
 import { UserEntity } from "../entities/UserEntity";
-import { AdmLogin } from "../../../services/security/encripty/AdmLogin";
+import { AdmLogin } from "../../../services/security/encryption/AdmLogin";
 import { PlatformEntity } from "@modules/platform/entities/PlatformEntity";
 import {
     UserType,

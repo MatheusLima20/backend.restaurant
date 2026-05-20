@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { UnitMeasurementEntity } from "../../unit.measurement/entities/UnitMeasurementEntity";
 import { ProductView } from "../views/ProvisionsView";
 import dayjs from "dayjs";

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { SpendingView } from "../views/SpendingView";
 import { Like } from "typeorm";
 import dayjs = require("dayjs");
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { SpendingEntity } from "../entities/SpendingEntity";
 
 export const SpendingController = {

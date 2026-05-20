@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserTypeView } from "../views/UserTypeView";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { UserTypeEntity } from "../entities/UserTypeEntity";
 
 

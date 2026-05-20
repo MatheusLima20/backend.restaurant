@@ -1,5 +1,5 @@
 import { StatesEntity } from "@modules/states/entities/StatesEntity";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { AddressEntity } from "../entities/AddressEntity";
 import { UserEntity } from "@modules/user/entities/UserEntity";
 import { CreateAddressDTO } from "../dto/CreatePlanDTO";

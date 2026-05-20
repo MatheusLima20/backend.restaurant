@@ -1,5 +1,5 @@
 import { CompanyEntity } from "@modules/company/entities/CompanyEntity";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { PlatformEntity } from "../entities/PlatformEntity";
 import { PlanEntity } from "@modules/plan/entities/PlanEntity";
 import { logger } from "@shared/logger/logger";

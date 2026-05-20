@@ -8,7 +8,7 @@ import { UploadFile } from "@shared/middlwares/Files/UploadFilesMiddlware";
 import { ContentView } from "../views/ContentView";
 import { Archive } from "@shared/utils/file/archive";
 import { CompanyEntity } from "@modules/company/entities/CompanyEntity";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { PlatformEntity } from "@modules/platform/entities/PlatformEntity";
 
 export const ContentController = {

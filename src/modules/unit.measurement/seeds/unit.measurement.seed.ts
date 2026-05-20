@@ -1,5 +1,5 @@
 import { logger } from "@shared/logger/logger";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { Unit, UnitMeasurementEntity } from "../entities/UnitMeasurementEntity";
 
 export async function unitMeasurementSeed() {

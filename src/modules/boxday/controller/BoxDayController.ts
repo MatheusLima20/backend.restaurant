@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import dayjs from "dayjs";
 import { Like } from "typeorm";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { BoxDayEntity } from "../entities/BoxDayEntity";
 import { OrderEntity } from "../../orders/entities/OrdersEntity";
 import { ChargesEntity } from "../../charges/entities/ChargesEntity";

@@ -7,13 +7,11 @@ import {
 } from "typeorm";
 
 export type ProductType =
-    | "PRATO"
-    | "GUARNIÇÃO"
-    | "BEBIDA"
-    | "SOBREMESA"
-    | "PETISCO"
-    | "ALMOÇO"
-    | "PF"
+    | "DISH"
+    | "SIDE DISH"
+    | "DRINK"
+    | "DESSERT"
+    | "SNACK"
     ;
 
 @Entity({ name: "product_type" })

@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { Like } from "typeorm";
 import { User } from "../../../@types/express";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { ContentEntity } from "../../content/entities/ContentEntity";
 import { LogView } from "../views/LogView";
 
-export type LogTag = "Salvo" | "Alterado" | "Cancelado" | "Excluido";
+export type LogTag = "Salvo" | "Modified" | "Cancelled" | "Deleted";
 
 export const LogController = {
     store: async (user: User, title: string, message: string, tag: LogTag) => {
@@ -50,7 +50,7 @@ export const LogController = {
 
             response.send({
                 data: logView,
-                message: "Dados encontrados com sucesso.",
+                message: "Data finds success.",
             });
         } catch (error) {
             response.status(404).send({

@@ -1,5 +1,5 @@
 import { logger } from "@shared/logger/logger";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { CreatePlanDTO } from "../dto/CreatePlanDTO";
 import { Plan, PlanEntity } from "../entities/PlanEntity";
 

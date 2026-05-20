@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { OrderView } from "../views/OrderView";
 import { Like } from "typeorm";
 import dayjs from "dayjs";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { OrderEntity } from "../entities/OrdersEntity";
 import { UserEntity } from "@modules/user/entities/UserEntity";
 import { BoxDayEntity } from "@modules/boxday/entities/BoxDayEntity";

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ProductTypeView } from "../views/ProductTypeView";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { ProductTypeEntity } from "../entities/ProductTypeEntity";
 
 

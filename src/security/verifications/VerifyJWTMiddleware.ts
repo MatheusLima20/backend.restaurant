@@ -9,9 +9,10 @@ export const VerifyJWTMiddleware = {
         if (!authorization) {
 
             response.status(404).send({
-                message: "Token Inexistente.",
-                error: "Token Inexistente."
+                message: "Undefined Token.",
+                error: "Undefined Token."
             });
+            return;
         }
 
         const token = authorization.replace('Bearer', '').trim();
@@ -34,7 +35,7 @@ export const VerifyJWTMiddleware = {
         } catch (error) {
 
             response.status(404).send({
-                message: "Token Expirado.",
+                message: "Expired Token.",
                 error: error
             });
         }

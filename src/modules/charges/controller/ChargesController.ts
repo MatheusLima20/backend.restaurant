@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import EfiPay from "sdk-typescript-apis-efi";
 import { efiOptions } from "../../../credentials";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { dateFormat } from "../../../shared/utils/date/date";
 import { User } from "../../../@types/express";
 import { mathClass } from "../../../shared/utils/math/math";

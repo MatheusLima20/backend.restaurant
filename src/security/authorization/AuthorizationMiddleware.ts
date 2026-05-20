@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-import { AdmLogin } from "../encripty/AdmLogin";
+import { AdmLogin } from "../encryption/AdmLogin";
 import { UserEntity } from "../../../modules/user/entities/UserEntity";
-import { dataSource } from "../../database/database";
+import { dataSource } from "../../../database/database";
 import { ChargesController } from "../../../modules/charges/controller/ChargesController";
 
 export const Authorization = {
@@ -82,7 +82,7 @@ export const Authorization = {
         try {
             const userRepository = dataSource.getRepository(UserEntity);
 
-            let user: UserEntity;
+            let user: UserEntity | null = null;
 
             if (userType) {
                 user = await userRepository.findOne({
@@ -112,10 +112,11 @@ export const Authorization = {
                 });
             }
 
-            if (user === undefined) {
+            if (!user) {
                 response
                     .status(404)
                     .send({ message: "Usuário ou senha incorretos!" });
+                    return;
             }
 
             const password = user.password;

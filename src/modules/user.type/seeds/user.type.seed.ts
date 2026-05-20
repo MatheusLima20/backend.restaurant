@@ -1,5 +1,5 @@
 import { logger } from "@shared/logger/logger";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { UserTypeEntity } from "../entities/UserTypeEntity";
 
 

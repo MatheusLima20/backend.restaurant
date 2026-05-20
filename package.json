@@ -1,7 +1,7 @@
 {
-    "name": "restaurant_api",
+    "name": "restaurant.app",
     "version": "0.0.1",
-    "main": "build/src/restaurant.js",
+    "main": "build/src/server.js",
     "description": "Awesome project developed with TypeORM.",
     "devDependencies": {
         "@types/bcryptjs": "^2.4.2",
@@ -47,8 +47,8 @@
         "@shared": "src/shared"
     },
     "scripts": {
-        "dev": "nodemon src/restaurant.ts",
-        "start": "node build/restaurant.js",
+        "dev": "nodemon src/server.ts",
+        "start": "node build/server.js",
         "build": "tsc --build",
         "clean": "tsc --build --clean"
     }

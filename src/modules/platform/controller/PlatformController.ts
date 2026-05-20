@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CompanyEntity } from "../../company/entities/CompanyEntity";
 import { stringFormatter } from "../../../shared/utils/formatter/string/string.formatter";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { PlatformEntity } from "../entities/PlatformEntity";
 
 

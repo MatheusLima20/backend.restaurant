@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ProfileView } from "../views/ProfileView";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { ProfileEntity } from "../entities/ProfileEntity";
 
 export const ProfileController = {

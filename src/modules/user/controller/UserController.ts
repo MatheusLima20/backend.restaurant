@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserView } from "../views/UserView";
-import { AdmLogin } from "../../../services/security/encripty/AdmLogin";
+import { AdmLogin } from "../../../services/security/encryption/AdmLogin";
 import { UserEntity } from "../entities/UserEntity";
 import { Address, RequestAuth, User } from "../../../@types/express";
 import { UserTypeEntity } from "../../user.type/entities/UserTypeEntity";
@@ -9,7 +9,7 @@ import { cpf } from "cpf-cnpj-validator";
 import { CompanyEntity } from "../../company/entities/CompanyEntity";
 import { getAddressByCEP } from "cep-address-finder";
 import { stringFormatter } from "../../../shared/utils/formatter/string/string.formatter";
-import { dataSource } from "../../../services/database/database";
+import { dataSource } from "../../../database/database";
 import { PlanEntity } from "../../plan/entities/PlanEntity";
 import { dateFormat } from "../../../shared/utils/date/date";
 import { PlatformEntity } from "@modules/platform/entities/PlatformEntity";

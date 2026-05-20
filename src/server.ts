@@ -2,8 +2,8 @@ import "reflect-metadata";
 import "process";
 import 'module-alias/register';
 import { SocketClass } from "./shared/utils/socket/socket";
-import { ServerClass, serverClass } from "./services/server/server";
-import { databaseClass } from "./services/database/database";
+import { databaseClass } from "./database/database";
+import { serverClass, ServerClass } from "./server/server";
 
 const server: ServerClass = serverClass;
 
