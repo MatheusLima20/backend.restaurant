@@ -1,7 +1,9 @@
 {
     "compilerOptions": {
         "lib": ["es5", "es6"],
+        "types": ["node", "jest"],
         "paths": {
+            "@/*": ["./src/*"],
             "@modules/*": ["./src/modules/*"],
             "@shared/*": ["./src/shared/*"]
         },

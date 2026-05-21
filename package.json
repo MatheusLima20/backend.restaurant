@@ -68,6 +68,7 @@
         "dev": "nodemon src/server.ts",
         "start": "node build/server.js",
         "build": "tsc --build",
-        "clean": "tsc --build --clean"
+        "clean": "tsc --build --clean",
+        "test": "jest --no-cache --watchAll"
     }
 }
