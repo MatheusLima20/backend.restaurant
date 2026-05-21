@@ -1,15 +1,15 @@
 
 import bcryptjs = require('bcryptjs');
 
-export const AdmLogin = {
+export const encryptionService = {
 
     hashPassword: (password: string): string => {
 
         const salt = bcryptjs.genSaltSync();
 
-        const senhaHash = bcryptjs.hashSync(password, salt);
+        const passwordHash = bcryptjs.hashSync(password, salt);
 
-        return senhaHash;
+        return passwordHash;
 
     },
 

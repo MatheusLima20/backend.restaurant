@@ -1,11 +1,11 @@
+import { UserEntity } from "@modules/user/entities/UserEntity";
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-import { AdmLogin } from "../encryption/AdmLogin";
-import { UserEntity } from "../../../modules/user/entities/UserEntity";
-import { dataSource } from "../../../database/database";
-import { ChargesController } from "../../../modules/charges/controller/ChargesController";
+import { dataSource } from "../../database/database";
+import { encryptionService } from "../services/encryption.service";
+import { ChargesController } from "@modules/charges/controller/ChargesController";
 
-export const Authorization = {
+export const authorization = {
     auth: async (request: Request, response: Response) => {
         const user = request.body as UserEntity;
 
@@ -121,7 +121,7 @@ export const Authorization = {
 
             const password = user.password;
 
-            const isValidPassword = AdmLogin.checkLogin(
+            const isValidPassword = encryptionService.checkLogin(
                 user.email,
                 userBody.email,
                 userBody.password,

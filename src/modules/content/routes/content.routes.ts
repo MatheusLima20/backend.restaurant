@@ -1,14 +1,13 @@
-import { Router } from "express";
-import { VerifyJWTMiddleware } from "../../../services/security/verifications/VerifyJWTMiddleware";
+import { Router } from "express";;
 import { ContentValidation } from "../validation/ContentValidation";
 import { ContentController } from "../controller/ContentController";
-import { UploadFile } from "../../../shared/middlwares/Files/UploadFilesMiddlware";
+import { verifyJWTMiddleware } from "../../../auth/middlewares/verify-jwt.middleware";
 
 const routes = Router();
 
 routes.post(
     "/content",
-    VerifyJWTMiddleware.verifyJWT,
+    verifyJWTMiddleware.verifyJWT,
     ContentController.upload,
     ContentValidation.store,
     ContentController.store
@@ -16,7 +15,7 @@ routes.post(
 
 routes.patch(
     "/content/:id",
-    VerifyJWTMiddleware.verifyJWT,
+    verifyJWTMiddleware.verifyJWT,
     ContentController.upload,
     ContentValidation.patch,
     ContentController.patch
@@ -42,14 +41,14 @@ routes.get(
 
 routes.get(
     "/content/:date",
-    VerifyJWTMiddleware.verifyJWT,
+    verifyJWTMiddleware.verifyJWT,
     ContentValidation.get,
     ContentController.get
 );
 
 routes.get(
     "/content-gallery/",
-    VerifyJWTMiddleware.verifyJWT,
+    verifyJWTMiddleware.verifyJWT,
     ContentController.getGallery
 );
 
@@ -59,11 +58,9 @@ routes.get(
     ContentController.getById
 );
 
-routes.get("/download/:path/:archive", UploadFile.download);
-
 routes.delete(
     "/content-archive/:id",
-    VerifyJWTMiddleware.verifyJWT,
+    verifyJWTMiddleware.verifyJWT,
     ContentValidation.delete,
     ContentController.deleteArchive
 );

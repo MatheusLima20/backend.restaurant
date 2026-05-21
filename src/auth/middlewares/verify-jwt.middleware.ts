@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from 'jsonwebtoken';
 
-export const VerifyJWTMiddleware = {
+export const verifyJWTMiddleware = {
 
     verifyJWT: async (request: Request, response: Response, next: NextFunction) => {
         const { authorization } = request.headers;

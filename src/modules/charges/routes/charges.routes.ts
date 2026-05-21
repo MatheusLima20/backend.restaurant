@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ChargesController } from "../controller/ChargesController";
-import { VerifyJWTMiddleware } from "../../../services/security/verifications/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../../files/services/security/verifications/VerifyJWTMiddleware";
 import { ChargesValidation } from "../validation/ChargesValidation";
 
 const routes = Router();

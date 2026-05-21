@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { SpendingController } from "../controller/SpendingController";
-import { VerifyJWTMiddleware } from "../../../services/security/verifications/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../../files/services/security/verifications/VerifyJWTMiddleware";
 import { SpendingValidation } from "../validation/SpendingValidation";
 
 

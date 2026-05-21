@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ProvisionsController } from "../controller/ProvisionsController";
-import { VerifyJWTMiddleware } from "../../../services/security/verifications/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../../files/services/security/verifications/VerifyJWTMiddleware";
 import { ProductValidation } from "../validation/ProductValidation";
 
 

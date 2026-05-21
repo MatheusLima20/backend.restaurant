@@ -2,8 +2,8 @@ import cors from "cors";
 import express from "express";
 import { IServer } from "./interface/server.interface";
 import { createServer, Server } from "http";
-import routes from "../../routes";
-import { customErrors } from "../../shared/middlwares/CustomErrors/CelebrationMiddleware";
+import routes from "../routes";
+import { celebrateErrorMiddleware } from "../middlewares/celebrate/celebrate.error.middleware";
 
 const host: string = process.env.HOST_NAME;
 const port: number = Number.parseInt(process.env.PORT);
@@ -44,7 +44,7 @@ export class ServerClass implements IServer {
 
         app.use(routes);
 
-        app.use(customErrors());
+        app.use(celebrateErrorMiddleware());
     }
 
     public start(): void {

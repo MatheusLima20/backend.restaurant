@@ -4,9 +4,9 @@ import {
     ContentType,
 } from "@modules/content/entities/ContentEntity";
 import { IsNull, Like, Not } from "typeorm";
-import { UploadFile } from "@shared/middlwares/Files/UploadFilesMiddlware";
+import { FileManager } from "../../files/services/files-manager/file-manager";
 import { ContentView } from "../views/ContentView";
-import { Archive } from "@shared/utils/file/archive";
+import { FileUtil } from "@shared/utils/file/file.util";
 import { CompanyEntity } from "@modules/company/entities/CompanyEntity";
 import { dataSource } from "../../../database/database";
 import { PlatformEntity } from "@modules/platform/entities/PlatformEntity";
@@ -14,7 +14,7 @@ import { PlatformEntity } from "@modules/platform/entities/PlatformEntity";
 export const ContentController = {
     upload: (request: Request, response: Response, next: NextFunction) => {
         try {
-            UploadFile.store({
+            FileManager.store({
                 request: request,
                 path: "/images/",
                 response: response,
@@ -371,7 +371,7 @@ export const ContentController = {
             });
         } catch (error) {
             if (file) {
-                Archive.delete(file);
+                FileUtil.delete(file);
             }
 
             response.status(404).send({
@@ -431,7 +431,7 @@ export const ContentController = {
             });
         } catch (error) {
             if (file) {
-                Archive.delete(file);
+                FileUtil.delete(file);
             }
 
             response.status(404).send({
@@ -524,7 +524,7 @@ export const ContentController = {
             };
 
             if (file) {
-                Archive.delete(file);
+                FileUtil.delete(file);
             }
 
             response.send({

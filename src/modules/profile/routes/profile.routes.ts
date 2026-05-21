@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ProfileController } from "../controller/Profile.Controller";
-import { VerifyJWTMiddleware } from "../../../services/security/verifications/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../../files/services/security/verifications/VerifyJWTMiddleware";
 import { ProfileValidation } from "../validation/ProfileValidation";
 
 const routes = Router();

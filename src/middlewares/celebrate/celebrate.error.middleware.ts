@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { CelebrateError, Segments } from 'celebrate';
-import { Archive } from '../../utils/file/archive';
+import { FileUtil } from '../../shared/utils/file/file.util';
 
-export function customErrors() {
+export function celebrateErrorMiddleware() {
 
     return (error: any, request: Request, response: Response, next: NextFunction) => {
         if (!CelebrateError(error, Segments.BODY)) {
@@ -19,10 +19,10 @@ export function customErrors() {
         const file = request.body.file;
 
         if (file) {
-            Archive.delete(file);
+            FileUtil.delete(file);
         }
 
-        response.status(404).send({
+        response.status(400).send({
             error: error.message,
             message: errorObject.message,
         });

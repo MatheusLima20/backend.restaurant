@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { VerifyJWTMiddleware } from "../../../services/security/verifications/VerifyJWTMiddleware";
+import { VerifyJWTMiddleware } from "../../files/services/security/verifications/VerifyJWTMiddleware";
 import { TableController } from "../controller/TableController";
 import { TableValidation } from "../validation/TableValidation";
 
